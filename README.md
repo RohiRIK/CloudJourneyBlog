@@ -1,4 +1,4 @@
-# [CloudJourneyBlog - e.g., Tech Blog Posts]
+# CloudJourneyBlog - e.g., Tech Blog Posts
 
 Welcome! 👋
 
