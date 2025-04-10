@@ -21,7 +21,6 @@ You can expect to find posts related to areas such as:
 * ⌨️ Scripting & Automation
 * 🤔 General Tech Tutorials and Thoughts
 
-*(Feel free to adjust this list based on what you plan to write about!)*
 
 ## Navigating Posts 🗺️🧭
 
@@ -38,7 +37,5 @@ Currently, this is a personal collection of posts. However, if you spot any erro
 If you'd like to connect or discuss any topics further, you can find me on:
 
 * **LinkedIn:**[www.linkedin.com/in/rohi-rikman-48831b239]
-* **Medium:** [Link to your Medium profile (Optional)]
-* **Other:** [Any other relevant links (Optional)]
 
 Thanks for stopping by! 🙏 Happy reading! 😊
