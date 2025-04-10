@@ -27,9 +27,7 @@ You can expect to find posts related to areas such as:
 
 Posts are generally organized within folders 📁 by topic, or you can find a list of recent posts below:
 
-* 🔗 [Link to Post 1 - e.g., Moving Day: Your Fun(ctional) Guide to Migrating from Google Workspace to Microsoft 365](./path/to/your/post1.md)
-* 🔗 [Link to Post 2](./path/to/your/post2.md)
-* *(Add more links here as you add posts)*
+* 🔗 [Moving Day: Your Fun(ctional) Guide to Migrating from Google Workspace to Microsoft 365](./posts/migrations/gws-to-m365-migration-guide.md)
 
 ## Contributing 🙌
 
@@ -39,7 +37,7 @@ Currently, this is a personal collection of posts. However, if you spot any erro
 
 If you'd like to connect or discuss any topics further, you can find me on:
 
-* **LinkedIn:** [Link to your LinkedIn profile (Optional)]
+* **LinkedIn:**[www.linkedin.com/in/rohi-rikman-48831b239]
 * **Medium:** [Link to your Medium profile (Optional)]
 * **Other:** [Any other relevant links (Optional)]
 
