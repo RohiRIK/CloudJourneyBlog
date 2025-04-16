@@ -27,6 +27,8 @@ You can expect to find posts related to areas such as:
 Posts are generally organized within folders 📁 by topic, or you can find a list of recent posts below:
 
 * 🔗 [Moving Day: Your Fun(ctional) Guide to Migrating from Google Workspace to Microsoft 365](./posts/migrations/gws-to-m365-migration-guide.md)
+* 🔗 [Migrating to Microsoft Defender for Office 365](./posts/migrations/third-party-to-defender-migration-guide.md)
+* 🔗 [Taming the Beast: Your Guide to Onboarding AD Devices to Defender for Endpoint (Without Losing Your Mind)](./posts/Defendnder_365/mde-onboarding-ad-devices.md)
 
 ## Contributing 🙌
 
