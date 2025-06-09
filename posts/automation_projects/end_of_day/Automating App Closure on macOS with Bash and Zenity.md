@@ -42,7 +42,7 @@ The first section prepares the script for execution by defining the applications
 apps=("iTerm2" "Microsoft Outlook" "Microsoft Teams" "AnyDesk" "Microsoft Edge" "WhatsApp")
 
 # Path to the icon for the Zenity dialog
-icon_path="/Users/rohirikman/Documents/Personal-Automation/.Scripts/Icons/Sunset.png"
+icon_path="/Sunset.png"
 
 # Current time for logging
 Time_of_Day="$(date +'%H:%M:%S')"
@@ -406,7 +406,7 @@ I hope this guide helps you create your own automation scripts. Feel free to cus
 - Consider adding more sophisticated conditions, such as only closing apps on weekdays
 - Share your automation scripts with the community to inspire others
 
-For the complete script and additional resources, check out my [GitHub repository](https://github.com/username/repository).
+For the complete script and additional resources, check out my [GitHub repository - CloudJourneyBlog](https://github.com/RohiRIK/CloudJourneyBlog/tree/b9866b6d3989a14aed91aac8b6ceb00278c4a25d/posts/automation_projects/end_of_day).
 
 *(Note: Replace the placeholder link with the actual repository link.)*
 
