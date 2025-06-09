@@ -408,7 +408,6 @@ I hope this guide helps you create your own automation scripts. Feel free to cus
 
 For the complete script and additional resources, check out my [GitHub repository - CloudJourneyBlog](https://github.com/RohiRIK/CloudJourneyBlog/tree/b9866b6d3989a14aed91aac8b6ceb00278c4a25d/posts/automation_projects/end_of_day).
 
-*(Note: Replace the placeholder link with the actual repository link.)*
 
 Happy automating!
 
