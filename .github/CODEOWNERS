@@ -1,0 +1,18 @@
+# Global owners
+* @rohirikman
+
+# Documentation
+/docs/ @rohirikman
+/README.md @rohirikman
+/CONTRIBUTING.md @rohirikman
+
+# Content
+/content/ @rohirikman
+
+# Infrastructure
+/infrastructure/ @rohirikman
+/projects/ @rohirikman
+
+# GitHub workflows
+/.github/ @rohirikman
+

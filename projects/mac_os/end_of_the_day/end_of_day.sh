@@ -5,7 +5,7 @@ apps=("iTerm2" "Microsoft Outlook" "Microsoft Teams" "AnyDesk" "Microsoft Edge" 
 
 # Path to the icon for the Zenity dialog
 # Note: Update this path to match your system or use --icon-name=dialog-information for default icon
-icon_path="$HOME/Documents/Personal-Automation/.Scripts/Icons/Sunset.png"
+icon_path="/assets/Sunset.png"
 
 # Current time for logging
 Time_of_Day="$(date +'%H:%M:%S')"

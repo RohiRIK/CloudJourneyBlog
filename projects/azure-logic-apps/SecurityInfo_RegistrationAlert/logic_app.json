@@ -1,0 +1,438 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowDefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "Recurrence": {
+                "type": "Recurrence",
+                "recurrence": {
+                    "interval": 15,
+                    "frequency": "Minute",
+                    "timeZone": "UTC"
+                }
+            }
+        },
+        "actions": {
+            "Initialize_error_tracking": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "hasErrors",
+                            "type": "boolean",
+                            "value": false
+                        }
+                    ]
+                },
+                "runAfter": {}
+            },
+            "Initialize_error_messages": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "errorMessages",
+                            "type": "string",
+                            "value": ""
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_error_tracking": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Run_query_and_list_results_V2": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters(\'$connections\')[\'azuremonitorlogs\'][\'connectionId\']"
+                        }
+                    },
+                    "method": "post",
+                    "body": {
+                        "query": "AuditLogs\n| where TimeGenerated > ago(60m)\n| where Category == \"UserManagement\"\n| where OperationName in (\n    \"User registered all required security info\",\n    \"User registered security info\",\n    \"User changed default security info\",\n    \"User started security info registration\",\n    \"User completed security info registration\",\n    \"User deleted security info\",\n    \"User updated security info\"\n)\n| extend TargetUser = tostring(TargetResources[0].userPrincipalName)\n| extend TargetUserDisplayName = tostring(TargetResources[0].displayName)\n| extend InitiatedByUser = tostring(InitiatedBy.user.userPrincipalName)\n| extend InitiatorIpAddress = tostring(InitiatedBy.user.ipAddress)\n| extend InitiatorDisplayName = tostring(InitiatedBy.user.displayName)\n| project\n    TimeGenerated,\n    OperationName,\n    Result,\n    ResultDescription,\n    TargetUser,\n    TargetUserDisplayName,\n    InitiatedByUser,\n    InitiatorDisplayName,\n    InitiatorIpAddress,\n    CorrelationId,\n    Category\n| sort by TimeGenerated desc",
+                        "timerangetype": "3"
+                    },
+                    "path": "/queryDataV2",
+                    "queries": {
+                        "subscriptions": "YOUR_SUBSCRIPTION_ID",
+                        "resourcegroups": "YOUR_RESOURCE_GROUP",
+                        "resourcetype": "Log Analytics Workspace",
+                        "resourcename": "YOUR_LOG_ANALYTICS_WORKSPACE_NAME"
+                    }
+                },
+                "runAfter": {
+                    "Initialize_error_messages": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Initialize_content_variable": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "content",
+                            "type": "string",
+                            "value": "@{body(\'Run_query_and_list_results_V2\')}"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Run_query_and_list_results_V2": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Initialize_emailBody_variable": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "summarizeEmailBody",
+                            "type": "string",
+                            "value": "<div style=\"border: 1px solid #e1e1e1; background-color: #fafafa; margin: 15px 0; padding: 20px; border-radius: 8px; font-family: Segoe UI, Arial, sans-serif; color: #333;\">\n    <h3 style=\"color: #005A9E; margin-top: 0; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #005A9E; padding-bottom: 10px;\">\n        Security Alert: Recent Authentication Events\n    </h3>\n    <table style=\"width: 100%; border-collapse: collapse; font-size: 14px;\">\n        <thead>\n            <tr style=\"background-color: #f2f2f2;\">\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">Target User</th>\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">Initiated By</th>\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">Time (UTC)</th>\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">Activity</th>\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">IP Address</th>\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">Result</th>\n                <th style=\"padding: 10px; font-weight: 600; color: #555; border-bottom: 1px solid #ddd; text-align: left;\">Correlation ID</th>\n            </tr>\n        </thead>\n        <tbody>"
+                        },
+                        {
+                            "name": "personalEmailBody",
+                            "type": "string"
+                        },
+                        {
+                            "name": "emailAddress",
+                            "type": "string"
+                        },
+                        {
+                            "name": "processedUsers",
+                            "type": "array"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_content_variable": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Initialize_matchingActivityFound_variable": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "matchingActivityFound",
+                            "type": "boolean",
+                            "value": false
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_emailBody_variable": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Initialize_activity_count": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "activityCount",
+                            "type": "integer",
+                            "value": 0
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_matchingActivityFound_variable": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Check_if_query_has_results": {
+                "type": "If",
+                "expression": {
+                    "and": [
+                        {
+                            "not": {
+                                "equals": [
+                                    "@body(\'Run_query_and_list_results_V2\')?[\'value\']",
+                                    null
+                                ]
+                            }
+                        },
+                        {
+                            "greater": [
+                                "@length(body(\'Run_query_and_list_results_V2\')?[\'value\'])",
+                                0
+                            ]
+                        }
+                    ]
+                },
+                "actions": {
+                    "Set_activity_count": {
+                        "type": "SetVariable",
+                        "inputs": {
+                            "name": "activityCount",
+                            "value": "@length(body(\'Run_query_and_list_results_V2\')?[\'value\'])"
+                        }
+                    },
+                    "For_each_audit_record": {
+                        "type": "Foreach",
+                        "foreach": "@body(\'Run_query_and_list_results_V2\')?[\'value\']",
+                        "actions": {
+                            "Set_matchingActivityFound_to_true": {
+                                "type": "SetVariable",
+                                "inputs": {
+                                    "name": "matchingActivityFound",
+                                    "value": true
+                                }
+                            },
+                            "Append_to_summarize_email_body": {
+                                "type": "AppendToStringVariable",
+                                "inputs": {
+                                    "name": "summarizeEmailBody",
+                                    "value": "<tr>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">@{coalesce(items(\'For_each_audit_record\')?[\'TargetUserDisplayName\'], items(\'For_each_audit_record\')?[\'TargetUser\'], \'N/A\')} (@{items(\'For_each_audit_record\')?[\'TargetUser\']})</td>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">@{coalesce(items(\'For_each_audit_record\')?[\'InitiatorDisplayName\'], items(\'For_each_audit_record\')?[\'InitiatedByUser\'], \'System\')}</td>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">@{formatDateTime(convertTimeZone(items(\'For_each_audit_record\')?[\'TimeGenerated\'], \'UTC\', \'UTC\'), \'yyyy-MM-dd HH:mm:ss\')\n}</td>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">@{items(\'For_each_audit_record\')?[\'OperationName\']}</td>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">@{coalesce(items(\'For_each_audit_record\')?[\'InitiatorIpAddress\'], \'N/A\')}</td>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">\n        <span style=\"background-color: @{if(equals(items(\'For_each_audit_record\')?[\'Result\'], \'success\'), \'#dff6dd\', \'#f8d7da\')}; color: @{if(equals(items(\'For_each_audit_record\')?[\'Result\'], \'success\'), \'#198754\', \'#842029\')}; font-weight: 700; padding: 4px 8px; border-radius: 5px; font-size: 12px;\">@{toUpper(items(\'For_each_audit_record\')?[\'Result\'])}</span>\n    </td>\n    <td style=\"padding: 8px; border-bottom: 1px solid #ddd; font-family: Consolas, monospace; font-size: 13px;\">@{items(\'For_each_audit_record\')?[\'CorrelationId\']}</td>\n</tr>"
+                                },
+                                "runAfter": {
+                                    "Set_matchingActivityFound_to_true": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            },
+                            "Condition": {
+                                "type": "If",
+                                "expression": {
+                                    "and": [
+                                        {
+                                            "not": {
+                                                "contains": [
+                                                    "@variables(\'processedUsers\')",
+                                                    "@items(\'For_each_audit_record\')?[\'TargetUser\']"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "actions": {
+                                    "set_personal_Email_body": {
+                                        "type": "SetVariable",
+                                        "inputs": {
+                                            "name": "personalEmailBody",
+                                            "value": "<!DOCTYPE html>\n<html>\n<head>\n<title>Security Alert</title>\n<meta charset=\"utf-8\">\n</head>\n<body style=\"margin: 0; padding: 0; background-color: #f8f8f8;\">\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n    <tr>\n        <td style=\"padding: 20px 0;\">\n            <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"600\" style=\"border-collapse: collapse; border: 1px solid #e1e1e1; background-color: #fafafa;\">\n                <tr>\n                    <td align=\"left\" style=\"padding: 20px; font-family: Segoe UI, Arial, sans-serif; color: #333;\">\n                        \n\n                        <h2 style=\"font-family: Segoe UI, Arial, sans-serif; color: #333; margin-top: 0;\">\n                            A change was made to your account\'s security info\n                        </h2>\n\n                        <p style=\"font-family: Segoe UI, Arial, sans-serif; color: #333; font-size: 16px;\">Dear @{items(\'For_each_audit_record\')[\'TargetUserDisplayName\']},</p>\n\n                        <p style=\"font-family: Segoe UI, Arial, sans-serif; color: #333; font-size: 16px; line-height: 1.5;\">\n                            This is an automated alert to inform you of a recent change made to your security settings. \n                        </p>\n\n                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border: 1px solid #ddd; border-radius: 4px; background-color: #ffffff; margin-bottom: 20px;\">\n                            <tr>\n                                <td style=\"padding: 15px; font-family: Segoe UI, Arial, sans-serif; color: #333; font-size: 15px;\">\n                                    <p style=\"margin: 0 0 10px 0;\"><b>Action:</b> @{items(\'For_each_audit_record\')?[\'ResultDescription\']}</p>\n                                    <p style=\"margin: 0 0 10px 0;\"><b>Time:</b> @{formatDateTime(convertTimeZone(items(\'For_each_audit_record\')?[\'TimeGenerated\'], \'UTC\', \'UTC\'), \'yyyy-MM-dd HH:mm:ss\')\n}</p>\n                                </td>\n                            </tr>\n                        </table>\n\n                        <hr style=\"border: none; border-top: 1px solid #e1e1e1; margin: 20px 0;\">\n\n                        <h3 style=\"font-family: Segoe UI, Arial, sans-serif; color: #333;\">Was this you?</h3>\n                        <p style=\"font-family: Segoe UI, Arial, sans-serif; color: #333; font-size: 16px; line-height: 1.5;\">\n                            <b>If you made this change,</b> you don\'t need to do anything. You can safely disregard this message.\n                        </p>\n                        <p style=\"font-family: Segoe UI, Arial, sans-serif; color: #333; font-size: 16px; line-height: 1.5;\">\n                            <b>If you DO NOT recognize this activity,</b> please secure your account immediately by contacting IT support.\n                        </p>\n                        <br>\n
+                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n                            <tr>\n                                <td>\n                                    <a href=\"mailto:support@example.com\" target=\"_blank\" style=\"background-color: #D83B01; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-family: Segoe UI, Arial, sans-serif; font-size: 16px;\">\n                                        No, this wasn\'t me - Contact IT Support\n                                    </a>\n                                </td>\n                            </tr>\n                        </table>\n\n                        <p style=\"margin-top: 25px; font-size: 12px; color: #666; font-family: Segoe UI, Arial, sans-serif;\">\n                            For additional verification, you can always review your sign-in activity directly at the <a href=\"https://mysignins.microsoft.com/security-info\" target=\"_blank\" style=\"color: #0078D4;\">Microsoft Security Info portal</a>.\n                        </p>\n                    </td>\n                </tr>\n                 <tr>\n                    <td style=\"padding: 15px; font-size: 12px; color: #666; font-family: Segoe UI, Arial, sans-serif; text-align: center; border-top: 1px solid #e1e1e1;\">\n                         Remember: Your organization will never ask for your password via email.\n                    </td>\n                </tr>\n            </table>\n        </td>\n    </tr>\n</table>\n</body>\n</html>"
+                                        },
+                                        "runAfter": {
+                                            "add_users_to_procces_users": [
+                                                "Succeeded"
+                                            ]
+                                        }
+                                    },
+                                    "Send_an_Personal_email_": {
+                                        "type": "ApiConnection",
+                                        "inputs": {
+                                            "host": {
+                                                "connection": {
+                                                    "name": "@parameters(\'$connections\')[\'office365\'][\'connectionId\']"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "body": {
+                                                "To": "recipient@example.com",
+                                                "Subject": "A change was made to your account\'s security info",
+                                                "Body": "<p class=\"editor-paragraph\">@{variables(\'personalEmailBody\')}</p>",
+                                                "Importance": "High"
+                                            },
+                                            "path": "/v2/Mail"
+                                        },
+                                        "runAfter": {
+                                            "set_personal_Email_body": [
+                                                "Succeeded"
+                                            ]
+                                        }
+                                    },
+                                    "add_users_to_procces_users": {
+                                        "type": "AppendToArrayVariable",
+                                        "inputs": {
+                                            "name": "processedUsers",
+                                            "value": "@items(\'For_each_audit_record\')?[\'TargetUser\']"
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "actions": {}
+                                },
+                                "runAfter": {
+                                    "Append_to_summarize_email_body": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Set_activity_count": [
+                                "Succeeded"
+                            ]
+                        },
+                        "runtimeConfiguration": {
+                            "concurrency": {
+                                "repetitions": 1
+                            }
+                        }
+                    },
+                    "Append_to_end_to_the_table": {
+                        "type": "AppendToStringVariable",
+                        "inputs": {
+                            "name": "summarizeEmailBody",
+                            "value": "</tbody>\n    </table>\n</div>\n"
+                        },
+                        "runAfter": {
+                            "For_each_audit_record": [
+                                "Succeeded"
+                            ]
+                        }
+                    }
+                },
+                "else": {
+                    "actions": {}
+                },
+                "runAfter": {
+                    "Initialize_activity_count": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Handle_query_failure": {
+                "type": "If",
+                "expression": {
+                    "equals": [
+                        "@outputs(\'Run_query_and_list_results_V2\')?[\'statusCode\']",
+                        200
+                    ]
+                },
+                "actions": {},
+                "else": {
+                    "actions": {
+                        "Set_error_flag": {
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "hasErrors",
+                                "value": true
+                            }
+                        },
+                        "Append_error_message": {
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                                "name": "errorMessages",
+                                "value": "Query failed with status code: @{outputs(\'Run_query_and_list_results_V2\')?[\'statusCode\']}. Body: @{outputs(\'Run_query_and_list_results_V2\')?[\'body\']}.\n"
+                            },
+                            "runAfter": {
+                                "Set_error_flag": [
+                                    "Succeeded"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Check_if_query_has_results": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Send_Summary_Email": {
+                "type": "If",
+                "expression": {
+                    "and": [
+                        {
+                            "equals": [
+                                "@variables(\'matchingActivityFound\')",
+                                true
+                            ]
+                        }
+                    ]
+                },
+                "actions": {
+                    "Send_an_email_(V2)": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters(\'$connections\')[\'office365\'][\'connectionId\']"
+                                }
+                            },
+                            "method": "post",
+                            "body": {
+                                "To": "summary_recipient@example.com",
+                                "Subject": "Security Alert Summary: Recent Authentication Events",
+                                "Body": "<p class=\"editor-paragraph\">@{variables(\'summarizeEmailBody\')}</p>",
+                                "Importance": "High"
+                            },
+                            "path": "/v2/Mail"
+                        },
+                        "runAfter": {}
+                    }
+                },
+                "runAfter": {
+                    "Handle_query_failure": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Send_Error_Notification": {
+                "type": "If",
+                "expression": {
+                    "equals": [
+                        "@variables(\'hasErrors\')",
+                        true
+                    ]
+                },
+                "actions": {
+                    "Send_Error_Email": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters(\'$connections\')[\'office365\'][\'connectionId\']"
+                                }
+                            },
+                            "method": "post",
+                            "body": {
+                                "To": "admin@example.com",
+                                "Subject": "Logic App Error Notification",
+                                "Body": "<p>The Logic App encountered the following errors:</p><p>@{variables(\'errorMessages\')}</p>",
+                                "Importance": "High"
+                            },
+                            "path": "/v2/Mail"
+                        },
+                        "runAfter": {}
+                    }
+                },
+                "runAfter": {
+                    "Send_Summary_Email": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "outputs": {}
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azuremonitorlogs": {
+                    "connectionId": "/subscriptions/YOUR_SUBSCRIPTION_ID/providers/Microsoft.Web/locations/eastus/managedApis/azuremonitorlogs",
+                    "connectionName": "azuremonitorlogs",
+                    "id": "/subscriptions/YOUR_SUBSCRIPTION_ID/providers/Microsoft.Web/locations/eastus/managedApis"
+                },
+                "office365": {
+                    "connectionId": "/subscriptions/YOUR_SUBSCRIPTION_ID/providers/Microsoft.Web/locations/eastus/managedApis/office365",
+                    "connectionName": "office365",
+                    "id": "/subscriptions/YOUR_SUBSCRIPTION_ID/providers/Microsoft.Web/locations/eastus/managedApis"
+                }
+            }
+        }
+    }
+}
+
