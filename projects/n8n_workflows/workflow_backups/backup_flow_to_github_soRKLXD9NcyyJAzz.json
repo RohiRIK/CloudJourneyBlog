@@ -242,7 +242,7 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        2060,
+        1900,
         880
       ],
       "id": "41abe8f3-ffcc-4f20-852d-4a446d7fe1f3",
@@ -560,5 +560,5 @@
   "active": false,
   "settings": {},
   "createdAt": "2025-06-15T13:36:45.752Z",
-  "updatedAt": "2025-06-19T11:32:11.493Z"
+  "updatedAt": "2025-06-19T11:54:40.532Z"
 }
