@@ -16,7 +16,7 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "position": [
         360,
-        945
+        665
       ],
       "typeVersion": 1.1
     },
@@ -32,7 +32,7 @@
       "type": "n8n-nodes-base.n8n",
       "position": [
         580,
-        945
+        665
       ],
       "typeVersion": 1,
       "credentials": {
@@ -103,7 +103,7 @@
       "type": "n8n-nodes-base.set",
       "position": [
         1020,
-        870
+        340
       ],
       "typeVersion": 3.3
     },
@@ -161,7 +161,7 @@
       "typeVersion": 3.4,
       "position": [
         1240,
-        870
+        340
       ],
       "id": "fdc3924e-4ee4-4aee-bd20-5e1d22596091",
       "name": "workflow_json"
@@ -173,8 +173,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        800,
-        945
+        820,
+        660
       ],
       "id": "1b19cbf6-a846-4ae7-8be9-8ed076a7173c",
       "name": "Loop Over Items"
@@ -204,7 +204,7 @@
       "typeVersion": 1.1,
       "position": [
         1460,
-        870
+        340
       ],
       "id": "c1e9e0fa-696d-4464-9498-b7d6ab0babca",
       "name": "che_exsits_in_github",
@@ -243,7 +243,7 @@
       "typeVersion": 1.1,
       "position": [
         1680,
-        1045
+        440
       ],
       "id": "41abe8f3-ffcc-4f20-852d-4a446d7fe1f3",
       "name": "Crate_Json",
@@ -257,25 +257,12 @@
     },
     {
       "parameters": {
-        "jsCode": "// --- Helper Function (No changes needed here) ---\n\n/**\n * Recursively compares two objects and returns an object detailing the differences.\n * @param {object} oldObject - The original object.\n * @param {object} newObject - The new object to compare against.\n * @returns {object} - An object listing the differences.\n */\nfunction compareObjects(oldObject, newObject) {\n  const diff = {};\n  // Ensure oldObject and newObject are valid objects before getting keys\n  const oldKeys = (oldObject && typeof oldObject === 'object') ? Object.keys(oldObject) : [];\n  const newKeys = (newObject && typeof newObject === 'object') ? Object.keys(newObject) : [];\n  const allKeys = new Set([...oldKeys, ...newKeys]);\n\n  for (const key of allKeys) {\n    const oldValue = oldObject ? oldObject[key] : undefined;\n    const newValue = newObject ? newObject[key] : undefined;\n\n    if (newObject && !newObject.hasOwnProperty(key)) {\n      diff[key] = { status: 'REMOVED', oldValue: oldValue };\n    } else if (oldObject && !oldObject.hasOwnProperty(key)) {\n      diff[key] = { status: 'ADDED', newValue: newValue };\n    } else if (typeof oldValue === 'object' && oldValue !== null && typeof newValue === 'object' && newValue !== null && !Array.isArray(oldValue) && !Array.isArray(newValue)) {\n      const nestedDiff = compareObjects(oldValue, newValue);\n      if (Object.keys(nestedDiff).length > 0) {\n        diff[key] = nestedDiff;\n      }\n    } else if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {\n      diff[key] = { status: 'MODIFIED', oldValue: oldValue, newValue: newValue };\n    }\n  }\n  return diff;\n}\n\n\n// --- Main Execution ---\n\n// Get the old JSON (the backup) and the new JSON from the previous node's output.\nconst old_json_to_compare = $input.item.json.backuped_json;\nconst new_json_to_compare = $input.item.json.updated_json;\n\n// Find the differences between the two versions.\nconst differences = compareObjects(old_json_to_compare, new_json_to_compare);\n\n// Check if the 'differences' object has any keys. If it does, changes were found.\nif (Object.keys(differences).length > 0) {\n  // YES, the backup needs to be updated.\n  return {\n    update_needed: true,\n    reason: \"Comparison found changes. The 'backuped_json' needs to be updated with 'updated_json'.\",\n    changes: differences // The actual changes are included for logging or review.\n  };\n} else {\n  // NO, the backup is already current.\n  return {\n    update_needed: false,\n    reason: \"No changes found between 'backuped_json' and 'updated_json'. The backup is current.\"\n  };\n}"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1900,
-        820
-      ],
-      "id": "86f6fe18-e7fb-43bd-8a6e-933beedeec0f",
-      "name": "Code"
-    },
-    {
-      "parameters": {
         "assignments": {
           "assignments": [
             {
               "id": "56d51dc6-fbf8-4efa-aeaf-566e36c48df3",
               "name": "backuped_json",
-              "value": "={{$('che_exsits_in_github').item.json}}",
+              "value": "={{ $('Extract_json_form_github_file').item.json}}",
               "type": "object"
             },
             {
@@ -297,11 +284,97 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1680,
-        820
+        1900,
+        240
       ],
       "id": "536abf51-e901-4bae-be65-48afa9db6bd6",
       "name": "jsons_to_compress"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        240
+      ],
+      "id": "5937f224-0c51-4c73-8398-c4f69e446d0a",
+      "name": "Extract_json_form_github_file"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "RohiRIK",
+          "mode": "list",
+          "cachedResultName": "RohiRIK",
+          "cachedResultUrl": "https://github.com/RohiRIK"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "CloudJourneyBlog",
+          "mode": "list",
+          "cachedResultName": "CloudJourneyBlog",
+          "cachedResultUrl": "https://github.com/RohiRIK/CloudJourneyBlog"
+        },
+        "filePath": "=projects/n8n_workflows/workflow_backups/{{$('work flow settings').item.json.name}}_{{ $('work flow settings').item.json.id }}.json",
+        "fileContent": "={{ JSON.stringify($('workflow_json').item.json, null, 2) }}",
+        "commitMessage": "=chore: update n8n automation flow to GitHub {{$('work flow settings').item.json.name}}_{{ $('work flow settings').item.json.id }} to GitHub."
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2340,
+        490
+      ],
+      "id": "44fd5663-a7db-483f-b67d-17705ef6edc8",
+      "name": "GitHub",
+      "webhookId": "e6cd4445-ba05-4e4d-ab7e-c17bc0258862",
+      "credentials": {
+        "githubApi": {
+          "id": "qSEsRGukJ4kS0Wum",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "87a385a9-80c9-4706-b5fc-dd65ae40db43",
+              "leftValue": "={{ $('jsons_to_compress').item.json.backuped_json }}",
+              "rightValue": "={{ $('jsons_to_compress').item.json.updated_json }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2120,
+        415
+      ],
+      "id": "b0f67483-4d96-437d-a6de-aa8535474e3b",
+      "name": "If1"
     }
   ],
   "connections": {
@@ -365,7 +438,7 @@
       "main": [
         [
           {
-            "node": "jsons_to_compress",
+            "node": "Extract_json_form_github_file",
             "type": "main",
             "index": 0
           }
@@ -394,7 +467,47 @@
       "main": [
         [
           {
-            "node": "Code",
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract_json_form_github_file": {
+      "main": [
+        [
+          {
+            "node": "jsons_to_compress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -405,5 +518,5 @@
   "active": false,
   "settings": {},
   "createdAt": "2025-06-15T13:36:45.752Z",
-  "updatedAt": "2025-06-18T10:02:35.866Z"
+  "updatedAt": "2025-06-19T10:57:28.319Z"
 }
