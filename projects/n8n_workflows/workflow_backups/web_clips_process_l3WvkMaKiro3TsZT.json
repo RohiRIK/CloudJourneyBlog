@@ -99,9 +99,11 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Task:\nSummarize the given Jina.ai response in a concise manner, focusing on key features, core benefits, and actionable information. Remove any unnecessary details or images.\n\nInput Format:\n{{ $json.data.markdown }}\n\nYou will receive a JSON object containing the title, URL source, and markdown content. Your task is to summarize the markdown content, focusing on the following:\n\t1.\tKey Features: List the primary features of the product, service, or tool described.\n\t2.\tCore Benefits: Highlight the main benefits of using the product or service.\n\t3.\tActionable Information: Provide any important steps or actions the user can take based on the content.\n\t4.\tRemove Excess Details: Avoid including unnecessary descriptions, images, or redundant content.\n \t5.\tonly output the content, not your thought, for example:\n“I’m happy to help you with summarizing the content of…” — do not output this.\n\nExpected Output Format:\n{\n  \"summary\": \"The article discusses the benefits of remote work and how it affects productivity.\"\n}",
+        "text": "={{ $json.data.markdown }}",
         "hasOutputParser": true,
-        "options": {}
+        "options": {
+          "systemMessage": "# IDENTITY and PURPOSE\n\nYou are an expert content summarizer. You take content in and output a Markdown formatted summary using the format below.\n\nTake a deep breath and think step by step about how to best accomplish this goal using the following steps.\n\n# OUTPUT SECTIONS\n\n- Combine all of your understanding of the content into a single, 20-word sentence in a section called ONE SENTENCE SUMMARY:.\n\n- Output the 10 most important points of the content as a list with no more than 16 words per point into a section called MAIN POINTS:.\n\n- Output a list of the 5 best takeaways from the content in a section called TAKEAWAYS:.\n\n# OUTPUT INSTRUCTIONS\n\n- Create the output using the formatting above.\n- You only output human readable Markdown.\n- Output numbered lists, not bullets.\n- Do not output warnings or notes—just the requested sections.\n- Do not repeat items in the output sections.\n- Do not start items with the same opening words."
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
@@ -148,8 +150,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        1080,
-        2880
+        1140,
+        2980
       ],
       "id": "dcd262de-19af-49cb-a8bb-47fef5653dc7",
       "name": "Ollama Chat Model1",
@@ -157,52 +159,6 @@
         "ollamaApi": {
           "id": "LprBiyyLSqKEHJGl",
           "name": "Ollama account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "databasePage",
-        "operation": "update",
-        "pageId": {
-          "__rl": true,
-          "value": "={{ $json['Page to update ID'] }}",
-          "mode": "id"
-        },
-        "propertiesUi": {
-          "propertyValues": [
-            {
-              "key": "TLDR|rich_text",
-              "textContent": "={{ $json.AI_article_summarise }}"
-            },
-            {
-              "key": "Topics|multi_select",
-              "multiSelectValue": "={{ [\n    $json['AI_Topic_Extraction 1 item'],\n    $json['keywords 1'],\n    $json['keywords 2'],\n    $json['Keywords 3']\n].filter(value => value).join(', ') }}"
-            },
-            {
-              "key": "Status|status",
-              "statusValue": "Processed"
-            },
-            {
-              "key": "Type|select",
-              "selectValue": "Web Clip"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2.2,
-      "position": [
-        2760,
-        2620
-      ],
-      "id": "d74bb89d-ccb1-46b9-bb2e-6861ef336181",
-      "name": "Notion1",
-      "credentials": {
-        "notionApi": {
-          "id": "Vpza7HmATHumPcuq",
-          "name": "Notion account"
         }
       }
     },
@@ -305,8 +261,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        100,
-        2860
+        280,
+        2960
       ],
       "id": "f9808dce-465b-4c70-8f09-afbdfac60fa2",
       "name": "llama3.2",
@@ -337,7 +293,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -180,
+        -240,
         2620
       ],
       "id": "11afc931-8d69-4c46-bef5-6c2d2a25ce13",
@@ -345,7 +301,53 @@
       "credentials": {
         "httpBearerAuth": {
           "id": "eFwntbjfFyKCMtKV",
-          "name": "Bearer Auth account"
+          "name": "Firecrawl"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json['Page to update ID'] }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "TLDR|rich_text",
+              "textContent": "={{ $json.AI_article_summarise }}"
+            },
+            {
+              "key": "Topics|multi_select",
+              "multiSelectValue": "={{ [\n    $json['AI_Topic_Extraction 1 item'],\n    $json['keywords 1'],\n    $json['keywords 2'],\n    $json['Keywords 3']\n].filter(value => value).join(', ') }}"
+            },
+            {
+              "key": "Status|status",
+              "statusValue": "Processed"
+            },
+            {
+              "key": "Type|select",
+              "selectValue": "Web Clip"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2760,
+        2620
+      ],
+      "id": "d74bb89d-ccb1-46b9-bb2e-6861ef336181",
+      "name": "Update a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "Vpza7HmATHumPcuq",
+          "name": "Notion account"
         }
       }
     }
@@ -432,7 +434,7 @@
       "main": [
         [
           {
-            "node": "Notion1",
+            "node": "Update a database page",
             "type": "main",
             "index": 0
           }
@@ -484,12 +486,12 @@
       ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1",
     "timezone": "Asia/Jerusalem",
     "callerPolicy": "workflowsFromSameOwner"
   },
   "createdAt": "2025-05-03T16:19:07.475Z",
-  "updatedAt": "2025-06-19T11:37:55.066Z"
+  "updatedAt": "2025-07-12T09:54:25.651Z"
 }
