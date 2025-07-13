@@ -44,7 +44,7 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        0,
+        -20,
         0
       ],
       "id": "53968ade-210b-4f46-a41d-7aa7f8b880dd",
@@ -63,7 +63,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        340,
+        440,
         0
       ],
       "id": "524093f2-ec23-4fb3-8290-4dd6f48f1334",
@@ -82,8 +82,8 @@
           "propertyValues": [
             {
               "key": "Due|date",
-              "date": "={{ $json.next_due }}",
-              "timezone": "Asia/Jerusalem"
+              "includeTime": false,
+              "date": "={{ $json.next_due }}"
             },
             {
               "key": "Kanban - Status|status",
@@ -96,7 +96,7 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        1380,
+        1600,
         200
       ],
       "id": "384e82f0-eba7-4b29-9e94-103c077b7feb",
@@ -126,8 +126,8 @@
             },
             {
               "id": "87a157e2-cb97-4f7c-a98f-9e2fc025119d",
-              "name": "property_kanban_state",
-              "value": "={{ $json.property_kanban_state }}",
+              "name": "property_kanban_status",
+              "value": "={{ $json.property_kanban_status }}",
               "type": "string"
             }
           ]
@@ -137,7 +137,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        900,
+        1120,
         80
       ],
       "id": "7f99de08-ce36-42c4-a9dd-afed9e636b3e",
@@ -162,6 +162,19 @@
       ],
       "id": "c08f3767-4131-411f-9f37-4da257b803f1",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "function getNextDay(dateString) {\n  try {\n    const inputDate = new Date(dateString);\n    if (isNaN(inputDate.getTime())) {\n      throw new Error('Invalid date format provided.');\n    }\n    inputDate.setDate(inputDate.getDate() + 1);\n    return inputDate.toISOString();\n  } catch (error) {\n    console.error(\"Error calculating next day:\", error.message);\n    return null;\n  }\n}\n\n\n// n8n requires you to process an array of items.\n// This loop will run for every item that the node receives.\nfor (const item of items) {\n  // Get the date string from the input item.\n  // We assume the field is named 'property_last_edited_time'. Change this if your field has a different name.\n  const myDate = item.json.property_last_edited_time;\n\n  // Call the function to calculate the next day.\n  const nextDay = getNextDay(myDate);\n\n  // Add the result to a new field in the item called 'nextDay'.\n  // This makes it available for subsequent nodes.\n  item.json.nextDay = nextDay;\n}\n\n// Return all the processed items to be passed on to the next node in the workflow.\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        40
+      ],
+      "id": "1753afc6-ba95-4ce9-8a0b-d021e85bed3b",
+      "name": "addding_next_day"
     }
   ],
   "connections": {
@@ -192,7 +205,7 @@
         [],
         [
           {
-            "node": "Edit Fields",
+            "node": "addding_next_day",
             "type": "main",
             "index": 0
           }
@@ -231,6 +244,17 @@
           }
         ]
       ]
+    },
+    "addding_next_day": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -240,5 +264,5 @@
     "callerPolicy": "workflowsFromSameOwner"
   },
   "createdAt": "2025-03-30T06:09:32.007Z",
-  "updatedAt": "2025-06-19T11:38:53.829Z"
+  "updatedAt": "2025-06-24T13:45:48.697Z"
 }
