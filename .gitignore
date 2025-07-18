@@ -13,10 +13,52 @@
 
 # Environment and Configuration
 .env
+.env.*
 .env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+environment.js
+environment.ts
+config.json
+config.yaml
+config.yml
 
 # Secrets and Credentials
 *.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+*.der
+*.jks
+*.keystore
+*.truststore
+secrets/
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+credentials.yaml
+credentials.yml
+auth.json
+auth.yaml
+auth.yml
+*.secret
+*.secrets
+api-keys.json
+api-keys.yaml
+api-keys.yml
+service-account.json
+service-account-key.json
+gcp-service-account.json
+aws-credentials
+.aws/
+.gcp/
+.azure/
 
 # Logs and Temporary Files
 *.log
