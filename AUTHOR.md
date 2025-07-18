@@ -42,7 +42,7 @@ Beyond the code, these are the principles that guide me:
 
 ---
 
-## ️‍♂️ My Current Kettlebell Workout Plan
+## My Current Kettlebell Workout Plan
 
 After six years of training, I believe kettlebells are the most effective tool for all-around fitness. Here is the hypertrophy-focused program I'm currently running.
 
