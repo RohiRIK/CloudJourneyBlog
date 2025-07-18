@@ -1,0 +1,55 @@
+services:
+  test:
+    image: nginx:latest
+    container_name: watchtower-test
+    networks: ['core-net']
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      # Traefik labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.test-nginx.rule=Host(`test.rohi.life`)"  # Domain name
+      - "traefik.http.routers.test-nginx.entrypoints=websecure"  # HTTPS entry point
+      - "traefik.http.routers.test-nginx.tls=true"  # Enable TLS/SSL
+      - "traefik.http.routers.test-nginx.tls.certresolver=myresolver"  # Let's Encrypt
+      - "traefik.http.services.test-nginx.loadbalancer.server.port=80"  # Internal port
+      #- "traefik.http.routers.test-nginx.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"  # Security middlewares
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.test-nginx-http.rule=Host(`test.rohi.life`)"  # HTTP rule
+      - "traefik.http.routers.test-nginx-http.entrypoints=web"  # HTTP entry point
+      - "traefik.http.routers.test-nginx-http.middlewares=https-redirect@file"  # Redirect to HTTPS
+      
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"  # Enable auto-updates
+      - "com.centurylinklabs.watchtower.cleanup=true"  # Clean up old images
+      - "com.centurylinklabs.watchtower.debug=true"  # Enable debug logging
+      - "com.centurylinklabs.watchtower.interval=300"  # Check every 5 minutes
+      - "com.centurylinklabs.watchtower.revive-stopped=true"  # Restart if stopped
+      - "com.centurylinklabs.watchtower.rolling-restart=true"  # Rolling restart
+    volumes:
+      - ./html:/usr/share/nginx/html  # Mount custom web content
+    environment:
+      - TZ=Asia/Jerusalem
+    healthcheck:
+      test: ["CMD-SHELL", "service nginx status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  core-net:
+    external: true

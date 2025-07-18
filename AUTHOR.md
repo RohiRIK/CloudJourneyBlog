@@ -21,16 +21,15 @@ My goal is to transition into a full-time **Automation Engineer** role where I c
 
 ## ️ My Tech Toolkit
 
-These are the tools and technologies I'm most excited about right now.
+Here are the tools and technologies I use to build, automate, and stay productive.
 
-* **Automation & iPaaS:** n8n, Zapier, Make, Microsoft Power Automate, IFTTT
-* **DevOps & Infra:** Docker, Portainer, Traefik (as a reverse proxy)
-* **Hardware:** Intel NUC (i9), OrangePi 5 and OrangePi 3 LTS
-* **Productivity:** Notion (I'm a big believer in the "Second Brain" methodology), Raycast AI
-  * **Cloud:** Primarily Microsoft Azure, with a focus on:
-  * **Microsoft Entra ID (Identity & Access Management)**
-  * **Microsoft Intune (Endpoint Management)**
-  * **Also have experience with AWS and Google Cloud.**
+*   **Homelab & Core Infra:** My personal playground runs on an **Intel NUC (i9)** and a cluster of **OrangePis (5 & 3 LTS)**. I use **Docker** and **Portainer** for container orchestration and **Traefik** as my go-to reverse proxy for exposing services securely.
+
+*   **Automation & iPaaS:** I'm passionate about connecting everything. **n8n** is my current tool of choice for building complex workflows and AI agents. I also have extensive experience with **Zapier**, **Make**, **Power Automate**, and **IFTTT**.
+
+*   **Cloud:** My primary expertise is in **Microsoft Azure**, where I focus on **Entra ID (Identity & Access)** and **Intune (Endpoint Management)**. I also have hands-on experience with **AWS** and **Google Cloud**.
+
+*   **Productivity:** I run my life on the "Second Brain" methodology using **Notion**. **Raycast AI** is my secret weapon for staying efficient on my Mac.
 
 ---
 

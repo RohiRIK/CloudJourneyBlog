@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traefik & Watchtower Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f4f8;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 700px;
+            width: 100%;
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .status {
+            background-color: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .labels {
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Traefik & Watchtower Test Container</h1>
+        
+        <div class="status">
+            <p><strong>Status:</strong> The test container is running successfully!</p>
+            <p><strong>Container name:</strong> watchtower-test</p>
+            <p><strong>Image:</strong> nginx:latest</p>
+        </div>
+        
+        <p>This container demonstrates the integration between Nginx, Traefik, and Watchtower in your home lab environment.</p>
+        
+        <div class="labels">
+            <h3>Active Labels:</h3>
+            <p><strong>Routing:</strong> This container is accessible through <code>test.rohi.life</code></p>
+            <p><strong>Security:</strong> Using HTTPS with Let's Encrypt certificates</p>
+            <p><strong>Auto-updates:</strong> Watchtower will automatically check for updates every 5 minutes</p>
+        </div>
+    </div>
+</body>
+</html> 

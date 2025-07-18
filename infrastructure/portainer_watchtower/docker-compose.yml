@@ -1,0 +1,363 @@
+volumes:
+  # Portainer
+  portainer_data:
+  # Mongo
+  mongo-data:
+  mongo-config:
+  # Core
+  repo-cache:
+  # Grafana
+  postgres_storage:
+  grafana_data:
+  prometheus_data:
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    networks:
+      - portainer_internal
+      - traefik_public
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      # Traefik labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.rohi.life`)"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.routers.portainer.tls.certresolver=myresolver"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.routers.portainer.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.portainer-http.rule=Host(`portainer.rohi.life`)"
+      - "traefik.http.routers.portainer-http.entrypoints=web"
+      - "traefik.http.routers.portainer-http.middlewares=https-redirect@file"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower to automatically update this container
+      - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Update at 4 AM only
+    environment:
+      - WEBSOCKET_TLS_VERIFY=false
+      - TZ=Asia/Jerusalem
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    ports:
+      - "9000:9000"
+      - "9443:9443"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --no-verbose --tries=1 --spider http://portainer:9000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    networks: ['portainer_internal'] # Consider adding other networks if you want it to resolve names on them, though usually not needed for Watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --interval 300 --label-enable --debug # Checks every 5 mins, only watches containers with enable label
+    environment:
+      - TZ=Asia/Jerusalem
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower to update itself
+      - "com.centurylinklabs.watchtower.cleanup=true" # Remove old images after updating
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    restart: unless-stopped
+    networks:
+      - portainer_internal
+    logging:
+      driver: ${COMPOSE_LOGGING_DRIVER:-local}
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DB_PASSWORD}
+    labels:
+      - "komodo.skip" # Prevent Komodo from stopping with StopAllContainers
+      - "com.centurylinklabs.watchtower.enable=true" # Will be updated by Watchtower based on its check interval
+      - "com.centurylinklabs.watchtower.lifecycle.pre-update=echo Updating {{.Container.Name}} from {{.Image.Name}}:{{.Image.Tag}}"
+      - "com.centurylinklabs.watchtower.lifecycle.post-update=echo Updated {{.Container.Name}} to {{.Image.Name}}:{{.Image.Tag}}"
+    security_opt:
+      - no-new-privileges:true
+
+  core:
+    image: ghcr.io/moghtech/komodo-core:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    container_name: komodo-core
+    networks:
+      - portainer_internal
+      - traefik_public
+    labels:
+      - "komodo.skip"
+      # traefik labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.core.rule=Host(`komodo.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.core.entrypoints=websecure"
+      - "traefik.http.routers.core.tls=true"
+      - "traefik.http.routers.core.tls.certresolver=myresolver"
+      - "traefik.http.services.core.loadbalancer.server.port=9120"
+      - "traefik.http.services.core.loadbalancer.server.scheme=http"
+      - "traefik.docker.network=traefik_public"
+      # http to https redirect
+      - "traefik.http.routers.core-http.rule=Host(`komodo.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.core-http.entrypoints=web"
+      - "traefik.http.routers.core-http.middlewares=https-redirect@file"
+      # security middlewares
+      - "traefik.http.routers.core.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.schedule=0 3 * * 4" # Update every Thursday at 03:00 AM
+      - "com.centurylinklabs.watchtower.lifecycle.pre-update=echo Updating {{.Container.Name}} from {{.Image.Name}}:{{.Image.Tag}}"
+      - "com.centurylinklabs.watchtower.lifecycle.post-update=echo Updated {{.Container.Name}} to {{.Image.Name}}:{{.Image.Tag}}"
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    logging:
+      driver: ${COMPOSE_LOGGING_DRIVER:-local}
+    ports:
+      - 9120:9120
+    env_file: ./.env
+    environment:
+      KOMODO_DATABASE_ADDRESS: mongo:27017
+      KOMODO_DATABASE_USERNAME: ${KOMODO_DB_USERNAME}
+      KOMODO_DATABASE_PASSWORD: ${KOMODO_DB_PASSWORD}
+    volumes:
+      - repo-cache:/repo-cache
+    security_opt:
+      - no-new-privileges:true
+
+  periphery:
+    container_name: komodo-periphery
+    image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    networks:
+      - portainer_internal
+    labels:
+      - "komodo.skip"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.schedule=0 3 * * 4" # Update every Thursday at 03:00 AM
+      - "com.centurylinklabs.watchtower.lifecycle.pre-update=echo Updating {{.Container.Name}} from {{.Image.Name}}:{{.Image.Tag}}"
+      - "com.centurylinklabs.watchtower.lifecycle.post-update=echo Updated {{.Container.Name}} to {{.Image.Name}}:{{.Image.Tag}}"
+    restart: unless-stopped
+    logging:
+      driver: ${COMPOSE_LOGGING_DRIVER:-local}
+    env_file: ./.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+    security_opt:
+      - no-new-privileges:true
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cadvisor.rule=Host(`cadvisor.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.cadvisor.entrypoints=websecure"
+      - "traefik.http.routers.cadvisor.tls=true"
+      - "traefik.http.routers.cadvisor.tls.certresolver=myresolver"
+      - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
+      - "traefik.http.services.cadvisor.loadbalancer.server.scheme=http"
+      - "traefik.docker.network=traefik_public"
+      # Security middlewares
+      - "traefik.http.routers.cadvisor.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.cadvisor-http.rule=Host(`cadvisor.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.cadvisor-http.entrypoints=web"
+      - "traefik.http.routers.cadvisor-http.middlewares=https-redirect@file"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.schedule=0 3 * * 4" # Update every Thursday at 03:00 AM
+      - "com.centurylinklabs.watchtower.lifecycle.pre-update=echo Updating {{.Container.Name}} from {{.Image.Name}}:{{.Image.Tag}}"
+      - "com.centurylinklabs.watchtower.lifecycle.post-update=echo Updated {{.Container.Name}} to {{.Image.Name}}:{{.Image.Tag}}"
+    networks:
+      - n8n_internal
+      - grafana_internal
+      - traefik_public
+    ports:
+      - "7070:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro # Make sure cgroup v2 is used or adjust path
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true # Required for cAdvisor to access Docker stats
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    # No security_opt: - seccomp=unconfined here, privileged implies a lot already.
+    # If you want to restrict it despite privileged, you'd need a custom seccomp profile.
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    networks:
+      - grafana_internal
+      - traefik_public
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS}
+      - GF_SERVER_DOMAIN=${GF_SERVER_DOMAIN} # Ensure this is set, or use GF_SERVER_ROOT_URL
+    labels:
+      # Traefik labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik_public"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.http.routers.grafana.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.grafana-http.rule=Host(`grafana.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.grafana-http.entrypoints=web"
+      - "traefik.http.routers.grafana-http.middlewares=https-redirect@file"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower to automatically update this container
+      - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Update at 4 AM only
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true # Changed from seccomp:unconfined unless specific plugins require it
+    logging:
+      driver: ${COMPOSE_LOGGING_DRIVER:-local}
+    env_file: ./.env
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-grafana
+    networks:
+      - grafana_internal
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    volumes:
+      - postgres_storage:/var/lib/postgresql/data
+      - ./scripts/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    labels:
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower to automatically update this container
+      - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Update at 4 AM only
+    security_opt:
+      - no-new-privileges:true # Changed from seccomp:unconfined
+    logging:
+      driver: ${COMPOSE_LOGGING_DRIVER:-local}
+    env_file: ./.env
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    networks:
+      - grafana_internal
+      - traefik_public
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    # PROMETHEUS_RETENTION_TIME is passed via command arguments, not environment by default for this image
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_RETENTION_TIME:-30d}' # Added default if var is not set
+    restart: unless-stopped
+    labels:
+      # Traefik labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik_public"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.http.routers.prometheus.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.prometheus-http.rule=Host(`prometheus.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.prometheus-http.entrypoints=web"
+      - "traefik.http.routers.prometheus-http.middlewares=https-redirect@file"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower to automatically update this container
+      - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Update at 4 AM only
+    security_opt:
+      - no-new-privileges:true # Changed from seccomp:unconfined
+    logging:
+      driver: ${COMPOSE_LOGGING_DRIVER:-local}
+    env_file: ./.env
+
+networks:
+  portainer_internal:
+    name: portainer_internal
+    driver: bridge
+    # ipam: # Generally not needed unless you have specific IP requirements
+    #   driver: default
+      # config:
+      #   - subnet: 172.26.0.0/27
+    driver_opts:
+      com.docker.network.bridge.name: portainer-br
+      # encrypted: "true" # Note: Native Docker network encryption is for Swarm overlay networks, not bridge networks.
+                          # For bridge networks, encryption is typically handled at the application layer (TLS) or via WireGuard/IPsec tunnels.
+    external: false
+
+  grafana_internal:
+    name: grafana_internal
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: grafana-br
+      # encrypted: "true" # Same note as above regarding bridge network encryption
+    external: false
+
+  n8n_internal:
+    name: n8n_internal
+    external: true # Assuming this network is created and managed elsewhere
+
+  traefik_public:
+    name: traefik_public # It's good practice to also name external networks in your compose if you define them
+    external: true
+    # driver: bridge # Not needed when external: true, Docker uses existing config
+    # driver_opts: # Not needed when external: true
+    #   com.docker.network.bridge.name: traefik-br
+    #   encrypted: "true" # Same note as above
