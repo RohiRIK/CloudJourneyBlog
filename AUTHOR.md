@@ -12,10 +12,10 @@ Today, I channel that passion into securing cloud environments and automating ev
 
 My goal is to transition into a full-time **Automation Engineer** role where I can build, innovate, and solve complex problems.
 
-* **‍ Building with n8n:** I'm currently creating complex workflows and AI agents, with a goal of publishing at least 5 of them as open-source projects. My first project is a fully automated blog posting workflow.
-* ** Homelab Projects:** Constantly expanding my homelab setup. It's my personal playground for learning new technologies like Docker, Traefik, and Portainer on my Intel NUC.
-* **️‍♂️ Fitness & Health:** On a mission to be in the best shape of my life by 31. Kettlebells are my tool of choice for building functional strength. (You can see my current workout plan below!)
-* ** Life & Travel:** Planning to relocate to a quieter, nature-focused environment by 2026, hopefully after a trip to Japan!
+**‍Building with n8n:** I'm currently creating complex workflows and AI agents, with a goal of publishing at least 5 of them as open-source projects. My first project is a fully automated blog posting workflow.
+**Homelab Projects:** Constantly expanding my homelab setup. It's my personal playground for learning new technologies like Docker, Traefik, and Portainer on my Intel NUC.
+**Fitness & Health:** On a mission to be in the best shape of my life by 31. Kettlebells are my tool of choice for building functional strength. (You can see my current workout plan below!)
+**Life & Travel:** Planning to relocate to a quieter, nature-focused environment by 2026, hopefully after a trip to Japan!
 
 ---
 
@@ -23,11 +23,14 @@ My goal is to transition into a full-time **Automation Engineer** role where I c
 
 These are the tools and technologies I'm most excited about right now.
 
-* **Automation:** n8n, Node-RED, Home Assistant
+* **Automation & iPaaS:** n8n, Zapier, Make, Microsoft Power Automate, IFTTT
 * **DevOps & Infra:** Docker, Portainer, Traefik (as a reverse proxy)
-* **Hardware:** Intel NUC (i9), OrangePi
+* **Hardware:** Intel NUC (i9), OrangePi 5 and OrangePi 3 LTS
 * **Productivity:** Notion (I'm a big believer in the "Second Brain" methodology), Raycast AI
-* **Cloud:** AWS, Azure, Google Cloud (with a focus on Security)
+  * **Cloud:** Primarily Microsoft Azure, with a focus on:
+  * **Microsoft Entra ID (Identity & Access Management)**
+  * **Microsoft Intune (Endpoint Management)**
+  * **Also have experience with AWS and Google Cloud.**
 
 ---
 
@@ -42,7 +45,7 @@ Beyond the code, these are the principles that guide me:
 
 ---
 
-## ️‍♂️ My Current Kettlebell Workout Plan
+## My Current Kettlebell Workout Plan
 
 After six years of training, I believe kettlebells are the most effective tool for all-around fitness. Here is the hypertrophy-focused program I'm currently running.
 
