@@ -1,13 +1,3 @@
-You've made an excellent point. The "What I'm Focused On Now" and "My Tech Toolkit" sections do have some overlap. A great README should have each section serve a distinct purpose.
-
-I've refactored these sections to eliminate the redundancy. Now, the "Focused On" section describes your *goals and active projects* (the "what"), while the "Tech Toolkit" serves as a clean, detailed inventory of the technologies you use to achieve them (the "how").
-
-This makes the entire document flow more logically and professionally.
-
-Here is the complete, revised `README.md` file:
-
----
-
 # Hey there! I'm Rohi Rikman
 
 I'm a **Cloud Security Engineer** and **Automation Enthusiast** from Israel with a passion for building efficient, creative solutions.
@@ -29,7 +19,7 @@ My primary goal is transitioning into a full-time **Automation Engineer** role. 
 
 ---
 
-## 🛠️ My Tech Toolkit
+## My Tech Toolkit
 
 Here are the tools and technologies I use to build, automate, and stay productive.
 
@@ -62,9 +52,17 @@ Beyond the code, these are the principles that guide me:
 
 ---
 
+## My Kettlebell Philosophy
+
+I believe kettlebells are the ultimate tool for building real-world, functional strength with maximum efficiency. My approach is simple:
+
+The Bell as an External Joint: The kettlebell's offset center of gravity forces your body to control it like an unstable joint. This simple fact triggers constant, deep core engagement to stabilize every single movement.
+
+Total Body Integration: Every exercise is a full-body event. A set of swings builds explosive power in your hips, strengthens your entire posterior chain, and provides a powerful cardio workout—all at once. It's the key to achieving profound results in minimal time.
+
 ## My Current Kettlebell Workout Plan
 
-After six years of training, I believe kettlebells are the most effective tool for all-around fitness. Here is the hypertrophy-focused program I'm currently running.
+Here is the hypertrophy-focused program I'm currently running.
 
 ### Phase: Hypertrophy & Conditioning
 
@@ -94,4 +92,4 @@ After six years of training, I believe kettlebells are the most effective tool f
 
 ## Let's Connect
 
-I'm always open to collaborating on interesting automation projects or just chatting about kettlebells, coffee, and homelabs. Feel free to reach out!
+I'm always open to collaborating on interesting automation projects or just chatting about kettlebells, coffee, and homelabs. Feel free to reach out via [Email](mailto:rohi504@gmail.com) or connect with me on [LinkedIn](www.linkedin.com/in/rohi-rikman-48831b239).
