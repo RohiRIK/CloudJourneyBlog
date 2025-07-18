@@ -23,11 +23,14 @@ My goal is to transition into a full-time **Automation Engineer** role where I c
 
 These are the tools and technologies I'm most excited about right now.
 
-* **Automation:** n8n, Node-RED, Home Assistant
+* **Automation & iPaaS:** n8n, Zapier, Make, Microsoft Power Automate, IFTTT
 * **DevOps & Infra:** Docker, Portainer, Traefik (as a reverse proxy)
-* **Hardware:** Intel NUC (i9), OrangePi
+* **Hardware:** Intel NUC (i9), OrangePi 5 and OrangePi 3 LTS
 * **Productivity:** Notion (I'm a big believer in the "Second Brain" methodology), Raycast AI
-* **Cloud:** AWS, Azure, Google Cloud (with a focus on Security)
+  * **Cloud:** Primarily Microsoft Azure, with a focus on:
+  * **Microsoft Entra ID (Identity & Access Management)**
+  * **Microsoft Intune (Endpoint Management)**
+  * **Also have experience with AWS and Google Cloud.**
 
 ---
 
