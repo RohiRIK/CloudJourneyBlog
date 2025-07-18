@@ -14,7 +14,7 @@ My goal is to transition into a full-time **Automation Engineer** role where I c
 
 * **‍ Building with n8n:** I'm currently creating complex workflows and AI agents, with a goal of publishing at least 5 of them as open-source projects. My first project is a fully automated blog posting workflow.
 * ** Homelab Projects:** Constantly expanding my homelab setup. It's my personal playground for learning new technologies like Docker, Traefik, and Portainer on my Intel NUC.
-* **️‍♂️ Fitness & Health:** On a mission to be in the best shape of my life by 31. Kettlebells are my tool of choice for building functional strength. (You can see my current workout plan below!)
+* ** Fitness & Health:** On a mission to be in the best shape of my life by 31. Kettlebells are my tool of choice for building functional strength. (You can see my current workout plan below!)
 * ** Life & Travel:** Planning to relocate to a quieter, nature-focused environment by 2026, hopefully after a trip to Japan!
 
 ---
