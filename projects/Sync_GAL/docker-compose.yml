@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CLIENT_ID=50baca19-4b83-4bae-af23-a30cf80b7519
+    secrets:
+      - certificate
+      - tenant_id
+      - certificate_thumbprint
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+
+secrets:
+  certificate:
+    file: ./secrets/certificate.pem
+  tenant_id:
+    file: ./secrets/tenant_id.txt
+  certificate_thumbprint:
+    file: ./secrets/certificate_thumbprint.txt
