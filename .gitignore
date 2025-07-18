@@ -19,6 +19,8 @@
 .env.production
 .env.staging
 .env.test
+# But allow .env.example files
+!.env.example
 environment.js
 environment.ts
 config.json
