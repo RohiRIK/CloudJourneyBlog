@@ -27,7 +27,7 @@ jobs:
           POST_NAME: ${{ github.event.client_payload.name }}
         run: |
             # --- Basic Validation ---
-            if [[ -z "$POST_TOPIC" || -z "$POST_NAME" || -z "$POST_CONTENT" ]]; then
+            if [[ -z "$POST_TOPIC" || -z "$POST_NAME" ]]; then
             echo "Error: 'topic', 'name', and 'content' must be provided in the payload."
             exit 1
             fi
