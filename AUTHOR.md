@@ -92,4 +92,4 @@ Here is the hypertrophy-focused program I'm currently running.
 
 ## Let's Connect
 
-I'm always open to collaborating on interesting automation projects or just chatting about kettlebells, coffee, and homelabs. Feel free to reach out via [Email](mailto:rohi504@gmail.com) or connect with me on [LinkedIn](www.linkedin.com/in/rohi-rikman-48831b239).
+I'm always open to collaborating on interesting automation projects or just chatting about kettlebells, coffee, and homelabs. Feel free to reach out via [Email](mailto:108658615+RohiRIK@users.noreply.github.com) or connect with me on [LinkedIn](www.linkedin.com/in/rohi-rikman-48831b239).

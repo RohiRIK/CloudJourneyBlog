@@ -1,0 +1,82 @@
+version: "3.7"
+
+services:
+  # caddy:
+  #   container_name: caddy
+  #   image: docker.io/library/caddy:2-alpine
+  #   network_mode: host
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./Caddyfile:/etc/caddy/Caddyfile:ro
+  #     - caddy-data:/data:rw
+  #     - caddy-config:/config:rw
+  #   environment:
+  #     - SEARXNG_HOSTNAME=${SEARXNG_HOSTNAME:-http://localhost}
+  #     - SEARXNG_TLS=${LETSENCRYPT_EMAIL:-internal}
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "1m"
+  #       max-file: "1"
+
+  redis:
+    container_name: redis
+    image: docker.io/valkey/valkey:8-alpine
+    command: valkey-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - searxng
+    volumes:
+      - valkey-data2:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    networks:
+      - traefik_public
+      - searxng
+    #ports:
+    #  - "127.0.0.1:8081:8080"
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-localhost}/
+      - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
+      - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    labels: 
+      # Traefik labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.searxng.rule=Host(`searxng.${TRAEFIK_DOMAIN}`)"  # Domain name
+      - "traefik.http.routers.searxng.entrypoints=websecure"  # HTTPS entry point
+      - "traefik.http.routers.searxng.tls=true"  # Enable TLS/SSL
+      - "traefik.http.routers.searxng.tls.certresolver=myresolver"  # Let's Encrypt
+      - "traefik.docker.network=traefik_public"  # Specify which network Traefik should use
+      - "traefik.http.services.searxng.loadbalancer.server.port=8080"  # Internal port
+      - "traefik.http.routers.searxng.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"  # Security
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.searxng-http.rule=Host(`searxng.${TRAEFIK_DOMAIN}`)"  # HTTP rule
+      - "traefik.http.routers.searxng-http.entrypoints=web"  # HTTP entry point
+      - "traefik.http.routers.searxng-http.middlewares=https-redirect@file"  # Redirect to HTTPS
+
+      # watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+
+    
+networks:
+  searxng:
+  traefik_public:
+    external: true
+
+volumes:
+  valkey-data2:

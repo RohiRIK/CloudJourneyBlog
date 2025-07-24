@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  fabric-backend:
+    build: ./backend
+    command: ["sh", "-c", "touch /root/.config/fabric/.env && ./fabric --serve --address=0.0.0.0:8080"]
+    ports:
+      - "8080:8080"
+      - "5173:5173"
+    volumes:
+      - fabric_data:/root/.config/fabric
+    environment:
+      - FABRIC_ENV=production
+
+volumes:
+  fabric_data:

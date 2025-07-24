@@ -1,0 +1,76 @@
+# .github/workflows/sort-blog.yml
+
+name: Create and Sort New Blog Post
+
+# This action is triggered by a repository_dispatch event.
+on:
+  repository_dispatch:
+    types: [new-blog-post]
+
+jobs:
+  create-and-commit:
+    runs-on: ubuntu-latest
+
+    # Permissions needed to check out code and push changes.
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Blog Post File
+        # We pass the content as an environment variable to safely handle
+        # special characters, quotes, and multiple lines.
+        env:
+          POST_TOPIC: ${{ github.event.client_payload.topic }}
+          POST_NAME: ${{ github.event.client_payload.name }}
+        run: |
+            # --- Basic Validation ---
+            if [[ -z "$POST_TOPIC" || -z "$POST_NAME" || -z "$POST_CONTENT" ]]; then
+            echo "Error: 'topic', 'name', and 'content' must be provided in the payload."
+            exit 1
+            fi
+
+            # --- Security Sanitization ---
+            # Sanitize inputs to prevent path traversal attacks (e.g., ../../).
+            # Allows alphanumeric, underscores, hyphens.
+            SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
+            # Allows alphanumeric, underscores, hyphens, and dots for file extensions.
+            SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
+            SAFE_NAME=$(echo "$POST_NAME" | tr -cd '[:alnum:]_.-')
+
+            if [[ "$SAFE_TOPIC" != "$POST_TOPIC" || "$SAFE_NAME" != "$POST_NAME" ]]; then
+            echo "Error: Invalid characters detected in 'topic' or 'name'. Use only letters, numbers, hyphens, and underscores."
+            exit 1
+            fi
+            
+            if [[ "$SAFE_NAME" != *.md ]]; then
+            echo "Error: Blog post file name must end with .md"
+            exit 1
+            fi
+            # --- Define Paths ---
+            TARGET_DIR="content/blogs/$SAFE_TOPIC"
+            TARGET_FILE="$TARGET_DIR/$SAFE_NAME"
+
+            echo "Target file will be: $TARGET_FILE"
+
+            # --- Create topic directory if it doesn't exist ---
+            mkdir -p "$TARGET_DIR"
+
+            # --- Move the Markdown file if it exists in the repo root ---
+            if [ -f "$SAFE_NAME" ]; then
+            echo "Moving $SAFE_NAME to $TARGET_FILE"
+            mv "$SAFE_NAME" "$TARGET_FILE"
+            echo "File moved successfully."
+            else
+            echo "Error: File '$SAFE_NAME' does not exist in the repository root. Aborting."
+            exit 1
+            fi
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "feat: Create blog post '${{ github.event.client_payload.name }}' in topic '${{ github.event.client_payload.topic }}'"
+          branch: main
+          file_pattern: 'content/blogs/**/*'
