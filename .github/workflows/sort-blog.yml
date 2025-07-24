@@ -58,15 +58,16 @@ jobs:
             # --- Create topic directory if it doesn't exist ---
             mkdir -p "$TARGET_DIR"
 
-            # --- Move the Markdown file if it exists in content/blogs ---
+            # --- Move the Markdown file from content/blogs/ to topic folder ---
             SOURCE_FILE="content/blogs/$SAFE_NAME"
             if [ -f "$SOURCE_FILE" ]; then
-            echo "Moving $SOURCE_FILE to $TARGET_FILE"
-            mv "$SOURCE_FILE" "$TARGET_FILE"
-            echo "File moved successfully."
+              echo "Moving $SOURCE_FILE to $TARGET_FILE"
+              mkdir -p "$TARGET_DIR"
+              mv "$SOURCE_FILE" "$TARGET_FILE"
+              echo "File moved successfully."
             else
-            echo "Error: File '$SAFE_NAME' does not exist in content/blogs. Aborting."
-            exit 1
+              echo "Error: File '$SAFE_NAME' does not exist in content/blogs. Aborting."
+              exit 1
             fi
 
       - name: Commit and Push Changes
