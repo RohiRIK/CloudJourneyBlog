@@ -5,12 +5,11 @@ services:
     image: fabric-ai:latest
     command: ["./fabric", "--serve", "--address=0.0.0.0:8999"]
     ports:
-      - "8999:8080"
-      - "5173:5173"
+      - "8999:8999"   # Fabric API port
+      - "5173:5173"   # Web UI port (if used)
     volumes:
       - fabric_data:/root/.config/fabric
-    environment:
-      - FABRIC_ENV=production
+    env_file:
       - .env
     networks:
       - fabric_network
@@ -18,21 +17,18 @@ services:
     restart: unless-stopped
     labels: 
       # Traefik labels
-      - "traefik.enable=true"
-      - "traefik.http.routers.fabric-ai.rule=Host(`${FABRIC_AI_SUBDOMAIN}.${TRAEFIK_DOMAIN}`)"  # Domain name
-      - "traefik.http.routers.fabric-ai.entrypoints=websecure"  # HTTPS entry point
-      - "traefik.http.routers.fabric-ai.tls=true"  # Enable TLS/SSL
-      - "traefik.http.routers.fabric-ai.tls.certresolver=myresolver"  # Let's Encrypt
-      - "traefik.docker.network=traefik_public"  # Specify which network Traefik should use
-      - "traefik.http.services.fabric-ai.loadbalancer.server.port=8999"  # Internal port
-      - "traefik.http.routers.fabric-ai.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"  # Security
-      # HTTP to HTTPS redirect
-      - "traefik.http.routers.fabric-ai-http.rule=Host(`${FABRIC_AI_SUBDOMAIN}.${TRAEFIK_DOMAIN}`)"  # HTTP rule
-      - "traefik.http.routers.fabric-ai-http.entrypoints=web"  # HTTP entry point
-      - "traefik.http.routers.fabric-ai-http.middlewares=https-redirect@file"  # Redirect to HTTPS
-
-      # watchtower labels 
-      - "com.centurylinklabs.watchtower.enable=true"
+        - "traefik.enable=true"
+        - "traefik.http.routers.fabric-ai.rule=Host(\"${FABRIC_AI_SUBDOMAIN}.${TRAEFIK_DOMAIN}\")"
+        - "traefik.http.routers.fabric-ai.entrypoints=websecure"
+        - "traefik.http.routers.fabric-ai.tls=true"
+        - "traefik.http.routers.fabric-ai.tls.certresolver=myresolver"
+        - "traefik.docker.network=traefik_public"
+        - "traefik.http.services.fabric-ai.loadbalancer.server.port=8999"
+        - "traefik.http.routers.fabric-ai.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+        - "traefik.http.routers.fabric-ai-http.rule=Host(\"${FABRIC_AI_SUBDOMAIN}.${TRAEFIK_DOMAIN}\")"
+        - "traefik.http.routers.fabric-ai-http.entrypoints=web"
+        - "traefik.http.routers.fabric-ai-http.middlewares=https-redirect@file"
+        - "com.centurylinklabs.watchtower.enable=true"
 
 volumes:
   fabric_data:

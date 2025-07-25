@@ -13,7 +13,7 @@ When triggered, the workflow performs these steps:
    Checks out the latest code from your repository.
 
 3. **Input Validation:**  
-   Ensures the required fields (`topic`, `name`, and `content`) are present in the payload.
+   Ensures the required fields (`topic` and `name`) are present in the payload.
 
 4. **Input Sanitization:**  
    Removes unsafe characters from `topic` and `name` to prevent security issues.
@@ -28,7 +28,7 @@ When triggered, the workflow performs these steps:
    Creates the topic folder if it does not already exist.
 
 8. **Move Existing Markdown File:**  
-   Checks if the Markdown file exists in the repository root.  
+   Checks if the Markdown file exists in `content/blogs/`.  
    If it exists, moves it into the topic folder.  
    If it does not exist, the workflow aborts with an error.
 
@@ -61,20 +61,20 @@ curl -X POST \
   }'
 ```
 
-- `topic`: The folder under `content/blogs/` (only letters, numbers, hyphens, underscores).
-- `name`: The Markdown file name (must end with `.md`).
+* `topic`: The folder under `content/blogs/` (only letters, numbers, hyphens, underscores).
+* `name`: The Markdown file name (must end with `.md`).
 
 **Note:**  
-The Markdown file (`name`) must already exist in the repository root before
+The Markdown file (`name`) must already exist in `content/blogs/` before triggering the workflow.
 
 ### Requirements
 
-- You need a GitHub personal access token (`repo` scope) to authenticate the request.
-- The workflow must exist in your repository.
-- The Markdown file (`name`) must already exist in the repository root before triggering the workflow.
+* You need a GitHub personal access token (`repo` scope) to authenticate the request.
+* The workflow must exist in your repository.
+* The Markdown file (`name`) must already exist in `content/blogs/` before triggering the workflow.
 
 ## Notes
 
-- The workflow will fail if the file already exists in the target folder or if invalid characters are used.
-- All moved posts are committed directly to the `main` branch.
-- This automation helps keep your blog content organized by topic with minimal manual
+* The workflow will fail if the file already exists in the target folder or if invalid characters are used.
+* All moved posts are committed directly to the `main` branch.
+* This automation helps keep your blog content organized by topic with minimal manual effort.

@@ -1,6 +1,6 @@
 # .github/workflows/sort-blog.yml
 
-name: Create and Sort New Blog Post
+name: Sort New Blog Post
 
 # This action is triggered by a repository_dispatch event.
 on:
@@ -19,60 +19,87 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create Blog Post File
+      - name: Sorting Blog Post File
         # We pass the content as an environment variable to safely handle
         # special characters, quotes, and multiple lines.
         env:
           POST_TOPIC: ${{ github.event.client_payload.topic }}
           POST_NAME: ${{ github.event.client_payload.name }}
         run: |
+            log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"; }
+            log "[INFO] Starting blog post sorting automation..."
+            log "[INFO] Received topic: $POST_TOPIC"
+            log "[INFO] Received name: $POST_NAME"
+
             # --- Basic Validation ---
             if [[ -z "$POST_TOPIC" || -z "$POST_NAME" ]]; then
-            echo "Error: 'topic', 'name', and 'content' must be provided in the payload."
-            exit 1
-            fi
-
-            # --- Security Sanitization ---
-            # Sanitize inputs to prevent path traversal attacks (e.g., ../../).
-            # Allows alphanumeric, underscores, hyphens.
-            SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
-            # Allows alphanumeric, underscores, hyphens, and dots for file extensions.
-            SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
-            SAFE_NAME=$(echo "$POST_NAME" | tr -cd '[:alnum:]_.-')
-
-            if [[ "$SAFE_TOPIC" != "$POST_TOPIC" || "$SAFE_NAME" != "$POST_NAME" ]]; then
-            echo "Error: Invalid characters detected in 'topic' or 'name'. Use only letters, numbers, hyphens, and underscores."
-            exit 1
-            fi
-            
-            if [[ "$SAFE_NAME" != *.md ]]; then
-            echo "Error: Blog post file name must end with .md"
-            exit 1
-            fi
-            # --- Define Paths ---
-            TARGET_DIR="content/blogs/$SAFE_TOPIC"
-            TARGET_FILE="$TARGET_DIR/$SAFE_NAME"
-
-            echo "Target file will be: $TARGET_FILE"
-
-            # --- Create topic directory if it doesn't exist ---
-            mkdir -p "$TARGET_DIR"
-
-            # --- Move the Markdown file from content/blogs/ to topic folder ---
-            SOURCE_FILE="content/blogs/$SAFE_NAME"
-            if [ -f "$SOURCE_FILE" ]; then
-              echo "Moving $SOURCE_FILE to $TARGET_FILE"
-              mkdir -p "$TARGET_DIR"
-              mv "$SOURCE_FILE" "$TARGET_FILE"
-              echo "File moved successfully."
-            else
-              echo "Error: File '$SAFE_NAME' does not exist in content/blogs. Aborting."
+              echo "[ERROR] 'topic' and 'name' must be provided in the payload."
               exit 1
             fi
 
+            # --- Security Sanitization ---
+            log "[INFO] Sanitizing input values..."
+            SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
+            SAFE_NAME=$(echo "$POST_NAME" | tr -cd '[:alnum:]_.-')
+
+            log "[INFO] Sanitized topic: $SAFE_TOPIC"
+            log "[INFO] Sanitized name: $SAFE_NAME"
+
+            if [[ "$SAFE_TOPIC" != "$POST_TOPIC" || "$SAFE_NAME" != "$POST_NAME" ]]; then
+              log "[ERROR] Invalid characters detected in 'topic' or 'name'. Use only letters, numbers, hyphens, and underscores."
+              exit 1
+            fi
+
+            if [[ "$SAFE_NAME" != *.md ]]; then
+              log "[ERROR] Blog post file name must end with .md"
+              exit 1
+            fi
+
+            # --- Define Paths ---
+            TARGET_DIR="content/blogs/$SAFE_TOPIC"
+            TARGET_FILE="$TARGET_DIR/$SAFE_NAME"
+            SOURCE_FILE="content/blogs/$SAFE_NAME"
+
+            log "[INFO] Target directory: $TARGET_DIR"
+            log "[INFO] Target file: $TARGET_FILE"
+            log "[INFO] Source file: $SOURCE_FILE"
+
+            # --- Create topic directory if it doesn't exist ---
+            if [ ! -d "$TARGET_DIR" ]; then
+              log "[INFO] Topic directory does not exist. Creating: $TARGET_DIR"
+              mkdir -p "$TARGET_DIR"
+            else
+              log "[INFO] Topic directory already exists: $TARGET_DIR"
+            fi
+
+            # --- Move the Markdown file from content/blogs/ to topic folder ---
+            if [ -f "$SOURCE_FILE" ]; then
+              log "[INFO] Moving $SOURCE_FILE to $TARGET_FILE"
+              mv "$SOURCE_FILE" "$TARGET_FILE"
+              log "[SUCCESS] File moved successfully."
+            else
+              log "[ERROR] File '$SAFE_NAME' does not exist in content/blogs. Aborting."
+              exit 1
+            fi
+            # --- Check if the file if still exists in the source directory ---
+            if [ -f "$TARGET_FILE" ]; then
+              log "[INFO] File exists in the target directory: $TARGET_FILE. Removing from source."
+              rm "$SOURCE_FILE"
+            else
+              log "[ERROR] File '$SAFE_NAME' does not exist in the target directory. Aborting."
+              exit 1
+            fi
+            # --- Add front matter to the Markdown file ---
+            log "[INFO] Adding front matter to the Markdown file..."
+            echo "---" > "$TARGET_FILE"
+            echo "title: '$POST_NAME'" >> "$TARGET_FILE"
+            echo "topic: '$POST_TOPIC'" >> "$TARGET_FILE"
+            echo "date: $(date +'%Y-%m-%d')" >> "$TARGET_FILE"
+            echo "---" >> "$TARGET_FILE"
+            log "[INFO] Front matter added successfully."
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "feat: Create blog post '${{ github.event.client_payload.name }}' in topic '${{ github.event.client_payload.topic }}'"
+          commit_message: "feat: move blog post '${{ github.event.client_payload.name }}' to topic '${{ github.event.client_payload.topic }}'"
           branch: main
           file_pattern: 'content/blogs/**/*'
