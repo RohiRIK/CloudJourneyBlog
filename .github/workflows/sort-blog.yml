@@ -92,7 +92,7 @@ jobs:
             fi
             
             # --- Remove the original file from content/blogs/ ---
-            git rm -f "$SOURCE_FILE" || echo "File not found, skipping"
+            rm -f "$SOURCE_FILE" || echo "File not found, skipping"
 
             # --- Add front matter to the Markdown file ---
             log "[INFO] Adding front matter to the Markdown file..."
