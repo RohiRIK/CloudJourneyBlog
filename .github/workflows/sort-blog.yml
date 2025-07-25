@@ -83,6 +83,10 @@ jobs:
               log "[INFO] Moving $SOURCE_FILE to $TARGET_FILE"
               mv "$SOURCE_FILE" "$TARGET_FILE"
               log "[SUCCESS] File moved successfully."
+              log "[DEBUG] Listing files in source directory after move:"
+              ls -l "content/blogs/"
+              log "[DEBUG] Listing files in target directory after move:"
+              ls -l "$TARGET_DIR"
             else
               log "[ERROR] File '$SAFE_NAME' does not exist in content/blogs. Aborting."
               exit 1
