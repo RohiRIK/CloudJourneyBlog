@@ -36,6 +36,12 @@ jobs:
               echo "[ERROR] 'topic' and 'name' must be provided in the payload."
               exit 1
             fi
+            
+            # --- Clean up: Delete source file if it still exists ---
+            if [ -f "$SOURCE_FILE" ]; then
+              echo "Warning: $SOURCE_FILE still exists after move. Deleting it."
+              rm "$SOURCE_FILE"
+            fi
 
             # --- Security Sanitization ---
             log "[INFO] Sanitizing input values..."
