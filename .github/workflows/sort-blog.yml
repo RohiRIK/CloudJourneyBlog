@@ -85,16 +85,18 @@ jobs:
               log "[INFO] Moving $SOURCE_FILE to $TARGET_FILE"
               mv "$SOURCE_FILE" "$TARGET_FILE"
               log "[SUCCESS] File moved successfully."
-              log "[DEBUG] Listing files in source directory after move:"
-              ls -l "content/blogs/"
-              log "[DEBUG] Listing files in target directory after move:"
-              ls -l "$TARGET_DIR"
             else
               log "[ERROR] File '$SAFE_NAME' does not exist in content/blogs. Aborting."
               exit 1
             fi
             # --- Check if the file if still exists in the source directory ---
-            # The file has already been moved, no need to remove from source.
+            if [ -f "$TARGET_FILE" ]; then
+              log "[INFO] File exists in the target directory: $TARGET_FILE. Removing from source."
+              rm "$SOURCE_FILE"
+            else
+              log "[ERROR] File '$SAFE_NAME' does not exist in the target directory. Aborting."
+              exit 1
+            fi
             # --- Add front matter to the Markdown file ---
             log "[INFO] Adding front matter to the Markdown file..."
             echo "---" > "$TARGET_FILE"
