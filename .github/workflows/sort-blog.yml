@@ -90,7 +90,7 @@ jobs:
               exit 1
             fi
             # --- Check if the file if still exists in the source directory ---
-            if [ -f "$TARGET_FILE" ]; then
+            if [ -f "$SOURCE_FILE" ]; then
               log "[INFO] File exists in the target directory: $TARGET_FILE. Removing from source."
               rm "$SOURCE_FILE"
             else
