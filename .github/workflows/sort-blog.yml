@@ -70,19 +70,36 @@ jobs:
           git mv "$SOURCE_FILE" "$TARGET_FILE"
           log "[SUCCESS] File moved."
 
-          # --- Prepend front matter WITHOUT deleting content ---
+          # --- Add front matter WITHOUT deleting content ---
           log "[INFO] Adding front matter..."
-          POST_CONTENT=$(cat "$TARGET_FILE")
           
-          # Write front matter properly with actual newlines
-          echo "---" > "$TARGET_FILE"
-          echo "title: '$SAFE_NAME'" >> "$TARGET_FILE"
-          echo "topic: '$SAFE_TOPIC'" >> "$TARGET_FILE"
-          echo "date: $(date +'%Y-%m-%d')" >> "$TARGET_FILE"
-          echo "---" >> "$TARGET_FILE"
-          echo "" >> "$TARGET_FILE" # Adds a blank line for readability
-          echo "$POST_CONTENT" >> "$TARGET_FILE"
-          log "[SUCCESS] Front matter added. Automation complete."
+          # Check if file already has front matter
+          if head -1 "$TARGET_FILE" | grep -q "^---$"; then
+            log "[INFO] File already has front matter, skipping..."
+          else
+            # Store the original content
+            POST_CONTENT=$(cat "$TARGET_FILE")
+            
+            # Create a temporary file with front matter
+            TEMP_FILE="${TARGET_FILE}.tmp"
+            
+            # Write front matter and original content
+            {
+              echo "---"
+              echo "title: '${POST_NAME%.md}'"  # Remove .md extension from title
+              echo "topic: '$SAFE_TOPIC'"
+              echo "date: $(date +'%Y-%m-%d')"
+              echo "---"
+              echo ""
+              echo "$POST_CONTENT"
+            } > "$TEMP_FILE"
+            
+            # Replace the original file
+            mv "$TEMP_FILE" "$TARGET_FILE"
+            log "[SUCCESS] Front matter added successfully."
+          fi
+          
+          log "[SUCCESS] Blog post sorting automation complete."
 
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
