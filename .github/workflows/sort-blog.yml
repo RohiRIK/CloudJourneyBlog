@@ -22,97 +22,71 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Sorting Blog Post File
-        # We pass the content as an environment variable to safely handle
-        # special characters, quotes, and multiple lines.
         env:
           POST_TOPIC: ${{ github.event.client_payload.topic }}
           POST_NAME: ${{ github.event.client_payload.name }}
-        # The script will handle the logic of moving the file and adding front matter
         run: |
-            log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"; }
-            log "[INFO] Starting blog post sorting automation..."
-            log "[INFO] Received topic: $POST_TOPIC"
-            log "[INFO] Received name: $POST_NAME"
+          set -e # Exit immediately if a command exits with a non-zero status.
 
-            # --- Basic Validation ---
-            if [[ -z "$POST_TOPIC" || -z "$POST_NAME" ]]; then
-              echo "[ERROR] 'topic' and 'name' must be provided in the payload."
-              exit 1
-            fi
-            
-            # --- Clean up: Delete source file if it still exists ---
-            if [ -f "$SOURCE_FILE" ]; then
-              echo "Warning: $SOURCE_FILE still exists after move. Deleting it."
-              rm "$SOURCE_FILE"
-            fi
+          log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"; }
+          log "[INFO] Starting blog post sorting automation..."
 
-            # --- Security Sanitization ---
-            log "[INFO] Sanitizing input values..."
-            SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
-            SAFE_NAME=$(echo "$POST_NAME" | tr -cd '[:alnum:]_.-')
+          # --- Basic Validation ---
+          if [[ -z "$POST_TOPIC" || -z "$POST_NAME" ]]; then
+            log "[ERROR] 'topic' and 'name' must be provided."
+            exit 1
+          fi
 
-            log "[INFO] Sanitized topic: $SAFE_TOPIC"
-            log "[INFO] Sanitized name: $SAFE_NAME"
+          # --- Security Sanitization ---
+          SAFE_TOPIC=$(echo "$POST_TOPIC" | tr -cd '[:alnum:]_-')
+          SAFE_NAME=$(echo "$POST_NAME" | tr -cd '[:alnum:]_.-')
 
-            if [[ "$SAFE_TOPIC" != "$POST_TOPIC" || "$SAFE_NAME" != "$POST_NAME" ]]; then
-              log "[ERROR] Invalid characters detected in 'topic' or 'name'. Use only letters, numbers, hyphens, and underscores."
-              exit 1
-            fi
+          if [[ "$SAFE_TOPIC" != "$POST_TOPIC" || "$SAFE_NAME" != "$POST_NAME" ]]; then
+            log "[ERROR] Invalid characters detected. Use only letters, numbers, hyphens, and underscores."
+            exit 1
+          fi
+          if [[ "$SAFE_NAME" != *.md ]]; then
+            log "[ERROR] File name must end with .md"
+            exit 1
+          fi
 
-            if [[ "$SAFE_NAME" != *.md ]]; then
-              log "[ERROR] Blog post file name must end with .md"
-              exit 1
-            fi
+          # --- Define Paths ---
+          SOURCE_FILE="content/blogs/$SAFE_NAME"
+          TARGET_DIR="content/blogs/$SAFE_TOPIC"
+          TARGET_FILE="$TARGET_DIR/$SAFE_NAME"
 
-            # --- Define Paths ---
-            TARGET_DIR="content/blogs/$SAFE_TOPIC"
-            TARGET_FILE="$TARGET_DIR/$SAFE_NAME"
-            SOURCE_FILE="content/blogs/$SAFE_NAME"
+          log "[INFO] Source: $SOURCE_FILE"
+          log "[INFO] Target: $TARGET_FILE"
 
-            log "[INFO] Target directory: $TARGET_DIR"
-            log "[INFO] Target file: $TARGET_FILE"
-            log "[INFO] Source file: $SOURCE_FILE"
+          # --- Check if source file exists ---
+          if [ ! -f "$SOURCE_FILE" ]; then
+            log "[ERROR] Source file '$SOURCE_FILE' not found. Aborting."
+            exit 1
+          fi
 
-            # --- Create topic directory if it doesn't exist ---
-            if [ ! -d "$TARGET_DIR" ]; then
-              log "[INFO] Topic directory does not exist. Creating: $TARGET_DIR"
-              mkdir -p "$TARGET_DIR"
-            else
-              log "[INFO] Topic directory already exists: $TARGET_DIR"
-            fi
+          # --- Create target directory and move file with git ---
+          mkdir -p "$TARGET_DIR"
+          log "[INFO] Moving file with 'git mv'..."
+          git mv "$SOURCE_FILE" "$TARGET_FILE"
+          log "[SUCCESS] File moved."
 
-            # --- copy the Markdown file from content/blogs/ to topic folder ---
-            if [ -f "$SOURCE_FILE" ]; then
-              log "[INFO] Copying $SOURCE_FILE to $TARGET_FILE"
-              cp "$SOURCE_FILE" "$TARGET_FILE"
-              log "[SUCCESS] File copied successfully."
-            else
-              log "[ERROR] File '$SAFE_NAME' does not exist in content/blogs. Aborting."
-              exit 1
-            fi
-            
-            # --- Remove the original file from content/blogs/ ---
-            rm -f "$SOURCE_FILE" || echo "File not found, skipping"
-
-            # --- Add front matter to the Markdown file ---
-            log "[INFO] Adding front matter to the Markdown file..."
-            echo "---" > "$TARGET_FILE"
-            echo "title: '$POST_NAME'" >> "$TARGET_FILE"
-            echo "topic: '$POST_TOPIC'" >> "$TARGET_FILE"
-            echo "date: $(date +'%Y-%m-%d')" >> "$TARGET_FILE"
-            echo "---" >> "$TARGET_FILE"
-            log "[INFO] Front matter added successfully."
+          # --- Prepend front matter WITHOUT deleting content ---
+          log "[INFO] Adding front matter..."
+          POST_CONTENT=$(cat "$TARGET_FILE")
+          
+          # Write front matter properly with actual newlines
+          echo "---" > "$TARGET_FILE"
+          echo "title: '$SAFE_NAME'" >> "$TARGET_FILE"
+          echo "topic: '$SAFE_TOPIC'" >> "$TARGET_FILE"
+          echo "date: $(date +'%Y-%m-%d')" >> "$TARGET_FILE"
+          echo "---" >> "$TARGET_FILE"
+          echo "" >> "$TARGET_FILE" # Adds a blank line for readability
+          echo "$POST_CONTENT" >> "$TARGET_FILE"
+          log "[SUCCESS] Front matter added. Automation complete."
 
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "feat: move blog post '${{ github.event.client_payload.name }}' to topic '${{ github.event.client_payload.topic }}'"
           branch: main
-          file_pattern: 'content/blogs/**/*'
-      
-      # - name: Remvove source file
-      #   run: |
-
-      #     git rm content/blogs|| echo "File not found, skipping"
-      #     log "[INFO] Source file removed from content/blogs/"
-      #     log "[INFO] Blog post sorting automation completed successfully."
+          # No file_pattern needed, the action commits all changes by default
