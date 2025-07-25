@@ -27,6 +27,7 @@ jobs:
         env:
           POST_TOPIC: ${{ github.event.client_payload.topic }}
           POST_NAME: ${{ github.event.client_payload.name }}
+        # The script will handle the logic of moving the file and adding front matter
         run: |
             log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"; }
             log "[INFO] Starting blog post sorting automation..."
@@ -80,24 +81,18 @@ jobs:
               log "[INFO] Topic directory already exists: $TARGET_DIR"
             fi
 
-            # --- Move the Markdown file from content/blogs/ to topic folder ---
+            # --- copy the Markdown file from content/blogs/ to topic folder ---
             if [ -f "$SOURCE_FILE" ]; then
-              log "[INFO] Moving $SOURCE_FILE to $TARGET_FILE"
-              mv "$SOURCE_FILE" "$TARGET_FILE"
-              log "[SUCCESS] File moved successfully."
+              log "[INFO] Copying $SOURCE_FILE to $TARGET_FILE"
+              cp "$SOURCE_FILE" "$TARGET_FILE"
+              log "[SUCCESS] File copied successfully."
             else
               log "[ERROR] File '$SAFE_NAME' does not exist in content/blogs. Aborting."
               exit 1
             fi
-            # --- Check if the file if still exists in the source directory ---
-              sleep 10
-            if [ -f "$SOURCE_FILE" ]; then
-              log "[INFO] File exists in the source directory: $SOURCE_FILE. Removing from source."
-              rm "$SOURCE_FILE"
-            else
-              log "[ERROR] File '$SAFE_NAME' does not exist in the source directory. Aborting."
-              exit 1
-            fi
+
+            git rm "$SOURCE_FILE" || echo "File not found, skipping"
+            
             # --- Add front matter to the Markdown file ---
             log "[INFO] Adding front matter to the Markdown file..."
             echo "---" > "$TARGET_FILE"
@@ -106,6 +101,7 @@ jobs:
             echo "date: $(date +'%Y-%m-%d')" >> "$TARGET_FILE"
             echo "---" >> "$TARGET_FILE"
             log "[INFO] Front matter added successfully."
+
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
