@@ -13,7 +13,9 @@ jobs:
 
     # Permissions needed to check out code and push changes.
     permissions:
-      contents: write
+        contents: write
+        issues: write
+        pull-requests: write
 
     steps:
       - name: Checkout repository
@@ -92,13 +94,7 @@ jobs:
               exit 1
             fi
             # --- Check if the file if still exists in the source directory ---
-            if [ -f "$TARGET_FILE" ]; then
-              log "[INFO] File exists in the target directory: $TARGET_FILE. Removing from source."
-              rm "$SOURCE_FILE"
-            else
-              log "[ERROR] File '$SAFE_NAME' does not exist in the target directory. Aborting."
-              exit 1
-            fi
+            # The file has already been moved, no need to remove from source.
             # --- Add front matter to the Markdown file ---
             log "[INFO] Adding front matter to the Markdown file..."
             echo "---" > "$TARGET_FILE"
