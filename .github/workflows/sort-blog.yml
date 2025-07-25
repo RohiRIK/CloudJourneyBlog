@@ -90,11 +90,12 @@ jobs:
               exit 1
             fi
             # --- Check if the file if still exists in the source directory ---
+              sleep 10
             if [ -f "$SOURCE_FILE" ]; then
-              log "[INFO] File exists in the target directory: $TARGET_FILE. Removing from source."
+              log "[INFO] File exists in the source directory: $SOURCE_FILE. Removing from source."
               rm "$SOURCE_FILE"
             else
-              log "[ERROR] File '$SAFE_NAME' does not exist in the target directory. Aborting."
+              log "[ERROR] File '$SAFE_NAME' does not exist in the source directory. Aborting."
               exit 1
             fi
             # --- Add front matter to the Markdown file ---
