@@ -90,9 +90,10 @@ jobs:
               log "[ERROR] File '$SAFE_NAME' does not exist in content/blogs. Aborting."
               exit 1
             fi
-
-            git rm "$SOURCE_FILE" || echo "File not found, skipping"
             
+            # --- Remove the original file from content/blogs/ ---
+            git rm -f "$SOURCE_FILE" || echo "File not found, skipping"
+
             # --- Add front matter to the Markdown file ---
             log "[INFO] Adding front matter to the Markdown file..."
             echo "---" > "$TARGET_FILE"
@@ -108,3 +109,10 @@ jobs:
           commit_message: "feat: move blog post '${{ github.event.client_payload.name }}' to topic '${{ github.event.client_payload.topic }}'"
           branch: main
           file_pattern: 'content/blogs/**/*'
+      
+      # - name: Remvove source file
+      #   run: |
+
+      #     git rm content/blogs|| echo "File not found, skipping"
+      #     log "[INFO] Source file removed from content/blogs/"
+      #     log "[INFO] Blog post sorting automation completed successfully."
