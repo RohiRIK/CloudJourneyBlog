@@ -81,11 +81,6 @@ Knowing Git and GitHub is more than just a technical skill; it's a non-negotiabl
 Git and GitHub can seem a bit intimidating at first, but they are fundamental tools for anyone who writes code. Start small, practice these basic ideas, and you'll quickly see how they make your coding life easier and open up huge opportunities for your career. Happy coding!
 
 ## Sources & Further Reading:
-*   Git Official Documentation
-*   GitHub Guides: Hello World
-*   GitHub Learning Lab
-*   Atlassian Git Tutorials
-*   freeCodeCamp: Git & GitHub for Beginners
 *   [Importance of Git & Github by Adnan Kattekaden on Medium](https://medium.com/@adnankattekaden/importance-of-git-github-3717eff683fb)
 *   [Three reasons why a programming beginner should know Git and GitHub on LinkedIn](https://www.linkedin.com/pulse/three-reasons-why-programming-beginner-should-know-queiroz-caetano-fp7gf)
 *   [Why Every Developer Should Learn Git and Github on acs.dypvp.edu.in](https://acs.dypvp.edu.in/blogs/why-every-developer-should-learn-git-and-github)
