@@ -284,7 +284,3 @@ This setup follows the same license as [Fabric AI](https://github.com/danielmies
 - [Ollama Setup Guide](https://ollama.ai)
 - [Traefik Documentation](https://doc.traefik.io/traefik/)
 - [Docker Compose Reference](https://docs.docker.com/compose/)
-
----
-
-**Need help?** Check the troubleshooting section or open an issue with your logs and configuration.
