@@ -1,15 +1,23 @@
 FROM golang:1.24-alpine AS builder
-RUN apk add --no-cache git nodejs npm
+RUN apk add --no-cache git
 WORKDIR /app
 RUN git clone https://github.com/danielmiessler/Fabric.git .
-WORKDIR /app/web
-RUN npm install && npm run build
-WORKDIR /app
 RUN go build -o fabric ./cmd/fabric
 
-FROM alpine:latest
+FROM node:18-alpine
 WORKDIR /root
-COPY --from=builder /app/fabric .
-COPY --from=builder /app/web/.svelte-kit/output/client/ ./dist
-EXPOSE 8080 5173
-CMD ["./fabric", "--serve", "--address=0.0.0.0:8999"]
+
+# Install git
+RUN apk add --no-cache git
+
+# Copy Fabric source from builder
+COPY --from=builder /app ./fabric-src
+
+# Copy entrypoint script
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
+# Expose both API and Web ports
+EXPOSE 8999 5173
+
+ENTRYPOINT ["./entrypoint.sh"]
