@@ -98,3 +98,11 @@ tasks.md
 
 # obsidian
 .obsidian
+
+# Copilot Instructions (legacy)
+docs/Copilot_Instructions*
+# Buddy AI Assistant Instructions  
+docs/buddy*
+
+projects/TELOS*
+projects/TELOS/TELOS.md
