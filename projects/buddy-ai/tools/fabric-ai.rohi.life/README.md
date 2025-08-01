@@ -14,13 +14,14 @@ Complete guide for using your self-hosted Fabric AI framework for multi-agent co
 ### Test Fabric AI Connection
 ```bash
 # Basic connectivity test (verified working format)
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
       "userInput": "Hello, test connection",
-      "model": "llama3.1:8b"
+      "model": "llama3.1:8b" # Or any other available model
     }],
     "language": "en"
   }'
@@ -36,6 +37,7 @@ curl -X GET https://fabric-ai.rohi.life/patterns/names \
 # Health check
 curl -X GET https://fabric-ai.rohi.life/health \
   -H "X-API-Key: $FABRIC_API_KEY"
+```
 ```
 
 ### Deploy/Restart Fabric AI
@@ -84,29 +86,48 @@ Buddy can dynamically select patterns based on content type:
 - **Social media**: Use engagement-focused patterns
 
 ### Dynamic API Usage
+Buddy will dynamically select the best model and pattern based on your request.
+When you use `run_shell_command` with Fabric AI, Buddy will analyze your `userInput` and choose the most appropriate `model` and `patternName` from the available options.
+
 ```bash
-# Example: Research-optimized request
+# Example: General request (Buddy will choose model and pattern)
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
-      "userInput": "Research query here",
-      "model": "best-research-model-available",
-      "pattern": "researcher-pattern"
+      "userInput": "YOUR_REQUEST_OR_CONTENT_HERE", # Replace with your actual request or content
+      "model": "gemini-2.0-flash-exp", # Buddy will dynamically select the best model
+      "patternName": "summarize" # Buddy will dynamically select the best pattern
     }],
     "language": "en"
   }'
 
-# Example: Content creation request  
+# Example: Research-optimized request (Buddy will choose model and pattern)
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
-      "userInput": "Content creation request",
-      "model": "best-creative-model-available", 
-      "pattern": "publisher-pattern"
+      "userInput": "RESEARCH_QUERY_HERE", # Replace with your actual research query
+      "model": "best-research-model-available", # Buddy will dynamically select the best research model
+      "patternName": "researcher-pattern" # Buddy will dynamically select the best research pattern
+    }],
+    "language": "en"
+  }'
+
+# Example: Content creation request (Buddy will choose model and pattern)
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
+curl -X POST https://fabric-ai.rohi.life/chat \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $FABRIC_API_KEY" \
+  -d '{
+    "prompts": [{
+      "userInput": "CONTENT_CREATION_REQUEST_HERE", # Replace with your actual content creation request
+      "model": "best-creative-model-available", # Buddy will dynamically select the best creative model
+      "patternName": "publisher-pattern" # Buddy will dynamically select the best publishing pattern
     }],
     "language": "en"
   }'
@@ -119,29 +140,30 @@ This setup gives Buddy the capability to:
 3. **Enhance all responses** with appropriate AI assistance
 4. **Adapt to new models/patterns** as they become available
 5. **Provide context-aware** tool selection for maximum efficiency
-# Check if API key is set
-echo "FABRIC_API_KEY: ${FABRIC_API_KEY:-'NOT SET'}"
+## API Key Usage
+To use the `curl` commands below, ensure your `FABRIC_API_KEY` is set as an environment variable.
+You can find this key in `infrastructure/fabric-ai/.env`.
 
-# Set API key temporarily
-export FABRIC_API_KEY="your_api_key_here"
-
-# Add to .env file permanently
-echo "FABRIC_API_KEY=your_api_key_here" >> infrastructure/fabric-ai/.env
+```bash
+# Example: Export the API key (replace with your actual key)
+export FABRIC_API_KEY="Pluh8-Smiss9-Bop2-Tit1-Glesk3-Snund7-Clint7-Stod3"
 ```
 
 ## AI Agent Usage Patterns
+Buddy is designed to dynamically select the most appropriate model and pattern for your request. However, if you wish to explicitly use a specific AI Agent pattern, you can do so as shown below. Remember to replace `[CONTENT HERE]` or `[TOPIC OR CLAIM HERE]` with your actual input.
 
 ### Publisher Agent (Content Strategy)
 ```bash
 # Use Publisher Agent for content evaluation
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
-      "systemPrompt": "'"$(cat docs/fabric-ai/ai_agent_prompts.md | sed -n '/^## Publisher Agent$/,/^## /p' | head -n -1)"'",
+      "patternName": "Publisher Agent", # Explicitly use the Publisher Agent pattern
       "userInput": "Evaluate this blog post draft: [CONTENT HERE]",
-      "model": "gemini-2.0-flash-exp",
+      "model": "gemini-2.0-flash-exp", # Or any other suitable model
       "temperature": 0.7
     }]
   }'
@@ -150,14 +172,15 @@ curl -X POST https://fabric-ai.rohi.life/chat \
 ### Researcher Agent (Fact Checking)
 ```bash
 # Use Researcher Agent with web search context
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
-      "systemPrompt": "'"$(cat docs/fabric-ai/ai_agent_prompts.md | sed -n '/^## Researcher Agent$/,/^## /p' | head -n -1)"'",
+      "patternName": "Researcher Agent", # Explicitly use the Researcher Agent pattern
       "userInput": "Research and fact-check: [TOPIC OR CLAIM HERE]",
-      "model": "gemini-2.0-flash-exp"
+      "model": "gemini-2.0-flash-exp" # Or any other suitable model
     }]
   }'
 ```
@@ -165,14 +188,15 @@ curl -X POST https://fabric-ai.rohi.life/chat \
 ### Editor Agent (Content Refinement)
 ```bash
 # Use Editor Agent for linguistic improvements
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
-      "systemPrompt": "'"$(cat docs/fabric-ai/ai_agent_prompts.md | sed -n '/^## Editor Agent$/,/^## /p' | head -n -1)"'",
+      "patternName": "Editor Agent", # Explicitly use the Editor Agent pattern
       "userInput": "Edit and improve this content: [CONTENT HERE]",
-      "model": "gemini-2.0-flash-exp"
+      "model": "gemini-2.0-flash-exp" # Or any other suitable model
     }]
   }'
 ```
@@ -180,14 +204,15 @@ curl -X POST https://fabric-ai.rohi.life/chat \
 ### SEO Optimizer Agent
 ```bash
 # Use SEO Optimizer for search optimization
+# Ensure FABRIC_API_KEY is exported (see "API Key Usage" section)
 curl -X POST https://fabric-ai.rohi.life/chat \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $FABRIC_API_KEY" \
   -d '{
     "prompts": [{
-      "systemPrompt": "'"$(cat docs/fabric-ai/ai_agent_prompts.md | sed -n '/^## SEO Optimizer Agent$/,/^## /p' | head -n -1)"'",
+      "patternName": "SEO Optimizer Agent", # Explicitly use the SEO Optimizer Agent pattern
       "userInput": "Optimize for SEO: [CONTENT HERE]",
-      "model": "gemini-2.0-flash-exp"
+      "model": "gemini-2.0-flash-exp" # Or any other suitable model
     }]
   }'
 ```
@@ -336,14 +361,42 @@ for i in {1..10}; do
 done
 ```
 
-## Quick Reference
+## Local `fabric-ai` Command Usage
+
+While `curl` commands directly interact with the Fabric AI API, you can also use the local `fabric-ai` command-line tool installed on your system. To ensure it communicates correctly with your Dockerized Ollama instance, you need to configure its environment.
+
+### Configuring Local `fabric-ai` for Dockerized Ollama
+
+The local `fabric-ai` command needs to know where your Ollama service is running. This is typically done via an `.env` file in your local Fabric AI configuration directory (usually `~/.config/fabric/`).
+
+1.  **Locate your local Fabric AI config directory:**
+    ```bash
+    ls -F ~/.config/fabric/
+    ```
+2.  **Create or edit the `.env` file:**
+    Add or update the `FABRIC_OLLAMA_URL` and `FABRIC_API_KEY` variables to point to your Dockerized Ollama and Fabric AI instances.
+
+    ```properties
+    # Example content for ~/.config/fabric/.env
+    FABRIC_OLLAMA_URL="http://ollama:11434" # Use the internal Docker network address
+    FABRIC_API_KEY="Pluh8-Smiss9-Bop2-Tit1-Glesk3-Snund7-Clint7-Stod3" # Your Fabric AI API Key
+    ```
+    **Note:** The `FABRIC_API_KEY` here should match the one in `infrastructure/fabric-ai/.env`.
+
+### Using the Local `fabric-ai` Command
+
+Once configured, you can use the `fabric-ai` command directly. Buddy will still analyze your request and dynamically select the best model and pattern for the task.
 
 ```bash
-# Essential commands for daily use
-alias fabric-test='curl -X POST https://fabric-ai.rohi.life/chat -H "Content-Type: application/json" -H "X-API-Key: $FABRIC_API_KEY" -d '"'"'{"prompts":[{"userInput":"test","model":"gemini-2.0-flash-exp"}]}'"'"''
-alias fabric-logs='docker logs fabric-ai -f'
-alias fabric-restart='docker-compose -f infrastructure/fabric-ai/docker-compose.yml restart'
-alias fabric-status='docker ps | grep fabric-ai && curl -s https://fabric-ai.rohi.life/health -H "X-API-Key: $FABRIC_API_KEY"'
+# Example: Summarize content using the local fabric-ai command
+# Buddy will dynamically select the best model and pattern for summarization
+fabric-ai --pattern summarize "YOUR_CONTENT_TO_SUMMARIZE_HERE"
+
+# Example: Ask a general question (Buddy will choose model and pattern)
+fabric-ai "What is the capital of France?"
+
+# Example: Use a specific agent pattern
+fabric-ai --pattern "Publisher Agent" "Evaluate this blog post draft: [CONTENT HERE]"
 ```
 
-Save these aliases to your `~/.zshrc` for quick access!
+This setup allows you to leverage the convenience of the local `fabric-ai` command while still benefiting from Buddy's intelligent model and pattern selection.
