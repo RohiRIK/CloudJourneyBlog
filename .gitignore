@@ -100,7 +100,8 @@ tasks.md
 .obsidian
 
 # Buddy AI Assistant Instructions  
-docs/buddy-ai*
+
+projects/buddy-ai/buddy-output/
 
 projects/TELOS*
 projects/TELOS/TELOS.md
