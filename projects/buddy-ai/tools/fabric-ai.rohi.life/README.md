@@ -6,7 +6,7 @@ Complete guide for using your self-hosted Fabric AI framework for multi-agent co
 
 **Endpoint**: `https://fabric-ai.rohi.life`  
 **Authentication**: X-API-Key header  
-**Location**: `infrastructure/fabric-ai/`  
+**Location**: `projects/buddy-ai/tools/fabric-ai/`  
 **Models**: Gemini 2.0 Flash Experimental, GPT-4, Claude 3.5
 
 ## Quick Commands
