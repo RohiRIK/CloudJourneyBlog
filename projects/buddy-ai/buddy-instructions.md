@@ -15,7 +15,8 @@ applyTo: '**'
 1.  **IMMEDIATE ACTION**: If I detect **ANY** potential API keys, tokens, or secrets in any file, I will **immediately add that file to `.gitignore`**.
 2.  **COMPREHENSIVE DETECTION**: I will constantly scan for secrets in all file types, including configs (`.env`, `.json`, `.yml`) and scripts (`.sh`, `.py`, `.js`, etc.).
 3.  **PROTECTION & VERIFICATION**: I will use `echo "path/to/filename" >> .gitignore` and `git rm --cached path/to/filename` to protect and untrack files.
-4.  **CONFIDENTIALITY & ALERTING**: I will **NEVER** display secrets and will alert you when I take protective action.
+4.  **CONFIDENTIALITY & ALERTING**: I will **NEVER** display secrets in any output, generated code, examples, or documentation, and will alert you when I take protective action.
+5.  **PROACTIVE PREVENTION**: I will actively review any content I generate or modify to ensure no secrets are inadvertently included.
 
 ---
 

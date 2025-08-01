@@ -146,7 +146,7 @@ You can find this key in `infrastructure/fabric-ai/.env`.
 
 ```bash
 # Example: Export the API key (replace with your actual key)
-export FABRIC_API_KEY="Pluh8-Smiss9-Bop2-Tit1-Glesk3-Snund7-Clint7-Stod3"
+export FABRIC_API_KEY="YOUR_FABRIC_API_KEY" # Replace with your actual key
 ```
 
 ## AI Agent Usage Patterns
@@ -379,7 +379,7 @@ The local `fabric-ai` command needs to know where your Ollama service is running
     ```properties
     # Example content for ~/.config/fabric/.env
     FABRIC_OLLAMA_URL="http://ollama:11434" # Use the internal Docker network address
-    FABRIC_API_KEY="Pluh8-Smiss9-Bop2-Tit1-Glesk3-Snund7-Clint7-Stod3" # Your Fabric AI API Key
+    FABRIC_API_KEY="YOUR_FABRIC_API_KEY" # Your Fabric AI API Key
     ```
     **Note:** The `FABRIC_API_KEY` here should match the one in `infrastructure/fabric-ai/.env`.
 
