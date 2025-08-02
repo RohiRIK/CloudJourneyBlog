@@ -88,5 +88,11 @@
       {"name": "Helper Scripts", "path": "tools/scripts/"},
       {"name": "GitHub Actions", "path": ".github/workflows/"}
     ]
+  },
+  {
+    "category": "Tasks",
+    "items": [
+      {"name": "Navigation System Tests", "path": "projects/buddy-ai/tasks/navigation-system-tests.md"}
+    ]
   }
 ]
