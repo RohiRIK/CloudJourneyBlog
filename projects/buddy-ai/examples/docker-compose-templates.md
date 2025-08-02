@@ -36,28 +36,29 @@ networks:
 ## Standard Labels Template
 ```yaml
 labels:
-    # Enable Traefik
+    # Enable Traefik for this service
     - "traefik.enable=true"
     
-    # Main service router (HTTPS)
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}.rule=Host(`${SERVICE_SUBDOMAIN}.${TRAEFIK_DOMAIN}`)"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}.entrypoints=websecure"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}.tls=true"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}.tls.certresolver=myresolver"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}.service=${SERVICE_NAME}"
-    - "traefik.docker.network=traefik_public"
+    # Main HTTPS router for the service
+    - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_SUBDOMAIN}.${TRAEFIK_DOMAIN}`)"
+    - "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"
+    - "traefik.http.routers.${SERVICE_NAME}.tls=true"
+    - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=myresolver" # Or 'letsencrypt' if using that resolver
     - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${INTERNAL_PORT}"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
+    - "traefik.docker.network=traefik_public" # Ensure service is on this network
     
-    # HTTP to HTTPS redirect
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}-http.rule=Host(`${SERVICE_SUBDOMAIN}.${TRAEFIK_DOMAIN}`)"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}-http.entrypoints=web"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}-http.service=${SERVICE_SUBDOMAIN}"
-    - "traefik.http.routers.${SERVICE_SUBDOMAIN}-http.middlewares=https-redirect@file"
+    # Optional: Add middlewares if needed (e.g., for security, rate limiting)
+    # - "traefik.http.routers.${SERVICE_NAME}.middlewares=secure-headers@file,ip-allowlist@file,rate-limit@file"
     
-    # Watchtower labels
-    - "com.centurylinklabs.watchtower.enable=true"
-    - "com.centurylinklabs.watchtower.cleanup=true"
+    # HTTP to HTTPS redirect (optional, but recommended)
+    - "traefik.http.routers.${SERVICE_NAME}-http.rule=Host(`${SERVICE_SUBDOMAIN}.${TRAEFIK_DOMAIN}`)"
+    - "traefik.http.routers.${SERVICE_NAME}-http.entrypoints=web"
+    - "traefik.http.routers.${SERVICE_NAME}-http.middlewares=https-redirect@file"
+    
+    # Watchtower labels for automatic updates
+    - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower for this container
+    - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Example: Update at 4 AM daily
+    # - "com.centurylinklabs.watchtower.cleanup=true" # Optional: Remove old images after updating
 ```
 
 

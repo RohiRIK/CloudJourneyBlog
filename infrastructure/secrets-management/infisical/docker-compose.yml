@@ -4,28 +4,59 @@ services:
   infisical:
     image: infisical/infisical:latest
     container_name: infisical
-    restart: always
+    restart: unless-stopped
     environment:
       - INFISICAL_TELEMETRY_ENABLED=false
     env_file:
       - .env
-    ports:
-      - "8080:3000"
+    # No direct port mapping, Traefik handles external access
     networks:
       - infisical-net
+      - traefik_public # Connect to Traefik network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.infisical.rule=Host(`infisical.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.infisical.entrypoints=websecure"
+      - "traefik.http.routers.infisical.tls=true"
+      - "traefik.http.routers.infisical.tls.certresolver=myresolver"
+      - "traefik.http.services.infisical.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik_public"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Update at 4 AM daily
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   infisical-db:
     image: mongo:6.0
     container_name: infisical-db
-    restart: always
+    restart: unless-stopped
     volumes:
       - infisical-data:/data/db
     networks:
       - infisical-net
+    labels:
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Update at 4 AM daily
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   infisical-net:
     driver: bridge
+  traefik_public:
+    external: true # Reference existing Traefik network
 
 volumes:
   infisical-data:

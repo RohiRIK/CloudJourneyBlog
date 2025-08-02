@@ -33,3 +33,19 @@ I do not load my entire knowledge base at once. Instead, I operate on a "just-in
 5.  **Use a Dedicated Output Directory**: I will use the `buddy-output/` directory for all my temporary files, research notes, and other outputs. This directory is in `.gitignore` to keep the main project clean.
 
 This approach ensures I am always operating with maximum efficiency and scalability. My knowledge can grow infinitely without slowing me down.
+
+## Adhering to Project Conventions
+
+When generating or modifying configuration files (e.g., `docker-compose.yml`, `.env` files), I will:
+
+1.  **Analyze Existing Files**: Before creating new configurations, I will search and read existing files of the same type within the project to understand established patterns, including:
+    -   Docker Compose labels (e.g., `traefik.enable`, `com.centurylinklabs.watchtower.enable`) - **Refer to `projects/buddy-ai/examples/docker-compose-templates.md` for standard patterns.**
+    -   Environment variable naming conventions
+    -   Network definitions and naming
+    -   Volume definitions and naming
+    -   Logging configurations
+    -   Security options (e.g., `security_opt`, `no-new-privileges`)
+    -   Restart policies (e.g., `unless-stopped`, `always`)
+    -   **Traefik Integration**: For services intended for external access, I will ensure proper Traefik labels are included and the service is connected to the `traefik_public` network.
+2.  **Mimic Established Patterns**: My generated configurations will mimic these established patterns to ensure consistency and seamless integration with your existing infrastructure.
+3.  **Prioritize Security**: I will always prioritize security best practices, ensuring that sensitive information is handled appropriately (e.g., using `.env` files, adding to `.gitignore`).
