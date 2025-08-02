@@ -399,4 +399,7 @@ fabric-ai "What is the capital of France?"
 fabric-ai --pattern "Publisher Agent" "Evaluate this blog post draft: [CONTENT HERE]"
 ```
 
+**Troubleshooting Note for Pattern Outputs:**
+If a `fabric-ai` command with a specific pattern (e.g., `summarize`) returns generic or unexpected content (like a marketing text or a meta-response about summarizing), this indicates that the pattern itself might not be processing the input as expected within the Fabric AI service. The issue is likely with the pattern's internal logic or its interaction with the AI model, rather than the command syntax or connectivity. Further debugging of the pattern within your Fabric AI instance may be required.
+
 This setup allows you to leverage the convenience of the local `fabric-ai` command while still benefiting from Buddy's intelligent model and pattern selection.
