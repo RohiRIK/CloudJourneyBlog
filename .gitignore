@@ -107,6 +107,7 @@ flair58-research-automation.goosehint
 
 projects/docker_swarm/*
 projects/TELOS/
+projects/TELOS/*
 
 # Infisical secrets file
 infrastructure/secrets-management/infisical/.env
