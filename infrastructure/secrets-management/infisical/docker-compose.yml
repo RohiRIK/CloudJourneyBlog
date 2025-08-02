@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  infisical:
+    image: infisical/infisical:latest
+    container_name: infisical
+    restart: always
+    environment:
+      - INFISICAL_TELEMETRY_ENABLED=false
+    env_file:
+      - .env
+    ports:
+      - "8080:3000"
+    networks:
+      - infisical-net
+
+  infisical-db:
+    image: mongo:6.0
+    container_name: infisical-db
+    restart: always
+    volumes:
+      - infisical-data:/data/db
+    networks:
+      - infisical-net
+
+networks:
+  infisical-net:
+    driver: bridge
+
+volumes:
+  infisical-data:
