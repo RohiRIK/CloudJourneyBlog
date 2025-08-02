@@ -114,31 +114,19 @@
 
 ### **Workouts**
 
-- W1: Curent workeout progerm is this
-    
-    
-    | **Day** | **Workout Focus** | **Exercise** | **Sets** | **Reps** | **Notes / Weight Suggestion** |
-    | --- | --- | --- | --- | --- | --- |
-    | **1 (Upper A)** | Peak Strength | Double KB Clean & Press | 5 | 3–5 | 2x16kg or 2x20kg |
-    |  |  | Weighted Pull-Ups OR Heavy Double KB Row | 4 | 4–6 | Bodyweight + KB / 2x20kg |
-    |  |  | Double KB Floor Press | 4 | 6–10 | 2x20kg |
-    |  |  | *Bodybuilding Add*: KB Upright Row | 3 | 10–12 | 2x16kg |
-    | **2 (Lower A)** | Peak Strength | Double KB Front Squat | 5 | 4–6 | 2x20kg or heavier |
-    |  |  | Heavy Single KB Swings | 5 | 8–10/side or 15–20 two-hand | 1x20kg or heavier |
-    |  |  | Single Leg KB Deadlift | 3 | 6–8 per side | 1x16kg or 1x20kg |
-    |  |  | *Bodybuilding Add*: Goblet Squat (Pause) | 3 | 8–10 | 1x20kg (1–2 sec pause) |
-    | **3 (Upper B)** | Hypertrophy | Complex (Repeat 3–4 rounds): | – | – | Minimal rest; 90s rest between rounds |
-    |  |  | 1. Double KB Clean | – | 5 | 2x16kg |
-    |  |  | 2. Double KB Military Press | – | 5 | 2x16kg |
-    |  |  | 3. Double KB Bent-Over Row | – | 8 | 2x16kg |
-    |  |  | After: Superset Curls / Skullcrushers | 3 | 10–12 each | 1x16kg / 2x16kg |
-    | **4 (Lower B)** | Conditioning | Circuit (Repeat 4 rounds): | – | – | 60s rest between rounds |
-    |  |  | 1. Double KB Swings | – | 15 | 2x16kg |
-    |  |  | 2. Alternating KB Lunges (Rack) | – | 8–10 per side | 1x16kg or 2x16kg |
-    |  |  | 3. Push-Ups | – | Max good reps | Bodyweight |
-    |  |  | After: Turkish Get-Up | 2 | 2–3 per side | 1x16kg or 1x20kg |
-    |  |  | After: Rack Carry | 2 | 30–40 meters | 2x20kg |
-- **W2**: I’ll cycle it for the next 4 weeks and then switch to a more fat-loss-oriented workout. I’m thinking something like 2 strength workouts and 2 conditioning workouts per weeks.
+| Day | Workout Focus | Exercise | Sets | Reps | Notes |
+| :-- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **Full Body A** | Clean & Press | 5 | 10 | |
+| | | Goblet Squat | 10 | 5 | |
+| | | *Superset:* | 4 | 8 each | Minimal rest between exercises |
+| | | Kettlebell Swings | | | |
+| | | Kettlebell Rows | | | |
+| **2** | **Full Body B** | Goblet Squat | 4 | 10 | |
+| | | Clean & Press | 10 | 5 | |
+| | | *Superset:* | 4 | 8 each | Minimal rest between exercises |
+| | | Push-Ups | | | |
+| | | Lunges | | | |
+| **3** | **Flexible** | Based on Day 1 | - | - | Repeat, modify, or choose a different workout based on recovery. |
 
 ### **Project**
 
