@@ -12,6 +12,7 @@ Buddy's complete navigation system - tells you exactly where to go for any task.
 - **Code Examples** → `projects/buddy-ai/examples/`  
 - **Troubleshooting** → `projects/buddy-ai/fixes/`
 - **Tools Integration** → `projects/buddy-ai/tools/`
+  - Fabric AI Workflows → `projects/buddy-ai/tools/fabric-ai.rohi.life/fabric-ai-workflows.md`
 - **Project Building** → `projects/buddy-ai/building/`
 
 ### 📝 Content & Blogs
