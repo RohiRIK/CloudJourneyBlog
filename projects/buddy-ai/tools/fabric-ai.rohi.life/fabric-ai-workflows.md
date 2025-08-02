@@ -19,24 +19,49 @@ fabric-ai --listmodels
 To see all predefined patterns (prompts) that Fabric AI can execute:
 
 ```bash
-basic-ai --listpatterns
+fabric-ai --listpatterns
 ```
 
 ## 2. AI Agent Workflows
 
-Fabric AI can be used to power various AI agent workflows, especially for content creation and analysis. These examples demonstrate how to use specific patterns with the `gemini-2.0-flash-exp` model.
+Fabric AI can be used to power various AI agent workflows, especially for content creation and analysis. These examples demonstrate how to use specific patterns with the `gemini-2.0-flash-exp` model, which is generally recommended for its versatility.
 
-### Workflow 1: Content Summarization (General Purpose)
+### Workflow 1: General Content Summarization
 
-**Note**: As of now, the generic `summarize` pattern in Fabric AI may return meta-responses or unexpected content rather than a direct summary of arbitrary text files. For general content summarization of documents like `buddy-instructions.md`, direct interaction with a large language model (like Gemini) or a custom-designed Fabric AI pattern specifically for document summarization might be more effective.
+This workflow uses the `create_summary` pattern to generate a concise summary of provided text content.
 
 ```bash
-# Example of attempting to summarize a document
-# Replace /path/to/your/document.md with the actual path
-fabric-ai --pattern "summarize" --model "gemini-2.0-flash-exp" "/path/to/your/document.md"
+# Example: Summarize a document or text content
+# Replace /path/to/your/document.md with the actual path to the file
+# Or replace "[CONTENT HERE]" with the text you want to summarize
+fabric-ai --pattern "create_summary" --model "gemini-2.0-flash-exp" "/path/to/your/document.md"
+# Alternatively, for direct text input:
+# fabric-ai --pattern "create_summary" --model "gemini-2.0-flash-exp" "[CONTENT HERE]"
 ```
 
-### Workflow 2: Publisher Agent (Content Strategy)
+### Workflow 2: Code Explanation and Analysis
+
+Use the `explain_code` pattern to get detailed explanations of code snippets, functions, or entire scripts.
+
+```bash
+# Example: Explain a Python function from a file
+# Replace /path/to/your/code.py with the actual path to the code file
+fabric-ai --pattern "explain_code" --model "gemini-2.0-flash-exp" "Explain the following Python function: [PASTE_PYTHON_FUNCTION_HERE]"
+# Alternatively, for a file:
+# fabric-ai --pattern "explain_code" --model "gemini-2.0-flash-exp" "/path/to/your/code.py"
+```
+
+### Workflow 3: Extracting Key Insights from Text
+
+Utilize the `extract_insights` pattern to pull out the most important information, key takeaways, or actionable points from a given text.
+
+```bash
+# Example: Extract insights from a blog post draft
+# Replace [CONTENT HERE] with the actual content
+fabric-ai --pattern "extract_insights" --model "gemini-2.0-flash-exp" "Extract key insights from this text: [CONTENT HERE]"
+```
+
+### Workflow 4: Publisher Agent (Content Strategy)
 
 Use the Publisher Agent pattern for evaluating blog post drafts and getting content strategy recommendations.
 
@@ -46,7 +71,7 @@ Use the Publisher Agent pattern for evaluating blog post drafts and getting cont
 fabric-ai --pattern "Publisher Agent" --model "gemini-2.0-flash-exp" "Evaluate this blog post draft: [CONTENT HERE]"
 ```
 
-### Workflow 3: Researcher Agent (Fact Checking)
+### Workflow 5: Researcher Agent (Fact Checking)
 
 Utilize the Researcher Agent pattern for fact-checking claims and gathering research.
 
@@ -56,7 +81,7 @@ Utilize the Researcher Agent pattern for fact-checking claims and gathering rese
 fabric-ai --pattern "Researcher Agent" --model "gemini-2.0-flash-exp" "Research and fact-check: [TOPIC OR CLAIM HERE]"
 ```
 
-### Workflow 4: Editor Agent (Content Refinement)
+### Workflow 6: Editor Agent (Content Refinement)
 
 Apply the Editor Agent pattern for linguistic improvements and content refinement.
 
@@ -66,7 +91,7 @@ Apply the Editor Agent pattern for linguistic improvements and content refinemen
 fabric-ai --pattern "Editor Agent" --model "gemini-2.0-flash-exp" "Edit and improve this content: [CONTENT HERE]"
 ```
 
-### Workflow 5: SEO Optimizer Agent
+### Workflow 7: SEO Optimizer Agent
 
 Use the SEO Optimizer Agent pattern to optimize content for search engines.
 
@@ -84,5 +109,6 @@ If you encounter unexpected outputs or errors when using Fabric AI patterns, con
 *   **Input Format**: Verify that the input provided to the pattern matches its expected format.
 *   **Service Health**: Confirm that the underlying Fabric AI Docker service is running and accessible. A "Bad Gateway" error often indicates a service-level issue.
 *   **Model Compatibility**: While `gemini-2.0-flash-exp` is generally versatile, some patterns might perform better with other models.
+*   **Unexpected Pattern Output**: If a `fabric-ai` command with a specific pattern returns generic or unrelated content (like a marketing text or a meta-response about summarizing), this indicates that the pattern itself might not be processing the input as expected within the Fabric AI service. The issue is likely with the pattern's internal logic or its interaction with the AI model, rather than the command syntax or connectivity. Further debugging of the pattern within your Fabric AI instance may be required.
 
 For more detailed troubleshooting, refer to `projects/buddy-ai/tools/fabric-ai.rohi.life/README.md`.

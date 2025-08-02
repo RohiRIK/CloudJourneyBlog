@@ -1,50 +1,24 @@
-# Tool### 1. Fabric AI ⚡
+Your complete guide to integrating and using all the powerful services in your CloudJourneyBlog ecosystem.
 
+## Available Tools
+
+### 1. Fabric AI ⚡
 📁 **[fabric-ai.rohi.life/](./fabric-ai.rohi.life/)**
-
 - Self-hosted AI framework for multi-agent content creation
 - API endpoint: `fabric-ai.rohi.life`
 - Authentication: X-API-Key header
 - Multi-model support (Gemini, GPT, Claude)
+- **Workflows**: [fabric-ai-workflows.md](./fabric-ai.rohi.life/fabric-ai-workflows.md)
 
 ### 2. Firecrawl 🔥  
-
 📁 **[firecrawl.rohi.life/](./firecrawl.rohi.life/)**
-
 - Web scraping and content extraction service
 - Authentication: Bearer token
 - Perfect for research agent data gathering
 - Structured content extraction
 
 ### 3. SearxNG 🔍
-
 📁 **[searxng.rohi.life/](./searxng.rohi.life/)**
-
-- Privacy-focused search engine
-- No authentication required
-- Powers your research workflows
-- Multiple search engine aggregationion Guides 🛠️
-
-Your complete guide to integrating and using all the powerful services in your CloudJourneyBlog ecosystem.
-
-## Available Tools
-
-### 1. Fabric AI ⚡
-� **[fabric-ai/](./fabric-ai/)**
-- Self-hosted AI framework for multi-agent content creation
-- API endpoint: `fabric-ai.rohi.life`
-- Authentication: X-API-Key header
-- Multi-model support (Gemini, GPT, Claude)
-
-### 2. Firecrawl �  
-📁 **[firecrawl/](./firecrawl/)**
-- Web scraping and content extraction service
-- Authentication: Bearer token
-- Perfect for research agent data gathering
-- Structured content extraction
-
-### 3. SearxNG �
-📁 **[searxng/](./searxng/)**
 - Privacy-focused search engine
 - No authentication required
 - Powers your research workflows
