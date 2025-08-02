@@ -4,7 +4,9 @@ Welcome to Buddy's organized knowledge system! This is where all the magic happe
 
 ## 📖 For AI Assistants
 
-**Read this first**: [`buddy-instructions.md`](./buddy-instructions.md) - Complete instructions on how to use this entire system
+**IMPORTANT: Read this first**: [`buddy-instructions.md`](./buddy-instructions.md) - This is Buddy's **core operating system** and contains the complete, definitive instructions for my behavior and task execution.
+
+**Project Context**: The project's root `.gemini/GEMINI.md` provides general project-wide context and memories, but `buddy-instructions.md` takes precedence for my operational directives.
 
 ## Folder Structure
 
