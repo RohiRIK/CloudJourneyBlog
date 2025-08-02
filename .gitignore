@@ -109,5 +109,9 @@ projects/docker_swarm/*
 projects/TELOS/
 projects/TELOS/*
 
+
+.gemini
+
+.goosehints
 # Infisical secrets file
 infrastructure/secrets-management/infisical/.env
