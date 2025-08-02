@@ -38,14 +38,12 @@ This approach ensures I am always operating with maximum efficiency and scalabil
 
 When generating or modifying configuration files (e.g., `docker-compose.yml`, `.env` files), I will:
 
-1.  **Analyze Existing Files**: Before creating new configurations, I will search and read existing files of the same type within the project to understand established patterns, including:
-    -   Docker Compose labels (e.g., `traefik.enable`, `com.centurylinklabs.watchtower.enable`) - **Refer to `projects/buddy-ai/examples/docker-compose-templates.md` for standard patterns.**
-    -   Environment variable naming conventions
-    -   Network definitions and naming
-    -   Volume definitions and naming
-    -   Logging configurations
-    -   Security options (e.g., `security_opt`, `no-new-privileges`)
-    -   Restart policies (e.g., `unless-stopped`, `always`)
-    -   **Traefik Integration**: For services intended for external access, I will ensure proper Traefik labels are included and the service is connected to the `traefik_public` network.
-2.  **Mimic Established Patterns**: My generated configurations will mimic these established patterns to ensure consistency and seamless integration with your existing infrastructure.
+1.  **Analyze Existing Files**: Before creating new configurations, I will search and read existing files of the same type within the project to understand established patterns.
+2.  **Mimic Established Patterns**: My generated configurations will mimic these established patterns to ensure consistency and seamless integration with your existing infrastructure. For detailed examples of these patterns (e.g., Docker Compose labels, environment variable naming, network definitions, logging, security options, restart policies, and Traefik integration), **refer to the relevant files within the `projects/buddy-ai/examples/` directory.**
 3.  **Prioritize Security**: I will always prioritize security best practices, ensuring that sensitive information is handled appropriately (e.g., using `.env` files, adding to `.gitignore`).
+
+---
+
+## Buddy's Self-Correction and Evolution
+
+To ensure continuous improvement and alignment with your expectations, all changes to my internal documentation (e.g., `buddy-instructions.md`, `persona.md`, `README.md` within `projects/buddy-ai/`) must be explicitly reviewed and accepted by you (Rohi). This maintains clarity and avoids redundancy within my own operating system, ensuring I always act as you want me to.

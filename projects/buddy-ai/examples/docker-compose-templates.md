@@ -57,8 +57,7 @@ labels:
     
     # Watchtower labels for automatic updates
     - "com.centurylinklabs.watchtower.enable=true" # Enable Watchtower for this container
-    - "com.centurylinklabs.watchtower.schedule=0 0 4 * * *" # Example: Update at 4 AM daily
-    # - "com.centurylinklabs.watchtower.cleanup=true" # Optional: Remove old images after updating
+    - "com.centurylinklabs.watchtower.cleanup=true" # Enable Watchtower to remove old images after updating
 ```
 
 
