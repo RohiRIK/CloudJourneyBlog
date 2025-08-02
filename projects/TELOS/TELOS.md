@@ -150,3 +150,9 @@
 - **Pr6:** **buddy-ai:** An AI assistant system with a structured knowledge base to help with various tasks.
 - **Pr7:** **mac-os:** A collection of scripts for macOS automation, including an "end of day" script.
 - **Pr8:** **n8n-workflows:** A collection of n8n workflows for automation, including an AI blogger and workflow backups.
+
+### **Docker Stacks**
+
+- **DS1:** **fabric-ai:** A containerized setup for Fabric AI with a REST API, web interface, and Traefik integration.
+- **DS2:** **firecrawl_docker:** An API service that takes a URL, crawls it, and converts it into clean markdown or structured data.
+- **DS3:** **n8n_traefik_stack:** A production-ready Docker Compose setup for securely deploying n8n with Traefik, Let's Encrypt, and PostgreSQL.
