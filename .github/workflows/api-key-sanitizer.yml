@@ -1,0 +1,113 @@
+name: API Key Sanitizer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sanitize_api_keys:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for accurate diffing
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v4
+        with:
+          files: |
+            **/*
+
+      - name: Scan and Sanitize API Keys
+        id: sanitizer
+        run: |
+          echo "Starting API Key Sanitization scan..."
+          SANITIZED_COUNT=0
+          
+          # Define common API key regex patterns
+          # AWS Access Key ID (A-Z, 20 chars)
+          # AWS Secret Access Key (a-zA-Z0-9, 40 chars)
+          # Azure Client Secret (base64-like, often 44 chars)
+          # Generic API Key (alphanumeric, often with hyphens/underscores, 16-64 chars)
+          API_KEY_PATTERNS=(
+            "AKIA[0-9A-Z]{16}" # AWS Access Key ID
+            "ASIA[0-9A-Z]{16}" # AWS Access Key ID (temporary)
+            "[a-zA-Z0-9+/]{40}" # AWS Secret Access Key (generic base64-like)
+            "[a-zA-Z0-9_-]{32,64}" # Generic API Key (alphanumeric, hyphens, underscores)
+            "[0-9a-fA-F]{32}" # Generic MD5 hash-like
+            "[0-9a-fA-F]{40}" # Generic SHA1 hash-like
+            "[0-9a-fA-F]{64}" # Generic SHA256 hash-like
+            "sk_live_[0-9a-zA-Z]{24,}" # Stripe Live Secret Key
+            "pk_live_[0-9a-zA-Z]{24,}" # Stripe Live Publishable Key
+            "Bearer [a-zA-Z0-9._-]{30,}" # Generic Bearer Token
+            "xoxb-[0-9]{12}-[0-9]{12}-[0-9a-zA-Z]{24}" # Slack Bot User OAuth Access Token
+            "EAACEdEose0cBA[0-9A-Za-z]+" # Facebook Access Token
+            "ya29\.[0-9A-Za-z\-_]+" # Google OAuth Access Token
+            "AIza[0-9A-Za-z\-_]{35}" # Google API Key
+            "sq0csp-[0-9A-Za-z\-_]{43}" # Square OAuth Secret
+            "sq0pdi-[0-9A-Za-z\-_]{43}" # Square Production API Key
+            "ghp_[0-9a-zA-Z]{36}" # GitHub Personal Access Token
+            "gho_[0-9a-zA-Z]{36}" # GitHub OAuth Token
+            "ghu_[0-9a-zA-Z]{36}" # GitHub User Token
+            "ghs_[0-9a-zA-Z]{36}" # GitHub Scoped Token
+            "pat_[0-9a-zA-Z]{44}" # Azure DevOps Personal Access Token
+            "Bearer\s[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*" # JWT Token
+          )
+
+          # Files to scan (from changed files output)
+          FILES_TO_SCAN="${{ steps.changed-files.outputs.all_changed_files }}"
+
+          if [ -z "$FILES_TO_SCAN" ]; then
+            echo "No changed files to scan."
+            echo "sanitized_count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Scanning the following files for API keys:"
+          echo "$FILES_TO_SCAN"
+
+          for file_path in $FILES_TO_SCAN; do
+            if [ -f "$file_path" ]; then
+              echo "Processing file: $file_path"
+              ORIGINAL_CONTENT=$(cat "$file_path")
+              SANITIZED_CONTENT="$ORIGINAL_CONTENT"
+              FILE_SANITIZED=false
+
+              for pattern in "${API_KEY_PATTERNS[@]}"; do
+                # Use grep to check if pattern exists before attempting sed replacement
+                if grep -Pq "$pattern" "$file_path"; then
+                  echo "  Found potential API key in $file_path matching pattern: $pattern"
+                  # Use sed with extended regex (-E) and in-place editing (-i)
+                  # The 'g' flag ensures all occurrences on a line are replaced
+                  SANITIZED_CONTENT=$(echo "$SANITIZED_CONTENT" | sed -E "s/$pattern/[REDACTED_API_KEY]/g")
+                  FILE_SANITIZED=true
+                fi
+              done
+
+              if [ "$FILE_SANITIZED" = true ]; then
+                echo "$SANITIZED_CONTENT" > "$file_path"
+                echo "  File $file_path sanitized."
+                SANITIZED_COUNT=$((SANITIZED_COUNT + 1))
+              else
+                echo "  No API keys found in $file_path."
+              fi
+            else
+              echo "Skipping non-file path: $file_path"
+            fi
+          done
+
+          echo "Total files sanitized: $SANITIZED_COUNT"
+          echo "sanitized_count=$SANITIZED_COUNT" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+      - name: Report Sanitization Status
+        run: |
+          echo "API Key Sanitization scan completed. Review logs for details."
+          # TODO: Add more detailed reporting here, e.g., if keys were found and sanitized.
+        shell: bash
