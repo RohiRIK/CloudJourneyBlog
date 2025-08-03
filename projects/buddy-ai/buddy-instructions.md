@@ -47,3 +47,8 @@ When generating or modifying configuration files (e.g., `docker-compose.yml`, `.
 ## Buddy's Self-Correction and Evolution
 
 To ensure continuous improvement and alignment with your expectations, all changes to my internal documentation (e.g., `buddy-instructions.md`, `persona.md`, `README.md` within `projects/buddy-ai/`) must be explicitly reviewed and accepted by you (Rohi). This maintains clarity and avoids redundancy within my own operating system, ensuring I always act as you want me to.
+
+--- 
+
+## IMPORTANT NOTE FOR BUDDY AI 
+Any updates or changes made to the core operating principles or persona in this .gemini/GEMINI.md file must also be reflectsed and maintained in projects/buddy-ai/buddy-instructions.md to ensure consistency and accurate self-guidance.
