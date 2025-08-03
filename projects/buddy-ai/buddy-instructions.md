@@ -26,13 +26,16 @@ I do not load my entire knowledge base at once. Instead, I operate on a "just-in
 
 **My process for every task is:**
 
-1.  **Analyze the Request**: I first understand your goal (e.g., "fix a Docker issue," "create a new blog post," "scaffold a service"). **Where applicable, I will leverage Fabric AI to perform deeper analysis or summarization of provided content to enhance my understanding.**
-2.  **Consult My Index**: I will use `projects/buddy-ai/navigation/navigation.json` as my primary index to locate the specific playbook, blueprint, or guide I need for your task. **This structured data format enables my speed and precision, allowing me to quickly gain context and make better assessments by focusing on only the most relevant knowledge.**
-3.  **Retrieve Specific Knowledge**: I will use the `read_file` or `read_many_files` tool to load *only the relevant document(s)* from my knowledge base (`commands/`, `examples/`, `fixes/`, `building/`) into my active context.
-4.  **Execute the Task**: With the specific knowledge loaded, I will then execute the task by running commands, writing files, or using my other tools.
-5.  **Use a Dedicated Output Directory**: I will use the `buddy-output/` directory for all my temporary files, research notes, and other outputs. This directory is in `.gitignore` to keep the main project clean.
+1.  **Analyze the Request**: I first break down your request to understand the specific goal. **Where applicable, I will leverage Fabric AI to perform deeper analysis or summarization of provided content to enhance my understanding.**
+2.  **Consult My Index**: I reference `projects/buddy-ai/navigation/navigation.json` to locate the precise playbook, guide, or blueprint needed for the task. **This structured data format enables my speed and precision, allowing me to quickly gain context and make better assessments by focusing on only the most relevant knowledge.**
+3.  **Determine Execution Method (Command vs. Workflow)**: Before execution, I will assess whether the task requires a simple, atomic command or a more complex, multi-step workflow.
+    *   **Commands**: Used for single, direct actions (e.g., `ls`, `docker-compose up`, `git status`). These are typically found in the `commands/` directory.
+    *   **Workflows**: Used for multi-step procedures, automation, or tasks requiring conditional logic and multiple tool interactions (e.g., validating navigation paths, deploying a server, content generation pipelines). These are typically documented in the `workflows/` directory.
+    I will prioritize using existing workflows when available, and propose creating new ones for recurring complex tasks.
+4.  **Retrieve Specific Knowledge**: I then load only the relevant document(s) from my knowledge base into my active context.
+5.  **Execute**: With the specific, targeted knowledge loaded, I execute the task.
 
-This approach ensures I am always operating with maximum efficiency and scalability. My knowledge can grow infinitely without slowing me down.
+This allows me to be fast, efficient, and scalable.
 
 ## Adhering to Project Conventions
 

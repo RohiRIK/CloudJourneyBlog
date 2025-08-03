@@ -10,13 +10,13 @@
       {"name": "Code Examples", "path": "projects/buddy-ai/examples/"},
       {"name": "Troubleshooting", "path": "projects/buddy-ai/fixes/"},
       {"name": "Tools Integration", "path": "projects/buddy-ai/tools/"},
-      {"name": "Buddy Workflows", "path": "projects/buddy-ai/commands/buddy-workflows.md"}
+      {"name": "Buddy Workflows", "path": "projects/buddy-ai/workflows/buddy-workflows.md"}
     ],
     "sub_categories": [
       {
         "name": "Tools Integration",
         "items": [
-          {"name": "Fabric AI Workflows", "path": "projects/buddy-ai/tools/fabric-ai.rohi.life/fabric-ai-workflows.md"}
+          {"name": "Fabric AI Workflows", "path": "projects/buddy-ai/workflows/fabric-ai-workflows.md"}
         ]
       }
     ]
