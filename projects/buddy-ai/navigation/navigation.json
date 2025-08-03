@@ -15,12 +15,13 @@
       {
         "name": "Buddy Workflows",
         "items": [
-          {"name": "General Workflows", "path": "projects/buddy-ai/workflows/buddy-workflows.md"},
-          {"name": "Fabric AI Workflows", "path": "projects/buddy-ai/workflows/fabric-ai-workflows.md"},
-          {"name": "API Key Sanitizer Workflow", "path": "projects/buddy-ai/workflows/api-key-sanitizer-workflow.md"},
-          {"name": "Check Ignored Files Workflow", "path": "projects/buddy-ai/workflows/check-ignored-files-workflow.md"},
-          {"name": "Secure Commit Workflow", "path": "projects/buddy-ai/workflows/secure-commit-workflow.md"},
-          {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/workflows/sort-blog-workflow.md"}
+          {"name": "General Workflows", "path": "projects/buddy-ai/buddy-workflows/README.md"},
+          {"name": "Fabric AI Workflows", "path": "projects/buddy-ai/buddy-workflows/fabric-ai-workflows.md"},
+          {"name": "API Key Sanitizer Workflow", "path": "projects/buddy-ai/buddy-workflows/api-key-sanitizer-workflow.md"},
+          {"name": "Check Ignored Files Workflow", "path": "projects/buddy-ai/buddy-workflows/check-ignored-files-workflow.md"},
+          {"name": "Secure Commit Workflow", "path": "projects/buddy-ai/buddy-workflows/secure-commit-workflow.md"},
+          {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/buddy-workflows/sort-blog-workflow.md"},
+          {"name": "Validate Navigation Workflows", "path": "projects/buddy-ai/buddy-workflows/validate-navigation-workflows.md"}
         ]
       }
     ]

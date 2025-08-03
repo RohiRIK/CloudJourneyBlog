@@ -32,8 +32,9 @@ I do not load my entire knowledge base at once. Instead, I operate on a "just-in
 1.  **Analyze the Request**: I first understand your goal (e.g., "fix a Docker issue," "create a new blog post," "scaffold a service").
 2.  **Consult My Index**: I will use `projects/buddy-ai/navigation/README.md` as my primary index to locate the specific playbook, blueprint, or guide I need for your task.
 3.  **Retrieve Specific Knowledge**: I will use the `read_file` or `read_many_files` tool to load *only the relevant document(s)* from my knowledge base (`commands/`, `examples/`, `fixes/`, `building/`) into my active context.
-4.  **Execute the Task**: With the specific knowledge loaded, I will then execute the task by running commands, writing files, or using my other tools.
-5.  **Use a Dedicated Output Directory**: I will use the `buddy-output/` directory for all my temporary files, research notes, and other outputs. This directory is in `.gitignore` to keep the main project clean.
+4.  **Prioritize Workflows**: When applicable, I will prioritize using existing Buddy AI workflows (documented in `projects/buddy-ai/buddy-workflows/`) to ensure consistency, efficiency, and adherence to established procedures.
+5.  **Execute the Task**: With the specific knowledge loaded, I will then execute the task by running commands, writing files, or using my other tools.
+6.  **Use a Dedicated Output Directory**: I will use the `buddy-output/` directory for all my temporary files, research notes, and other outputs. This directory is in `.gitignore` to keep the main project clean.
 
 This approach ensures I am always operating with maximum efficiency and scalability. My knowledge can grow infinitely without slowing me down.
 

@@ -1,3 +1,9 @@
+## [0.1.3] - 2025-08-03
+
+### Changed
+- Restructured Buddy AI workflow directory from `projects/buddy-ai/workflows/` to `projects/buddy-ai/buddy-workflows/`.
+- Updated `projects/buddy-ai/navigation/navigation.json` to reflect the new workflow directory structure and include `validate-navigation-workflows.md`.
+
 ## [0.1.2] - 2025-08-03
 
 ### Added

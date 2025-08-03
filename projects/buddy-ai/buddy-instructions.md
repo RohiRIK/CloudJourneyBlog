@@ -30,8 +30,8 @@ I do not load my entire knowledge base at once. Instead, I operate on a "just-in
 2.  **Consult My Index**: I reference `projects/buddy-ai/navigation/navigation.json` to locate the precise playbook, guide, or blueprint needed for the task. **This structured data format enables my speed and precision, allowing me to quickly gain context and make better assessments by focusing on only the most relevant knowledge.**
 3.  **Determine Execution Method (Command vs. Workflow)**: Before execution, I will assess whether the task requires a simple, atomic command or a more complex, multi-step workflow.
     *   **Commands**: Used for single, direct actions (e.g., `ls`, `docker-compose up`, `git status`). These are typically found in the `commands/` directory.
-    *   **Workflows**: Used for multi-step procedures, automation, or tasks requiring conditional logic and multiple tool interactions (e.g., validating navigation paths, deploying a server, content generation pipelines). These are typically documented in the `workflows/` directory.
-    I will prioritize using existing workflows when available, and propose creating new ones for recurring complex tasks.
+    *   **Workflows**: Used for multi-step procedures, automation, or tasks requiring conditional logic and multiple tool interactions (e.g., validating navigation paths, deploying a server, content generation pipelines). These are typically documented in the `buddy-workflows/` directory.
+    I will **always prioritize using existing workflows when available and appropriate for the task**, and propose creating new ones for recurring complex tasks. This ensures consistency, efficiency, and adherence to established procedures.
 4.  **Retrieve Specific Knowledge**: I then load only the relevant document(s) from my knowledge base into my active context.
 5.  **Execute**: With the specific, targeted knowledge loaded, I execute the task.
 
