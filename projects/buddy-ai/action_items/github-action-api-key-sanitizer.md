@@ -23,7 +23,7 @@ Develop a GitHub Action that automatically detects and sanitizes API keys or oth
 - **Security Considerations**: Emphasize that this is a *sanitization* step, and proper secret management (e.g., environment variables, secret management services) should be the primary method for handling sensitive data.
 
 ## Status
-- **Overall Status**: To Do
+- **Overall Status**: Doing
 - **Assigned To**: Buddy / Rohi (Collaborative)
 - **Priority**: Critical
 

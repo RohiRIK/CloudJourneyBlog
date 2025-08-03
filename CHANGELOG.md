@@ -8,21 +8,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] 🚧
 
 ### Added
+- GitHub Action to prevent accidental commits of ignored files (`.gemini/`, `projects/TELOS/`).
+- New action item: Automate Model Context Protocol (MCP) Server Deployment with n8n.
+- New action item: Secure SSH Access and Workflow for Home Lab Server.
+- New action item: GitHub Action for API Key Sanitization in uploaded files.
+
+### Changed
+- Renamed `projects/buddy-ai/tasks/` directory to `projects/buddy-ai/action_items/` for better clarity and purpose.
+- Updated `README.md` to introduce Buddy AI, include its catchphrase, and reflect consolidated script directories.
+- Added Buddy AI catchphrase to `.gemini/GEMINI.md`.
+- Added consistency note to `buddy-instructions.md` and `.gemini/GEMINI.md` regarding updates.
+
+### Fixed
+- Untracked `projects/TELOS/` and `.gemini/` directories from Git to prevent accidental commits.
+- Consolidated `scripts/` directory into `tools/scripts/` to remove redundancy and centralize utility scripts.
+
+### Added
 - Professional repository restructure
 - GitHub workflows for content quality
 - Issue and PR templates
 - Contributing guidelines
 - Code of conduct
 - Security policy
-
-### Changed
-- Reorganized content structure
-- Enhanced README with professional formatting
-- Improved directory organization
-
-### Fixed
-- Inconsistent naming conventions
-- Missing documentation structure
 
 ## [1.0.0] - 2024-06-11 🎉
 
