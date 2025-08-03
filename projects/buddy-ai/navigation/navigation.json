@@ -91,9 +91,10 @@
     ]
   },
   {
-    "category": "Tasks",
+    "category": "Action Items",
     "items": [
-      {"name": "Navigation System Tests", "path": "projects/buddy-ai/tasks/navigation-system-tests.md"}
+      {"name": "Navigation System Tests", "path": "projects/buddy-ai/action_items/navigation-system-tests.md"},
+      {"name": "Automate MCP Server Deployment", "path": "projects/buddy-ai/action_items/n8n-mcp-server-automation.md"}
     ]
   }
 ]
