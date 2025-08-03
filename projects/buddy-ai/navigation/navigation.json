@@ -94,7 +94,9 @@
     "category": "Action Items",
     "items": [
       {"name": "Navigation System Tests", "path": "projects/buddy-ai/action_items/navigation-system-tests.md"},
-      {"name": "Automate MCP Server Deployment", "path": "projects/buddy-ai/action_items/n8n-mcp-server-automation.md"}
+      {"name": "Automate MCP Server Deployment", "path": "projects/buddy-ai/action_items/n8n-mcp-server-automation.md"},
+      {"name": "Secure SSH Access to Home Lab", "path": "projects/buddy-ai/action_items/ssh-home-lab-access.md"},
+      {"name": "GitHub Action: API Key Sanitizer", "path": "projects/buddy-ai/action_items/github-action-api-key-sanitizer.md"}
     ]
   }
 ]
