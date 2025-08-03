@@ -6,3 +6,4 @@ This directory contains documentation for complex, multi-step procedures and aut
 
 - `buddy-workflows.md`: General workflows and procedures.
 - `fabric-ai-workflows.md`: Workflows specifically leveraging the Fabric AI tool.
+- `secure-commit-workflow.md`: Workflow for secure and efficient Git commits.

@@ -1,3 +1,12 @@
+## [0.1.2] - 2025-08-03
+
+### Added
+- Documented GitHub Actions as Buddy AI workflows:
+  - `api-key-sanitizer-workflow.md`
+  - `check-ignored-files-workflow.md`
+  - `sort-blog-workflow.md`
+- Documented new Buddy AI workflow: `secure-commit-workflow.md`
+
 ## [0.1.1] - 2025-08-02
 
 ### Added
