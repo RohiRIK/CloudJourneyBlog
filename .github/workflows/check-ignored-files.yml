@@ -1,0 +1,29 @@
+name: Check for Ignored Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_ignored:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for TELOS directory
+        run: |
+          if [ -d "projects/TELOS" ]; then
+            echo "::error file=projects/TELOS::The 'projects/TELOS' directory should not be committed. Please untrack it using 'git rm -r --cached projects/TELOS/' and add it to .gitignore."
+            exit 1
+          fi
+        shell: bash
+
+      - name: Check for .gemini directory
+        run: |
+          if [ -d ".gemini" ]; then
+            echo "::error file=.gemini::The '.gemini' directory should not be committed. Please untrack it using 'git rm -r --cached .gemini/' and add it to .gitignore."
+            exit 1
+          fi
+        shell: bash

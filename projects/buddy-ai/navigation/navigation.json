@@ -6,6 +6,7 @@
       {"name": "Main Buddy Hub", "path": "projects/buddy-ai/"},
       {"name": "Navigation System", "path": "projects/buddy-ai/navigation/"},
       {"name": "Commands Database", "path": "projects/buddy-ai/commands/"},
+      {"name": "Check Local Ignored Files", "path": "projects/buddy-ai/commands/check_local_ignored_files.md"},
       {"name": "Code Examples", "path": "projects/buddy-ai/examples/"},
       {"name": "Troubleshooting", "path": "projects/buddy-ai/fixes/"},
       {"name": "Tools Integration", "path": "projects/buddy-ai/tools/"}
