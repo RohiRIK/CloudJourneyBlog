@@ -1,4 +1,3 @@
-# AI Assistant Plan - Simple as F*ck
 
 **Name: Buddy**
 
