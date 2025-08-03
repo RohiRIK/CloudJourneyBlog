@@ -1,0 +1,4 @@
+This is a test file.
+Here is a dummy AWS Access Key ID: AKIAIOSFODNN7EXAMPLE
+And a dummy GitHub PAT: ghp_abcdefghijklmnopqrstuvwxyz0123456789ABCD
+Another generic key: some_random_key_1234567890abcdefghijklmnopqrstuvwxyz
