@@ -9,14 +9,18 @@
       {"name": "Check Local Ignored Files", "path": "projects/buddy-ai/commands/check_local_ignored_files.md"},
       {"name": "Code Examples", "path": "projects/buddy-ai/examples/"},
       {"name": "Troubleshooting", "path": "projects/buddy-ai/fixes/"},
-      {"name": "Tools Integration", "path": "projects/buddy-ai/tools/"},
-      {"name": "Buddy Workflows", "path": "projects/buddy-ai/workflows/buddy-workflows.md"}
+      {"name": "Tools Integration", "path": "projects/buddy-ai/tools/"}
     ],
     "sub_categories": [
       {
-        "name": "Tools Integration",
+        "name": "Buddy Workflows",
         "items": [
-          {"name": "Fabric AI Workflows", "path": "projects/buddy-ai/workflows/fabric-ai-workflows.md"}
+          {"name": "General Workflows", "path": "projects/buddy-ai/workflows/buddy-workflows.md"},
+          {"name": "Fabric AI Workflows", "path": "projects/buddy-ai/workflows/fabric-ai-workflows.md"},
+          {"name": "API Key Sanitizer Workflow", "path": "projects/buddy-ai/workflows/api-key-sanitizer-workflow.md"},
+          {"name": "Check Ignored Files Workflow", "path": "projects/buddy-ai/workflows/check-ignored-files-workflow.md"},
+          {"name": "Secure Commit Workflow", "path": "projects/buddy-ai/workflows/secure-commit-workflow.md"},
+          {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/workflows/sort-blog-workflow.md"}
         ]
       }
     ]
