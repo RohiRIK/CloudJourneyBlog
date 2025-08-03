@@ -1,7 +1,7 @@
 # Improve Fabric AI Documentation and Workflows for Efficiency
 
 ## Description
-To enhance my operational efficiency, this task focuses on reviewing, updating, and standardizing the documentation and workflow examples for the `fabric-ai` tool. The primary goal is to ensure that I can leverage the tool, especially the Gemini model, for data processing tasks more effectively and consistently.
+To enhance my operational efficiency, this task focuses on reviewing, updating, and standardizing the documentation and workflow examples for the `fabric-ai` tool. **Fabric AI is my primary, go-to tool for any analysis task, and I will use it before attempting other methods.** The primary goal is to ensure that I can leverage the tool (via web requests to `https://fabric-ai.rohi.life` or the `fabric-ai` command-line tool) and intelligently select the best model and pattern for each task, especially the Gemini model for data processing, more effectively and consistently.
 
 ## Key Objectives
 
@@ -20,9 +20,10 @@ To enhance my operational efficiency, this task focuses on reviewing, updating, 
 - Design and implement new, efficient patterns within the Fabric AI service to automate these tasks.
 - Examples: `summarize_and_format_for_notion`, `extract_action_items_from_meeting_notes`.
 
-### 4. Update My Internal Knowledge Base
-- Once the documentation is improved, I will re-index the relevant files to update my internal knowledge about `fabric-ai`.
-- This will ensure I use the new, efficient methods by default.
+### 5. Develop Intelligent Model and Pattern Selection
+- Document the process for how I will analyze a given task and select the most appropriate `fabric-ai` model (e.g., Gemini for complex analysis, a smaller model for simple tasks).
+- Create a decision matrix or guide that outlines the strengths of each available pattern and when it should be used.
+- This will ensure I am using the tool in the most efficient and effective way possible, without needing to be explicitly told which model or pattern to use.
 
 ## Status
 - **Overall Status**: To Do
