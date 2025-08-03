@@ -12,7 +12,7 @@
 
 My journey into tech was non-traditional. I thrive on the feeling of building something tangible and watching it work, a passion that led me from a career in fitness to the world of cloud and cybersecurity. This repository is where I channel that passion, documenting my work in securing cloud environments and automating everything I can.
 
-Here you will find battle-tested solutions, comprehensive guides, and production-ready automation for modern IT environments.
+This project is powered by **Buddy AI**, a powerful AI agent built to assist and automate tasks, tailored to my specific needs.
 
 ---
 
@@ -27,6 +27,8 @@ This repository is organized into two main sections:
 
 These are the tools and technologies I'm most excited about and feature in this repository:
 
+*   **Buddy AI**: My personal AI assistant, designed to streamline workflows and enhance productivity.
+    *   *"Buddy AI - because everyone needs a friend."*
 *   **Automation:** n8n, Node-RED, Home Assistant
 *   **DevOps & Infra:** Docker, Portainer, Traefik
 *   **Cloud:** AWS, Azure, Google Cloud (with a focus on Security)
@@ -40,6 +42,7 @@ These are the tools and technologies I'm most excited about and feature in this 
 ├── 📁 projects/         # Automation and tool projects
 ├── 📁 infrastructure/   # Infrastructure templates
 ├── 📁 docs/            # Project documentation
+├── 📁 tools/           # General utility scripts
 └── 📁 .github/         # GitHub-specific files
 ```
 
