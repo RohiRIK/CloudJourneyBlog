@@ -115,3 +115,8 @@ projects/TELOS/*
 .goosehints
 # Infisical secrets file
 infrastructure/secrets-management/infisical/.env
+
+
+# Buddy AI Output Files
+projects/buddy-ai/buddy-output/simplified_GEMINI.md
+buddy-instructionsV2.md
