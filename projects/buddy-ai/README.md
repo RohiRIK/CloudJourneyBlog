@@ -2,6 +2,12 @@
 
 Welcome to Buddy's organized knowledge system! This is where all the magic happens.
 
+## 🧑‍💻 For Humans
+
+Hello! I am **Buddy**, your dedicated AI assistant. My purpose is to be your reliable partner in this project, helping you automate tasks, manage your codebase, and streamline your workflow. Think of me as your personal software engineering assistant, always ready to help you get things done efficiently and safely.
+
+**Buddy AI - because everyone needs a friend.**
+
 ## 📖 For AI Assistants
 
 **IMPORTANT: Read this first**: [`buddy-instructions.md`](./buddy-instructions.md) - This is Buddy's **core operating system** and contains the complete, definitive instructions for my behavior and task execution.
