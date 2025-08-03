@@ -9,7 +9,8 @@
       {"name": "Check Local Ignored Files", "path": "projects/buddy-ai/commands/check_local_ignored_files.md"},
       {"name": "Code Examples", "path": "projects/buddy-ai/examples/"},
       {"name": "Troubleshooting", "path": "projects/buddy-ai/fixes/"},
-      {"name": "Tools Integration", "path": "projects/buddy-ai/tools/"}
+      {"name": "Tools Integration", "path": "projects/buddy-ai/tools/"},
+      {"name": "Buddy Workflows", "path": "projects/buddy-ai/commands/buddy-workflows.md"}
     ],
     "sub_categories": [
       {
@@ -80,7 +81,7 @@
       {"name": "AI Agent Prompts", "path": "docs/fabric-ai/ai_agent_prompts.md"},
       {"name": "Architecture Docs", "path": "docs/architecture/"},
       {"name": "Project Structure", "path": "docs/architecture/repository-structure.md"},
-      {"name": "Buddy Instructions", "path": "docs/Copilot_Instructions/"}
+      {"name": "Buddy Instructions", "path": "projects/buddy-ai/buddy-instructions.md"}
     ]
   },
   {
