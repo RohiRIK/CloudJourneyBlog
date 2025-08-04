@@ -121,43 +121,6 @@ function Get-EndpointAnalyticsScore {
     }
 }
 
-function Get-RecentCrashEvents {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true)]
-        [string]$DeviceId,
-        [Parameter(Mandatory = $false)]
-        [int]$DaysBack = 30
-    )
-
-    try {
-        $daysAgo = (Get-Date).AddDays(-$DaysBack).ToString("yyyy-MM-ddTHH:mm:ssZ")
-        $detailsUri = "https://graph.microsoft.com/beta/deviceManagement/userExperienceAnalyticsAppHealthDevicePerformanceDetails?`$filter=deviceId eq '$DeviceId' and eventType eq 'App crash' and eventDateTime ge $daysAgo"
-
-        Write-Log "Querying crash events for device: $DeviceId" -Level "Info"
-        $detailsResponse = Invoke-MgGraphRequest -Uri $detailsUri -Method Get 
-
-        if ($detailsResponse.value -and $detailsResponse.value.Count -gt 0) {
-            Write-Log "Found $($detailsResponse.value.Count) crash events in the last $DaysBack days for device: $DeviceId" -Level "Info"
-            
-            # Format the crash details and return them
-            $crashes = $detailsResponse.value | Select-Object -Property @{Name = "AppDisplayName"; Expression = { $_.appDisplayName } },
-                                                                        @{Name = "AppVersion"; Expression = { $_.appVersion } },
-                                                                        @{Name = "EventDateTime"; Expression = { $_.eventDateTime } }
-            
-            return $crashes
-        } 
-        else {
-            Write-Log "No crash events found within the last $DaysBack days for device: $DeviceId" -Level "Info"
-            return $null
-        }
-    }
-    catch {
-        Write-Log "Error getting crash events for device '$DeviceId': $($_.Exception.Message)" -Level "Error"
-        return $null
-    }
-}
-
 
 function Get-RecentCrashEvents {
     [CmdletBinding()]
