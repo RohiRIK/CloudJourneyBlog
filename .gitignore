@@ -65,18 +65,6 @@ aws-credentials
 # Logs and Temporary Files
 *.log
 
-# Dependencies
-node_modules/
-
-# Coverage and Testing
-coverage/
-
-# Archives
-*.zip
-
-# Large Media Files
-*.mp4
-
 # Custom Exclusions
 
 # Keep Important Files
@@ -120,3 +108,6 @@ infrastructure/secrets-management/infisical/.env
 # Buddy AI Output Files
 projects/buddy-ai/buddy-output/simplified_GEMINI.md
 buddy-instructionsV2.md
+
+# Best Practices Project
+projects/buddy-ai/best-pratice/
