@@ -3,13 +3,24 @@
 
 # --- Configuration (will be replaced by secure methods in production) ---
 # These values are currently hardcoded for local testing purposes.
-$SiteUrl = "https://m365x57796783.sharepoint.com/sites/device_inentory/_layouts/15/appinv.aspx"
+$SiteUrl = "https://m365x57796783.sharepoint.com/sites/device_inentory"
 $ListName = "device_inventory"
 $JsonFilePath = "C:\Users\RohiRikman\OneDrive - OnCloud\infrastructure_toolkit\automation_workflows\device_inventory\data\device_inventry_exmple.json"
 
 $ClientId = "5c87eb80-c3e2-45a0-bc1e-520785b3df38"
 $TenantId = "d7e5afc3-f28a-4611-bf69-bb91ff76fefa"
 $ClientSecret = "Lfa8Q~ZYF5cgm2KuNTBnFNCTpjdTRgmo6r1yzarq"
+
+$mainObjectProperties = @(
+    "Id",
+    "AzureAdDeviceId",
+    "DeviceName",
+    "UserPrincipalName",
+    "Model",
+    "Manufacturer",
+    "SerialNumber",
+    "IsEncrypted" # For "Disk Encryption Status"
+)
 
 # --- Functions ---
 
@@ -258,7 +269,7 @@ function Connect-SharePointOnline {
         [string]$SiteUrl,
         [Parameter(Mandatory = $true)]
         [string]$ClientId,
-        [Parameter(Mandatory = true)]
+        [Parameter(Mandatory = $true)]
         [string]$ClientSecret
     )
     Write-Log "Connecting to SharePoint Online using Service Principal..." -Level "Info"
@@ -272,7 +283,6 @@ function Connect-SharePointOnline {
         return $false
     }
 }
-
 
 
 
@@ -329,7 +339,7 @@ $secureSecret = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 # Create a PSCredential object
 $ClientSecretCredential = New-Object System.Management.Automation.PSCredential($clientId, $secureSecret)
 # Connect to Microsoft Graph
-Connect-MgGraph -TenantId $tenantId -ClientSecretCredential $ClientSecretCredential
+Connect-MgGraph -TenantId $tenantId -ClientSecretCredential $ClientSecretCredential -NoWelcome
 Write-Log "Successfully connected to Microsoft Graph." -Level "Info"
 
 ## Query all devices
