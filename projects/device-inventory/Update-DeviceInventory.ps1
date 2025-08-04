@@ -217,61 +217,98 @@ function Connect-SharePointOnline {
     }
 }
 
-# --- Main Script Logic (will be moved here) ---
+function Update-SharePointListItem {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$ListName,
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject]$ItemData,
+        [Parameter(Mandatory = $true)]
+        [string]$UniqueIdColumn # e.g., "AzureAdDeviceId" or "Id"
+    )
+
+    Write-Log "Attempting to upsert item with $($UniqueIdColumn) = $($ItemData.$UniqueIdColumn) into SharePoint list '$ListName'." -Level "Info"
+
+    try {
+        # Check if item exists
+        $existingItem = Get-PnPListItem -List $ListName -Query "<View><Query><Where><Eq><FieldRef Name='$UniqueIdColumn'/><Value Type='Text'>$($ItemData.$UniqueIdColumn)</Value></Eq></Where></Query></View>" -ErrorAction SilentlyContinue
+
+        if ($existingItem) {
+            # Update existing item
+            Write-Log "  - Item with $($UniqueIdColumn) = $($ItemData.$UniqueIdColumn) found. Updating item." -Level "Info"
+            Set-PnPListItem -List $ListName -Identity $existingItem.Id -Values $ItemData -ErrorAction Stop | Out-Null
+            Write-Log "  - Item updated successfully." -Level "Info"
+            return "Updated"
+        }
+        else {
+            # Add new item
+            Write-Log "  - Item with $($UniqueIdColumn) = $($ItemData.$UniqueIdColumn) not found. Adding new item." -Level "Info"
+            Add-PnPListItem -List $ListName -Values $ItemData -ErrorAction Stop | Out-Null
+            Write-Log "  - New item added successfully." -Level "Info"
+            return "Added"
+        }
+    }
+    catch {
+        Write-Log "  - Failed to upsert item with $($UniqueIdColumn) = $($ItemData.$UniqueIdColumn): $($_.Exception.Message)" -Level "Error"
+        Write-Log "  - Item details: $($ItemData | ConvertTo-Json -Compress)" -Level "Error"
+        return "Failed"
+    }
+}
+
+# --- Main Script Logic ---
 
 ### Main
-Write-Log "Connecting to Microsoft Graph..." -Level "Info"
-# Added UserExperienceAnalytics.Read.All for the new endpoints
+Write-Log "Starting Device Inventory Update Script..." -Level "Info"
 
+# --- Connect to Microsoft Graph ---
+Write-Log "Connecting to Microsoft Graph..." -Level "Info"
 # Convert the client secret to a SecureString
 $secureSecret = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
-
 # Create a PSCredential object
 $ClientSecretCredential = New-Object System.Management.Automation.PSCredential($clientId, $secureSecret)
-
 # Connect to Microsoft Graph
 Connect-MgGraph -TenantId $tenantId -ClientSecretCredential $ClientSecretCredential
 Write-Log "Successfully connected to Microsoft Graph." -Level "Info"
 
-## query all devices
-Write-Log "Querying all managed devices to get their main properties from your table..." -Level "Info"
-
-    # This single, efficient call gets all the direct properties for all devices.
-$allDevicesWithMainProps = Get-MgDeviceManagementManagedDevice  -All -Property $mainObjectProperties #-top 300 # -Filter "operatingSystem eq 'Windows'"
+## Query all devices
+Write-Log "Querying all managed devices to get their main properties..." -Level "Info"
+$allDevicesWithMainProps = Get-MgDeviceManagementManagedDevice  -All -Property $mainObjectProperties
 Write-Log "Found $($allDevicesWithMainProps.Count) devices. Now fetching additional data for each." -Level "Info"
-
-$results = @()
 
 # Get all device scores first (more efficient than individual calls)
 Write-Log "Fetching all endpoint analytics scores..." -Level "Info"
 $allDeviceAnalytics = Get-EndpointAnalyticsScore
-
 $deviceAnalyticsHash = @{}
-
-#Create a hashtable for quick lookup by device ID
 if ($allDeviceAnalytics) {
-        foreach ($Analytics in $allDeviceAnalytics) {
-
+    foreach ($Analytics in $allDeviceAnalytics) {
         $deviceAnalyticsHash[$Analytics.id] = $Analytics
     }
     Write-Log "Device score hash created with $($deviceAnalyticsHash.Count) entries." -Level "Info"
 }
 
+# --- Connect to SharePoint Online ---
+$sharePointConnected = Connect-SharePointOnline -SiteUrl $SiteUrl -ClientId $ClientId -ClientSecret $ClientSecret
+if (-not $sharePointConnected) {
+    Write-Log "SharePoint connection failed. Exiting script." -Level "Error"
+    exit
+}
+
+$processedCount = 0
+$addedCount = 0
+$updatedCount = 0
+$failedCount = 0
+$lowScoreDevices = @()
+
 foreach ($device in $allDevicesWithMainProps) {
+    $processedCount++
     $deviceId = $device.Id
     $AzureAdDeviceId = $device.AzureAdDeviceId
-    Write-Log "Processing device: $($device.DeviceName) with ID: $deviceId" -Level "Info"
+    Write-Log "Processing device: $($device.DeviceName) (ID: $deviceId)" -Level "Info"
 
-    # Try to get the device score - first by regular ID 
     $deviceAnalytics = $deviceAnalyticsHash[$deviceId]
-    # if ($deviceAnalytics -eq $null) {
-    #     # If not found, try using AzureAdDeviceId
-    #     write-Log "Device $($device.DeviceName) not found, trying request it again: $($deviceId)" -Level "Info"
-    #     #$result = Get-EndpointAnalyticsScore -DeviceId $deviceId
-    # }
 
     # Create a custom object to hold the device data
-    $result = [PSCustomObject]@{
+    $deviceData = [PSCustomObject]@{
         Id                         = $deviceId
         AzureAdDeviceId            = $AzureAdDeviceId
         DeviceName                 = $device.DeviceName
@@ -295,25 +332,56 @@ foreach ($device in $allDevicesWithMainProps) {
         dataCollectionTime       = get-date -Format "yyyy-MM-ddTHH:mm:ssZ" # Add a timestamp for data collection
     }
 
-    # Add the result to the results array
-    $results += $result
+    # Update SharePoint List Item
+    $upsertResult = Update-SharePointListItem -ListName $ListName -ItemData $deviceData -UniqueIdColumn "AzureAdDeviceId"
+    
+    switch ($upsertResult) {
+        "Added" { $addedCount++ }
+        "Updated" { $updatedCount++ }
+        "Failed" { $failedCount++ }
+    }
+
+    # Check for low scores and add to report
+    if ($deviceData.EndpointAnalyticsScore -lt 80 -or
+        $deviceData.StartupPerformanceScore -lt 80 -or
+        $deviceData.AppReliabilityScore -lt 80 -or
+        $deviceData.WorkFromAnywhereScore -lt 80 -or
+        $deviceData.MeanResourceSpikeTimeScore -lt 80 -or
+        $deviceData.BatteryHealthScore -lt 80) {
+        $lowScoreDevices += $deviceData
+    }
 }
 
-# Display summary
-Write-Log "Processing completed. Total devices processed: $($results.Count)" -Level "Info"
+# --- Generate Summary Report ---
+Write-Log "Data import and processing complete." -Level "Info"
+Write-Log "--- Summary Report ---" -Level "Info"
+Write-Log "Total Devices Processed: $processedCount" -Level "Info"
+Write-Log "New Devices Added to SharePoint: $addedCount" -Level "Info"
+Write-Log "Existing Devices Updated in SharePoint: $updatedCount" -Level "Info"
+Write-Log "Failed SharePoint Operations: $failedCount" -Level "Info"
 
-# Display the results in a formatted table
-Write-Log "Device Analytics Summary:" -Level "Info"
-$results | ConvertTo-Json
-# Export to CSV
-$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-$csvPath = "device_analytics_scores_$timestamp.csv"
-$results | Export-Csv -Path $csvPath -NoTypeInformation
-Write-Log "Results exported to: $csvPath" -Level "Info"
+if ($lowScoreDevices.Count -gt 0) {
+    Write-Log "Devices with Scores Below Threshold (80):" -Level "Warning"
+    foreach ($lowDevice in $lowScoreDevices) {
+        Write-Log "  - Device: $($lowDevice.DeviceName), EndpointAnalyticsScore: $($lowDevice.EndpointAnalyticsScore), AppReliabilityScore: $($lowDevice.AppReliabilityScore)" -Level "Warning"
+        if ($lowDevice.RecentCrashEvents) {
+            Write-Log "    Recent Crash Events:" -Level "Warning"
+            $lowDevice.RecentCrashEvents | ForEach-Object {
+                Write-Log "      App: $($_.AppDisplayName), Version: $($_.AppVersion), Time: $($_.EventDateTime)" -Level "Warning"
+            }
+        }
+    }
+} else {
+    Write-Log "No devices found with scores below threshold." -Level "Info"
+}
 
-# # Disconnect from Microsoft Graph
-# Disconnect-MgGraph
+# --- Disconnect from Microsoft Graph ---
+# Disconnect-MgGraph # Uncomment if you want to disconnect explicitly
 # Write-Log "Disconnected from Microsoft Graph." -Level "Info"
+
+# --- Disconnect from SharePoint ---
+# Disconnect-PnPOnline # Uncomment if you want to disconnect explicitly
+# Write-Log "Disconnected from SharePoint Online." -Level "Info"
 
 ### Main
 Write-Log "Connecting to Microsoft Graph..." -Level "Info"
