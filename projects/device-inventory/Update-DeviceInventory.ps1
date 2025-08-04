@@ -11,7 +11,7 @@ $ClientId = "5c87eb80-c3e2-45a0-bc1e-520785b3df38"
 $TenantId = "d7e5afc3-f28a-4611-bf69-bb91ff76fefa"
 $ClientSecret = "Lfa8Q~ZYF5cgm2KuNTBnFNCTpjdTRgmo6r1yzarq"
 
-# --- Functions (will be moved here) ---
+# --- Functions ---
 
 ## Function to create logs
 function Write-Log {
@@ -121,7 +121,6 @@ function Get-EndpointAnalyticsScore {
     }
 }
 
-
 function Get-RecentCrashEvents {
     [CmdletBinding()]
     param (
@@ -161,20 +160,16 @@ function Get-RecentCrashEvents {
 
 function Connect-SharePointOnline {
     param (
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [string]$SiteUrl,
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [string]$ClientId,
-        [Parameter(Mandatory = $false)]
-        [string]$ClientSecret,
-        [Parameter(Mandatory = $false)]
-        [string]$AccessToken = $null
+        [Parameter(Mandatory = true)]
+        [string]$ClientSecret
     )
     Write-Log "Connecting to SharePoint Online using Service Principal..." -Level "Info"
     try {
-        #Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -ClientSecretCredential $ClientSecret -WarningAction Ignore
-        Connect-PnPOnline -Url $SiteUrl -AccessToken $AccessToken -WarningAction Ignore
-
+        Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -ClientSecretCredential $ClientSecret -WarningAction Ignore
         Write-Log "Successfully connected to $SiteUrl using Service Principal." -Level "Info"
         return $true
     }
@@ -356,99 +351,3 @@ if ($lowScoreDevices.Count -gt 0) {
 # --- Disconnect from SharePoint ---
 # Disconnect-PnPOnline # Uncomment if you want to disconnect explicitly
 # Write-Log "Disconnected from SharePoint Online." -Level "Info"
-
-### Main
-Write-Log "Connecting to Microsoft Graph..." -Level "Info"
-# Added UserExperienceAnalytics.Read.All for the new endpoints
-
-# Convert the client secret to a SecureString
-$secureSecret = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
-
-# Create a PSCredential object
-$ClientSecretCredential = New-Object System.Management.Automation.PSCredential($clientId, $secureSecret)
-
-# Connect to Microsoft Graph
-Connect-MgGraph -TenantId $tenantId -ClientSecretCredential $ClientSecretCredential
-Write-Log "Successfully connected to Microsoft Graph." -Level "Info"
-
-## query all devices
-Write-Log "Querying all managed devices to get their main properties from your table..." -Level "Info"
-
-    # This single, efficient call gets all the direct properties for all devices.
-$allDevicesWithMainProps = Get-MgDeviceManagementManagedDevice  -All -Property $mainObjectProperties #-top 300 # -Filter "operatingSystem eq 'Windows'"
-Write-Log "Found $($allDevicesWithMainProps.Count) devices. Now fetching additional data for each." -Level "Info"
-
-$results = @()
-
-# Get all device scores first (more efficient than individual calls)
-Write-Log "Fetching all endpoint analytics scores..." -Level "Info"
-$allDeviceAnalytics = Get-EndpointAnalyticsScore
-
-$deviceAnalyticsHash = @{}
-
-#Create a hashtable for quick lookup by device ID
-if ($allDeviceAnalytics) {
-        foreach ($Analytics in $allDeviceAnalytics) {
-
-        $deviceAnalyticsHash[$Analytics.id] = $Analytics
-    }
-    Write-Log "Device score hash created with $($deviceAnalyticsHash.Count) entries." -Level "Info"
-}
-
-foreach ($device in $allDevicesWithMainProps) {
-    $deviceId = $device.Id
-    $AzureAdDeviceId = $device.AzureAdDeviceId
-    Write-Log "Processing device: $($device.DeviceName) with ID: $deviceId" -Level "Info"
-
-    # Try to get the device score - first by regular ID 
-    $deviceAnalytics = $deviceAnalyticsHash[$deviceId]
-    # if ($deviceAnalytics -eq $null) {
-    #     # If not found, try using AzureAdDeviceId
-    #     write-Log "Device $($device.DeviceName) not found, trying request it again: $($deviceId)" -Level "Info"
-    #     #$result = Get-EndpointAnalyticsScore -DeviceId $deviceId
-    # }
-
-    # Create a custom object to hold the device data
-    $result = [PSCustomObject]@{
-        Id                         = $deviceId
-        AzureAdDeviceId            = $AzureAdDeviceId
-        DeviceName                 = $device.DeviceName
-        UserPrincipalName          = $device.UserPrincipalName
-        Model                      = $device.Model
-        Manufacturer               = $device.Manufacturer
-        SerialNumber               = $device.SerialNumber
-        IsEncrypted                = $device.IsEncrypted
-        
-        # Endpoint Analytics Scores (handle null device scores)
-        EndpointAnalyticsScore     = if ($deviceAnalytics) { $deviceAnalytics.endpointAnalyticsScore } else { -1 }
-        StartupPerformanceScore    = if ($deviceAnalytics) { $deviceAnalytics.startupPerformanceScore } else { -1 }
-        AppReliabilityScore        = if ($deviceAnalytics) { $deviceAnalytics.appReliabilityScore } else { -1 }
-        WorkFromAnywhereScore      = if ($deviceAnalytics) { $deviceAnalytics.workFromAnywhereScore } else { -1 }
-        MeanResourceSpikeTimeScore = if ($deviceAnalytics) { $deviceAnalytics.meanResourceSpikeTimeScore } else { -1 }
-        BatteryHealthScore         = if ($deviceAnalytics) { $deviceAnalytics.batteryHealthScore } else { -1 }
-        HealthStatus               = if ($deviceAnalytics) { $deviceAnalytics.healthStatus } else { "Unknown" }
-
-        # Crash Events Data - only call if we have a device score and it's low
-        RecentCrashEvents          = if ($deviceAnalytics -and $deviceAnalytics.appReliabilityScore -lt 80) { Get-RecentCrashEvents -DeviceId $deviceId -DaysBack 30 } else { $null }
-        dataCollectionTime       = get-date -Format "yyyy-MM-ddTHH:mm:ssZ" # Add a timestamp for data collection
-    }
-
-    # Add the result to the results array
-    $results += $result
-}
-
-# Display summary
-Write-Log "Processing completed. Total devices processed: $($results.Count)" -Level "Info"
-
-# Display the results in a formatted table
-Write-Log "Device Analytics Summary:" -Level "Info"
-$results | ConvertTo-Json
-# Export to CSV
-$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-$csvPath = "device_analytics_scores_$timestamp.csv"
-$results | Export-Csv -Path $csvPath -NoTypeInformation
-Write-Log "Results exported to: $csvPath" -Level "Info"
-
-# # Disconnect from Microsoft Graph
-# Disconnect-MgGraph
-# Write-Log "Disconnected from Microsoft Graph." -Level "Info"
