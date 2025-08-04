@@ -10,12 +10,20 @@
 
 ## To-Do: Further Enhancements
 
-The existing function for retrieving device scores is working. Now, we need to research and integrate additional data points from the Graph API for other Endpoint Analytics scores. This involves identifying the correct Graph API endpoints and properties for each. and implement this in the update script
+The existing function for retrieving device scores is working. Now, we need to research and integrate additional data points from the Graph API for other Endpoint Analytics scores. This involves identifying the correct Graph API endpoints and properties for each, and implementing this in the update script.
 
 Specifically, we need to enhance data collection for:
 
-*   **EndpointAnalyticsScore:** Research relevant Graph API endpoints to gather more detailed data for this score.
-*   **StartupPerformanceScore:** For example, we can add data related to device startup times.
-*   **WorkFromAnywhereScore**
-*   **MeanResourceSpikeTimeScore**
-*   **BatteryHealthScore**
+*   **EndpointAnalyticsScore:** This is an overall score. Detailed data for its contributing factors will be gathered from the specific endpoints below.
+*   **StartupPerformanceScore:**
+    *   **Research Findings:** Detailed data can be found in `userExperienceAnalyticsDeviceStartupProcess` and `userExperienceAnalyticsDeviceStartupProcessPerformance` entities.
+    *   **Data Points:** Look for `processName`, `productName`, `publisher`, `impactInMs`, `medianImpactInMs`, `totalImpactInMs`, and `deviceCount` related to startup processes.
+*   **WorkFromAnywhereScore:**
+    *   **Research Findings:** Detailed data is available through the `userExperienceAnalyticsWorkFromAnywhereDevices` entity.
+    *   **Data Points:** Includes `id`, `deviceId`, `deviceName`, `serialNumber`, `manufacturer`, `model`, `ownership`, `managedBy`, and boolean flags for hardware checks, Autopilot, and Azure AD registration status.
+*   **MeanResourceSpikeTimeScore:**
+    *   **Research Findings:** This metric is part of **Resource Performance** within Endpoint Analytics and is primarily found in `userExperienceAnalyticsMetricHistory`.
+    *   **Data Points:** Focus on historical trends of CPU and RAM usage spikes (over 50% usage) to understand the underlying factors.
+*   **BatteryHealthScore:**
+    *   **Research Findings:** Detailed battery health information is available via the `userExperienceAnalyticsBatteryHealthDevicePerformance` entity.
+    *   **Data Points:** Includes `maxCapacity`, `cycleCount`, `tags` (e.g., "newbattery", "batterycapacityred"), and `overallBatteryHealthStatus`.

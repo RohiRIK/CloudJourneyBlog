@@ -164,7 +164,7 @@ function Get-RecentCrashEvents {
     param (
         [Parameter(Mandatory = $true)]
         [string]$DeviceId,
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = $false)]
         [int]$DaysBack = 30
     )
 
@@ -198,16 +198,20 @@ function Get-RecentCrashEvents {
 
 function Connect-SharePointOnline {
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [string]$SiteUrl,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [string]$ClientId,
-        [Parameter(Mandatory = true)]
-        [string]$ClientSecret
+        [Parameter(Mandatory = $false)]
+        [string]$ClientSecret,
+        [Parameter(Mandatory = $false)]
+        [string]$AccessToken = $null
     )
     Write-Log "Connecting to SharePoint Online using Service Principal..." -Level "Info"
     try {
-        Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -ClientSecretCredential $ClientSecret -WarningAction Ignore
+        #Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -ClientSecretCredential $ClientSecret -WarningAction Ignore
+        Connect-PnPOnline -Url $SiteUrl -AccessToken $AccessToken -WarningAction Ignore
+
         Write-Log "Successfully connected to $SiteUrl using Service Principal." -Level "Info"
         return $true
     }
@@ -287,7 +291,14 @@ if ($allDeviceAnalytics) {
 }
 
 # --- Connect to SharePoint Online ---
-$sharePointConnected = Connect-SharePointOnline -SiteUrl $SiteUrl -ClientId $ClientId -ClientSecret $ClientSecret
+Write-Log "Connecting to SharePoint Online..." -Level "Info"
+$accessToken = Get-AccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+if (-not $accessToken) {
+    Write-Log "Failed to obtain access token for SharePoint. Exiting script." -Level "Error"
+    exit
+}   
+$sharePointConnected = Connect-SharePointOnline -SiteUrl $SiteUrl -AccessToken $accessToken
+Write-Log "SharePoint connection established." -Level "Info"    
 if (-not $sharePointConnected) {
     Write-Log "SharePoint connection failed. Exiting script." -Level "Error"
     exit
