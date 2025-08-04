@@ -378,6 +378,7 @@ $addedCount = 0
 $updatedCount = 0
 $failedCount = 0
 $lowScoreDevices = @()
+$allDeviceData = @()  # Array to collect all device data for testing
 
 foreach ($device in $allDevicesWithMainProps) {
     $processedCount++
@@ -409,21 +410,25 @@ foreach ($device in $allDevicesWithMainProps) {
         HealthStatus               = if ($deviceAnalytics) { $deviceAnalytics.healthStatus } else { "Unknown" }
 
 
-        # Crash Events Data - only call if we have a device score and it's low
+        # Additional Performance Data - only call if we have device analytics and score is less than 80
         RecentCrashEvents_data          = if ($deviceAnalytics -and $deviceAnalytics.appReliabilityScore -lt 80) { Get-RecentCrashEvents -DeviceId $deviceId -DaysBack 30 } else { $null }
-        StartupPerformance_data         = if ($deviceAnalytics) { $deviceAnalytics.startupPerformance -lt 80 } else { Get-DeviceStartupHistory -DeviceId $deviceId -DaysBack 30 }
-        BatteryHealth_data               = if ($deviceAnalytics) { $deviceAnalytics.batteryHealth -lt 80 } else { Get-BatteryHealthDevicePerformance -DeviceId $deviceId }
-        WorkFromAnywhere_data            = if ($deviceAnalytics) { $deviceAnalytics.workFromAnywhere -lt 80 } else { Get-WorkFromAnywhereDevicePerformance -DeviceId $deviceId }
+        StartupPerformance_data         = if ($deviceAnalytics -and $deviceAnalytics.startupPerformanceScore -lt 80) { Get-DeviceStartupHistory -DeviceId $deviceId } else { $null }
+        BatteryHealth_data              = if ($deviceAnalytics -and $deviceAnalytics.batteryHealthScore -lt 80) { Get-BatteryHealthDevicePerformance -DeviceId $deviceId } else { $null }
+        WorkFromAnywhere_data           = if ($deviceAnalytics -and $deviceAnalytics.workFromAnywhereScore -lt 80) { Get-WorkFromAnywhereModelPerformance -DeviceId $deviceId } else { $null }
         dataCollectionTime               = get-date -Format "yyyy-MM-ddTHH:mm:ssZ" # Add a timestamp for data collection
     }
 
-    # Update SharePoint List Item
-    $upsertResult = Update-SharePointListItem -ListName $ListName -ItemData $deviceData -UniqueIdColumn "AzureAdDeviceId"
+    # TESTING MODE: Collect data instead of updating SharePoint
+    $allDeviceData += $deviceData
+    
+    # Simulate the result for testing
+    $upsertResult = "Testing"  # Set a test result
     
     switch ($upsertResult) {
         "Added" { $addedCount++ }
         "Updated" { $updatedCount++ }
         "Failed" { $failedCount++ }
+        "Testing" { Write-Log "  - Device data collected for testing: $($device.DeviceName)" -Level "Info" }
     }
 
 }
@@ -435,6 +440,42 @@ Write-Log "Total Devices Processed: $processedCount" -Level "Info"
 Write-Log "New Devices Added to SharePoint: $addedCount" -Level "Info"
 Write-Log "Existing Devices Updated in SharePoint: $updatedCount" -Level "Info"
 Write-Log "Failed SharePoint Operations: $failedCount" -Level "Info"
+
+# --- TESTING OUTPUT: Display collected device data ---
+Write-Log "--- TESTING MODE: Device Data Collection Results ---" -Level "Warning"
+Write-Log "Total devices with data collected: $($allDeviceData.Count)" -Level "Warning"
+
+# Display summary of each device
+foreach ($deviceInfo in $allDeviceData) {
+    Write-Log "Device: $($deviceInfo.DeviceName)" -Level "Info"
+    Write-Log "  - Azure AD Device ID: $($deviceInfo.AzureAdDeviceId)" -Level "Info"
+    Write-Log "  - User: $($deviceInfo.UserPrincipalName)" -Level "Info"
+    Write-Log "  - Endpoint Analytics Score: $($deviceInfo.EndpointAnalyticsScore)" -Level "Info"
+    Write-Log "  - App Reliability Score: $($deviceInfo.AppReliabilityScore)" -Level "Info"
+    Write-Log "  - Startup Performance Score: $($deviceInfo.StartupPerformanceScore)" -Level "Info"
+    Write-Log "  - Battery Health Score: $($deviceInfo.BatteryHealthScore)" -Level "Info"
+    Write-Log "  - Work From Anywhere Score: $($deviceInfo.WorkFromAnywhereScore)" -Level "Info"
+    
+    # Show if additional data was collected
+    if ($deviceInfo.RecentCrashEvents_data) {
+        Write-Log "  - Recent Crash Events: $($deviceInfo.RecentCrashEvents_data.Count) events found" -Level "Warning"
+    }
+    if ($deviceInfo.StartupPerformance_data) {
+        Write-Log "  - Startup Performance Data: Available" -Level "Warning"
+    }
+    if ($deviceInfo.BatteryHealth_data) {
+        Write-Log "  - Battery Health Data: Available" -Level "Warning"
+    }
+    if ($deviceInfo.WorkFromAnywhere_data) {
+        Write-Log "  - Work From Anywhere Data: Available" -Level "Warning"
+    }
+    Write-Log "  ---" -Level "Info"
+}
+
+# Export to JSON for detailed review
+$jsonOutputPath = "C:\temp\device_inventory_test_results.json"
+$allDeviceData | ConvertTo-Json -Depth 10 | Out-File -FilePath $jsonOutputPath -Encoding UTF8
+Write-Log "Detailed device data exported to: $jsonOutputPath" -Level "Warning"
 
 if ($lowScoreDevices.Count -gt 0) {
     Write-Log "Devices with Scores Below Threshold (80):" -Level "Warning"
