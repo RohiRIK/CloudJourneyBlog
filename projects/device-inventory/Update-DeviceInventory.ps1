@@ -373,18 +373,18 @@ if ($allWorkFromAnywhereModelPerformance) {
 }
 
 # --- Connect to SharePoint Online ---
-Write-Log "Connecting to SharePoint Online..." -Level "Info"
-$accessToken = Get-AccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
-if (-not $accessToken) {
-    Write-Log "Failed to obtain access token for SharePoint. Exiting script." -Level "Error"
-    exit
-}   
-$sharePointConnected = Connect-SharePointOnline -SiteUrl $SiteUrl -AccessToken $accessToken
-Write-Log "SharePoint connection established." -Level "Info"    
-if (-not $sharePointConnected) {
-    Write-Log "SharePoint connection failed. Exiting script." -Level "Error"
-    exit
-}
+# Write-Log "Connecting to SharePoint Online..." -Level "Info"
+# $accessToken = Get-AccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+# if (-not $accessToken) {
+#     Write-Log "Failed to obtain access token for SharePoint. Exiting script." -Level "Error"
+#     exit
+# }   
+# $sharePointConnected = Connect-SharePointOnline -SiteUrl $SiteUrl -AccessToken $accessToken
+# Write-Log "SharePoint connection established." -Level "Info"    
+# if (-not $sharePointConnected) {
+#     Write-Log "SharePoint connection failed. Exiting script." -Level "Error"
+#     exit
+# }
 
 $processedCount = 0
 $addedCount = 0
