@@ -59,8 +59,14 @@ This section provides a detailed explanation of each data point collected for En
     
 *   **BatteryHealthScore:**
     *   **Description:** A score (0-100) indicating the overall health and performance of a device's battery. A lower score suggests potential battery degradation or issues.
-    *   **Associated Data Points (from `userExperienceAnalyticsBatteryHealthDevicePerformance`):**
-        *   **`maxCapacity`:** The maximum charge capacity of the battery.
-        *   **`cycleCount`:** The number of charge cycles the battery has undergone.
-        *   **`tags`:** Descriptive tags indicating battery behavior or status (e.g., "newbattery", "batterycapacityred").
-        *   **`overallBatteryHealthStatus`:** A categorical status of the battery's health (e.g., `unknown`, `insufficientData`, `needsAttention`, `meetingGoals`).
+    *   **Research Findings:** Detailed battery health information is available via the `userExperienceAnalyticsBatteryHealthDevicePerformance` entity.
+    *   **Data Points:** Look for:
+        *   `maxCapacityPercentage`: The maximum charge capacity of the battery as a percentage.
+        *   `estimatedRuntimeInMinutes`: The estimated runtime of the battery in minutes.
+        *   `batteryAgeInDays`: The age of the battery in days.
+        *   `fullBatteryDrainCount`: The number of times the battery has been fully drained.
+        *   `deviceBatteryCount`: The number of batteries in the device.
+        *   `deviceBatteryTags`: Tags indicating battery behavior or status.
+        *   `deviceBatteryHealthScore`: The health score of the device battery.
+        *   `healthStatus`: The overall health status of the battery (`unknown`, `insufficientData`, `needsAttention`, or `meetingGoals`).
+        *   `deviceBatteriesDetails`: Details for individual batteries within the device, including `batteryId`, `maxCapacityPercentage`, and `fullBatteryDrainCount`.
