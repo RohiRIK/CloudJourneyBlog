@@ -100,4 +100,6 @@ projects/TELOS/*
 infrastructure/secrets-management/infisical/.env
 
 # Gemini CLI specific ignores
-.gemini
+.gemini/
+
+device_inventory/
