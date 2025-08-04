@@ -49,6 +49,9 @@ This section provides a detailed explanation of each data point collected for En
         *   `modelDeviceCount`: The number of devices associated with that specific model.
         *   `workFromAnywhereScore`: A score (0-100) indicating the overall work from anywhere performance of the device model.
         *   `windowsScore`: The Windows score of the device model (0-100).
+        *   `cloudManagementScore`: Score for cloud management aspects.
+        *   `cloudIdentityScore`: Score for cloud identity aspects.
+        *   `cloudProvisioningScore`: Score for cloud provisioning aspects.
         *   `healthStatus`: The health state of the device model (`unknown`, `insufficientData`, `needsAttention`, or `meetingGoals`).
 
 *   **MeanResourceSpikeTimeScore:**
