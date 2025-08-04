@@ -22,6 +22,15 @@
           {"name": "Secure Commit Workflow", "path": "projects/buddy-ai/workflows/secure-commit-workflow.md"},
           {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/workflows/sort-blog-workflow.md"}
         ]
+      },
+      {
+        "name": "Best Practices",
+        "items": [
+          {"name": "Buddy AI Best Practices Project", "path": "projects/buddy-ai/best-pratice/README.md"},
+          {"name": "The Goal and The Prompt", "path": "projects/buddy-ai/best-pratice/The gole and the prompt.md"},
+          {"name": "Checklist", "path": "projects/buddy-ai/best-pratice/checklist.md"},
+          {"name": "Polished Best Practices", "path": "projects/buddy-ai/best-pratice/polished_best_practices.md"}
+        ]
       }
     ]
   },
