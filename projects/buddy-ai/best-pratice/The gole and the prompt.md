@@ -116,6 +116,393 @@ Based on the overview of Gemini CLI, here are some best practices and key consid
 *   Consider adding autocompletion support to enhance the user experience.
 *   Distribute the CLI as a Python package for easy installation.
 
+## Extracted Best Practices from Gemini CLI GitHub README
+
+Based on the GitHub README of Gemini CLI, here are additional best practices and key considerations for building and improving AI agents like Buddy AI:
+
+### Ideas for Building and Improving AI Agents (from GitHub README)
+
+*   **Querying and Editing Codebases:** Utilize Gemini CLI for efficiently querying and editing large codebases.
+*   **Generating Applications:** Explore Gemini's multimodal capabilities for generating new applications from PDFs or sketches.
+*   **Automating Operational Tasks:** Automate tasks like querying pull requests or handling complex rebases.
+*   **Tool and MCP Server Connection:** Connect to tools and Model Context Protocol (MCP) servers for new capabilities, including media generation (Imagen, Veo, Lyria).
+*   **Grounding Queries:** Leverage the built-in Google Search tool for grounding queries.
+*   **Secure Authentication:** Ensure secure access to Gemini through authentication methods like `gcloud auth application-default login`.
+*   **Customizable Configuration:** Use `config.yaml` for customizing API keys and settings for tailored AI model interactions.
+*   **Preventing Credential Leaks:** Utilize `.gitignore` to prevent accidental commits of sensitive credentials.
+*   **Shell Script Automation:** Automate common tasks with shell scripts to enhance efficiency and reproducibility.
+*   **Streamlined Operations with Makefile:** Use a `Makefile` to streamline complex operations and ensure consistency.
+*   **Comprehensive Documentation:** Provide comprehensive documentation for user understanding and effective utilization.
+*   **Continuous Integration:** Implement continuous integration via GitHub Actions for automated testing and code quality.
+*   **Semantic Versioning:** Manage changes with semantic versioning for clear communication and controlled updates.
+*   **Contribution Guidelines:** Adhere to contribution guidelines to foster collaboration and maintain code quality.
+*   **Detailed Commit Messages:** Write detailed commit messages for clarity and effective collaboration.
+*   **Pull Request for Review:** Use pull requests for code review, quality assurance, and knowledge sharing.
+*   **Thorough Testing:** Prioritize testing to identify bugs early and ensure reliability and overall quality.
+*   **Informative Error Handling:** Implement error handling to prevent crashes and provide informative messages.
+*   **Rate Limiting:** Implement rate limiting to prevent abuse and ensure fair access to Gemini AI models.
+*   **Embedding Generation:** Utilize the CLI tool for generating embeddings, facilitating semantic search and similarity analysis.
+*   **Interactive Model Interaction:** Provide a convenient way to interact with Gemini models for exploration and experimentation.
+*   **Productivity Enhancement:** Leverage command-line interfaces to enhance productivity by automating tasks and integrating AI.
+*   **Maintainable Project Structure:** Design a project structure for maintainability and long-term sustainability.
+*   **Support for Various Output Formats:** Support various output formats for integrating AI insights into diverse applications.
+*   **Clear API Key Setup:** Provide clear instructions on setting up API keys for quick user onboarding.
+*   **Community Contributions:** Encourage community contributions to foster collaboration and innovation.
+*   **Text Generation:** Support text generation for creating various types of content with AI assistance.
+*   **Multimodal Inputs:** Support multimodal inputs (text and images) for richer AI interactions.
+*   **Rapid Prototyping:** Use the CLI for quick prototyping, enabling rapid experimentation and validation of AI-driven ideas.
+
+### Key Insights for AI-Powered CLI Development (from GitHub README)
+
+*   Automation through scripts and Makefiles improves efficiency and reproducibility.
+*   Clear documentation and contribution guidelines foster community involvement.
+*   Robust testing and error handling enhance user experience and reliability.
+*   Careful configuration and security practices protect sensitive data.
+*   Semantic versioning and change logs provide transparency.
+*   The Gemini CLI empowers developers to integrate AI seamlessly.
+*   Focus on usability and maintainability ensures accessibility.
+*   Emphasis on security and responsible AI usage promotes ethical development.
+*   Streamlining AI model interactions unlocks new levels of productivity.
+*   Prioritizing code quality and community collaboration fosters continuous improvement.
+*   Effective error handling and rate limiting ensure stable performance.
+*   The CLI tool allows for rapid prototyping and experimentation.
+
+### Habits for Effective CLI Development (from GitHub README)
+
+*   Always authenticate using `gcloud auth application-default login` for secure access.
+*   Regularly update `config.yaml` to manage API keys and customize behavior.
+*   Consistently use `.gitignore` to prevent accidental committing of sensitive information.
+*   Automate common tasks with shell scripts.
+*   Utilize the `Makefile` to streamline complex operations.
+*   Refer to comprehensive documentation for effective usage.
+*   Implement continuous integration using GitHub Actions.
+*   Follow semantic versioning practices for clear updates.
+*   Adhere to contribution guidelines for quality contributions.
+*   Write detailed commit messages for clarity and collaboration.
+*   Use pull requests for code review and quality assurance.
+*   Prioritize testing to identify bugs early.
+*   Implement robust error handling.
+*   Utilize rate limiting to prevent abuse.
+*   Maintain a well-structured project for maintainability.
+
+### Recommendations for Buddy AI Improvement (from GitHub README)
+
+*   Prioritize security by regularly rotating API keys and using environment variables.
+*   Implement comprehensive logging to track usage and debug issues.
+*   Create example scripts showcasing common use cases.
+*   Provide clear error messages with actionable suggestions.
+*   Offer support for multiple output formats (JSON, CSV).
+*   Develop a comprehensive test suite for code reliability.
+*   Establish a clear roadmap with planned features.
+*   Encourage community contributions with templates and guidelines.
+*   Automate the release process for streamlined updates.
+*   Monitor API usage and implement rate limiting strategies.
+*   Implement input validation to prevent injection attacks.
+*   Regularly update dependencies to address security vulnerabilities.
+*   Provide a command-line flag for verbose output for debugging.
+*   Offer a configuration option to specify the API endpoint.
+*   Create a FAQ section in the documentation.
+
+## Extracted Best Practices from Gemini API Prompting Strategies
+
+Based on the Gemini API prompting strategies documentation, here are best practices and key considerations for building and improving AI agents like Buddy AI, specifically focusing on prompt engineering:
+
+### Ideas for Building and Improving AI Agents (from Prompting Strategies)
+
+*   **Prompt Engineering:** Craft effective prompts to guide AI models toward desired outputs and behaviors.
+*   **Iterative Refinement:** Continuously test and adjust prompts based on model responses to achieve optimal results.
+*   **Background Context:** Provide sufficient background context to help the model understand the task, its goals, and the desired style of response.
+*   **Examples in Prompts:** Use examples in prompts to teach the model how to structure its output and improve accuracy.
+*   **Output Format Specification:** Specify the desired output format to ensure the model delivers information in a structured, easily parsable manner.
+*   **Tone and Style Guidelines:** Include tone and style guidelines in the prompt to help the model align its responses with the intended audience.
+*   **Constraints and Limitations:** Define constraints and limitations in prompts to prevent the model from generating harmful or irrelevant content.
+*   **Task Decomposition:** Break down complex tasks into smaller sub-prompts to simplify processing and enhance the quality of outputs.
+*   **KPIs for Prompt Effectiveness:** Define key performance indicators (KPIs) to measure prompt effectiveness and track progress toward goals.
+*   **Regular Prompt Review:** Regularly review and update prompts to ensure continued relevance and optimal performance over time.
+*   **User Feedback for Refinement:** Incorporate user feedback into the prompt refinement process to improve the model's understanding of user needs.
+*   **Experimentation:** Experiment with different prompting techniques to uncover novel approaches for eliciting desired model behaviors.
+*   **Monitoring Model Responses:** Monitor model responses to identify potential biases, inaccuracies, or undesirable outputs for prompt adjustment.
+*   **A/B Testing Prompts:** Use A/B testing to determine which prompt versions yield the best results based on predefined metrics.
+*   **Prompt Chaining:** Utilize prompt chaining by using the output of one prompt as input for another to solve complex problems.
+*   **Few-shot Learning:** Employ few-shot learning, using a small number of examples, to teach the model to generalize to new, similar tasks.
+*   **Zero-shot Learning:** Allow the model to perform tasks without any specific examples, leveraging its general knowledge.
+*   **Chain-of-Thought Prompting:** Encourage the model to explain its reasoning process, improving transparency.
+*   **Self-consistency Sampling:** Generate multiple responses and select the most consistent one for accuracy.
+*   **Active Learning:** Enable the model to request specific data points to improve its understanding and performance.
+*   **Knowledge Graphs:** Provide structured information through knowledge graphs to enhance the model's understanding of relationships and context.
+*   **Retrieval-Augmented Generation:** Combine prompt engineering with information retrieval for improved accuracy and relevance.
+*   **Human-in-the-Loop Prompting:** Involve human intervention to guide the model and correct errors in real-time.
+*   **Explainable AI Techniques:** Use Explainable AI techniques to understand how prompts influence model behavior and improve transparency.
+*   **Prompt Libraries:** Maintain prompt libraries to provide a collection of pre-designed prompts for common tasks, accelerating development.
+*   **Version Control for Prompts:** Use version control systems to track changes to prompts, facilitating collaboration and preventing accidental modifications.
+*   **Balance of Skills:** Recognize that prompt engineering requires a balance of creativity, technical expertise, and a deep understanding of the model.
+*   **Mitigating Biases:** Design prompts carefully to mitigate biases, improve fairness, and ensure responsible AI development and deployment.
+*   **Effective Content Generation:** Understand that effective prompts enhance the model's ability to generate accurate, relevant, and engaging content.
+
+### Key Insights for AI-Powered CLI Development (from Prompting Strategies)
+
+*   The art of prompt engineering lies in understanding the AI model's capabilities and limitations to guide responses effectively.
+*   Continuous refinement through iterative testing and user feedback is crucial for optimizing prompt performance and achieving desired outcomes.
+*   Providing clear context and constraints ensures the model focuses on relevant information and avoids generating inappropriate responses.
+*   Experimentation and A/B testing are essential for discovering novel prompting techniques and identifying the most effective strategies.
+*   Combining prompt engineering with knowledge graphs and retrieval-augmented generation enhances accuracy and relevance.
+*   Transparency and explainability in prompt design are critical for building trust and understanding model behavior.
+*   Prompt libraries and version control systems streamline the development process and facilitate collaboration among prompt engineers.
+*   Responsible AI development requires careful prompt design to mitigate biases and ensure fairness in model outputs.
+*   Effective prompt engineering enhances the model's ability to generate accurate, relevant, and engaging content.
+*   Mastery of prompt engineering unlocks the full potential of AI models, enabling them to solve complex problems effectively.
+*   Prompt engineering is not just a technical skill but also a creative endeavor that requires deep understanding.
+*   The best prompts are simple, clear, and concise, yet provide sufficient context for the model to succeed.
+*   Understanding the nuances of language and how AI models interpret it is critical for effective prompting.
+*   Prompt engineering is an evolving field, and continuous learning is essential to stay ahead of the curve.
+*   The most effective prompts are those that align with the model's strengths while mitigating its weaknesses.
+
+### Habits for Effective CLI Development (from Prompting Strategies)
+
+*   Iteratively test and refine prompts based on model responses for continuous improvement and optimization.
+*   Always provide clear context and background information to guide the model's understanding of the task.
+*   Experiment with different prompting techniques to discover novel approaches and optimize model behavior.
+*   Regularly review and update prompts to ensure continued relevance and optimal performance over time.
+*   Monitor model responses for biases, inaccuracies, and undesirable outputs, adjusting prompts accordingly.
+*   Use A/B testing to compare different prompts and identify the versions that yield the best results.
+*   Break down complex tasks into smaller sub-prompts to simplify processing and enhance the quality of outputs.
+*   Define key performance indicators (KPIs) to measure prompt effectiveness and track progress toward goals.
+*   Incorporating user feedback into the prompt refinement process to improve the model's understanding of user needs.
+*   Maintain a prompt library to store and reuse effective prompts for common tasks, saving time and effort.
+*   Use version control systems to track changes to prompts, facilitating collaboration and preventing accidental modifications.
+*   Focus on simplicity and clarity in prompt design to ensure the model can easily understand and execute the task.
+*   Prioritize transparency and explainability in prompt design to build trust and understanding of model behavior.
+*   Stay up-to-date with the latest advancements in prompt engineering and AI to continuously improve skills.
+*   Always consider ethical implications and potential biases when designing prompts to ensure responsible AI development.
+
+### Recommendations for Buddy AI Improvement (from Prompting Strategies)
+
+*   Prioritize clarity and conciseness in prompt design to ensure the model understands the task effectively.
+*   Provide relevant background context to guide the model's understanding and improve the quality of responses.
+*   Incorporating examples into prompts to teach the model how to structure its output and improve accuracy.
+*   Specify the desired output format to ensure the model delivers information in a structured, parsable manner.
+*   Define the tone and style to align the model's responses with the intended audience and purpose.
+*   Include constraints and limitations to prevent the model from generating harmful or irrelevant content.
+*   Break down complex tasks into smaller sub-prompts to simplify processing and enhance the quality of outputs.
+*   Define key performance indicators (KPIs) to measure prompt effectiveness and track progress toward desired outcomes.
+*   Regularly review and update prompts to ensure continued relevance and optimal performance over time.
+*   Incorporating user feedback into the prompt refinement process to improve the model's understanding of user needs.
+*   Experiment with different prompting techniques to discover novel approaches and optimize model behavior effectively.
+*   Monitor model responses for biases, inaccuracies, and undesirable outputs, adjusting prompts to mitigate these issues.
+*   Use A/B testing to compare different prompts and identify the versions that yield the best results consistently.
+*   Explore prompt chaining to solve complex problems by using the output of one prompt as input.
+*   Consider few-shot learning to teach the model new tasks with only a small number of examples provided.
+
+## Extracted Best Practices from Gemini Code Assist Overview
+
+Based on the Gemini Code Assist overview, here are best practices and key considerations for building and improving AI agents like Buddy AI, specifically focusing on AI-powered assistance for software development:
+
+### Ideas for Building and Improving AI Agents (from Code Assist Overview)
+
+*   **AI Coding Assistance:** Utilize AI for code completion and generation in supported IDEs.
+*   **Conversational Assistant:** Implement conversational AI within IDEs for debugging, understanding, and documenting code.
+*   **Agentic Chat:** Enable AI to complete complex, multi-step tasks using system tools.
+*   **Smart Actions and Commands:** Integrate AI-initiated actions and commands for selected code.
+*   **External Service Integration:** Connect with external services to perform actions and get information within the IDE.
+*   **Source Citations:** Provide citations for documentation and code samples used to generate responses.
+*   **Enterprise-Grade Security:** Prioritize enterprise-grade security for AI-powered development tools.
+*   **Local Codebase Awareness:** Ensure AI tools have awareness of the local codebase for relevant assistance.
+*   **Extended Integrations:** Integrate with cloud services (Firebase, Colab Enterprise, BigQuery, Apigee, Application Integration).
+*   **Code Customization:** Allow for code customization based on private source code repositories.
+*   **Output Validation:** Always validate AI-generated output, as it may sometimes be factually incorrect.
+
+### Key Insights for AI-Powered CLI Development (from Code Assist Overview)
+
+*   AI augmentation transforms software development, enabling developers to concentrate on innovation while AI handles routine tasks.
+*   AI-driven tools democratize coding by providing personalized learning and real-time assistance.
+*   AI's capacity to automate documentation, testing, and refactoring ensures higher code quality and maintainability.
+*   AI-enhanced code review identifies vulnerabilities and inconsistencies, fostering secure and robust software development.
+*   AI-powered project management optimizes resource allocation and predicts potential issues.
+*   AI-assisted pair programming promotes real-time collaboration and knowledge sharing.
+*   AI's ability to analyze and optimize code performance ensures responsive and scalable applications.
+*   AI-driven security analysis proactively identifies and mitigates potential threats.
+*   AI personalizes learning experiences and accelerates skill development.
+*   AI-assisted code search and knowledge retrieval saves developers time and improves productivity.
+*   AI-driven automation streamlines deployment processes, reducing errors.
+*   AI's capacity to generate UI/UX designs enhances user satisfaction.
+*   AI assists in database design and optimization.
+*   AI enables developers to focus on creativity and innovation.
+*   AI-powered chatbots provide instant support and guidance.
+
+### Habits for Effective CLI Development (from Code Assist Overview)
+
+*   Embrace continuous learning and stay updated with AI tools and techniques in software development.
+*   Integrate AI-assisted code review into the development workflow to identify and address potential issues early on.
+*   Utilize AI-powered documentation tools to ensure code is well-documented and easy to understand for collaboration.
+*   Leverage AI to automate repetitive tasks, freeing up time for creative problem-solving and innovative development work.
+*   Employ AI-driven testing and debugging to catch errors early, improving software reliability and reducing debugging time significantly.
+*   Use AI to personalize learning experiences and accelerate skill development in specific areas of software engineering.
+*   Monitor code performance in real-time using AI tools to identify bottlenecks and optimize application responsiveness effectively.
+*   Utilize AI-assisted code search to quickly find relevant code snippets and documentation, improving productivity and reducing search time.
+*   Incorporate AI-driven security analysis into the development process to identify and mitigate potential security threats proactively.
+*   Leverage AI to generate realistic test data, ensuring thorough testing and improving the quality of software applications significantly and consistently.
+*   Embrace AI-assisted pair programming to enhance collaboration, share knowledge, and foster a culture of continuous improvement within teams.
+*   Use AI to analyze project data, identify bottlenecks, and optimize resource allocation, enhancing project management efficiency significantly overall.
+*   Employ AI to generate UI/UX designs based on user requirements, creating intuitive and visually appealing interfaces for enhanced user satisfaction.
+*   Leverage AI-driven deployment automation to streamline the deployment process, ensuring applications are deployed quickly, reliably, and consistently.
+*   Use AI to analyze code complexity and suggest simplifications, improving code readability, maintainability, and reducing the risk of bugs.
+*   Embrace AI-assisted accessibility testing to ensure applications are accessible to users with disabilities, improving inclusivity significantly overall.
+*   Utilize AI to predict code changes based on historical data, helping developers anticipate future modifications and plan accordingly.
+*   Employ AI-powered chatbots to provide instant support and guidance, answering questions, troubleshooting issues, and helping developers overcome challenges.
+*   Leverage AI to assist in database design by suggesting optimal schemas, indexes, and query optimizations, improving performance.
+
+### Recommendations for Buddy AI Improvement (from Code Assist Overview)
+
+*   Explore AI-powered documentation tools to streamline documentation processes.
+*   Implement AI-driven testing and debugging to catch errors early.
+*   Integrate AI-assisted code review into your development workflow.
+*   Leverage AI to automate repetitive tasks, freeing up time for creative problem-solving.
+*   Use AI to personalize learning experiences and accelerate skill development.
+*   Monitor code performance in real-time using AI tools.
+*   Utilize AI-assisted code search to quickly find relevant code.
+*   Incorporate AI-driven security analysis into your development process.
+*   Leverage AI to generate realistic test data for thorough testing.
+*   Embrace AI-assisted pair programming to enhance collaboration.
+*   Use AI to analyze project data and optimize resource allocation.
+*   Employ AI to generate UI/UX designs.
+*   Leverage AI-driven deployment automation.
+*   Use AI to analyze code complexity and suggest simplifications.
+*   Embrace AI-assisted accessibility testing.
+*   Utilize AI to predict code changes based on historical data.
+*   Employ AI-powered chatbots for instant support.
+*   Leverage AI to assist in database design.
+
+## Extracted Best Practices from DhiWise Gemini API Guide
+
+Based on the DhiWise guide to mastering the Gemini API, here are best practices and key considerations for building and improving AI agents like Buddy AI, specifically focusing on API integration and application development:
+
+### Ideas for Building and Improving AI Agents (from DhiWise Guide)
+
+*   **Rapid Application Development:** Utilize platforms like DhiWise to build applications rapidly, emphasizing efficient development methodologies.
+*   **AI-Driven Features:** Integrate Gemini API to enable AI-driven features and intelligent functionalities within applications.
+*   **Innovative AI Solutions:** Create innovative AI-powered solutions by combining development platforms with Gemini API.
+*   **Focus on Creativity:** Simplify complex coding tasks to allow developers to focus on creativity and innovation.
+*   **Personalized User Experiences:** Leverage AI to create personalized user experiences, adapting applications to individual preferences.
+*   **Seamless Integration:** Use user-friendly interfaces for seamless integration of Gemini API, reducing the learning curve.
+*   **Automate Tasks:** Automate tasks, improve decision-making, and provide real-time insights using AI-driven applications.
+*   **Engaging Applications:** Create more engaging and interactive applications through Gemini API integration.
+*   **Collaborative Development:** Support collaborative development to allow teams to work efficiently on complex projects.
+*   **User Data Analysis:** Analyze user data with AI-powered features to identify patterns and optimize application performance.
+*   **Customizable Templates:** Utilize customizable templates and components to accelerate development and reduce time-to-market.
+*   **Intelligent Chatbots:** Integrate Gemini API to create intelligent chatbots and virtual assistants for personalized support.
+*   **Comprehensive Documentation:** Provide comprehensive documentation and tutorials for platform mastery.
+*   **Fraud Detection:** Implement AI-driven fraud detection to ensure security and integrity of user data.
+*   **Cross-Platform Development:** Support cross-platform development for applications that run seamlessly on multiple devices.
+*   **Natural Language Interaction:** Enable applications to understand and respond to natural language queries.
+*   **Debugging Tools:** Offer debugging tools and features to identify and resolve issues quickly.
+*   **User Feedback Analysis:** Analyze user feedback to identify areas for improvement and optimize user satisfaction.
+*   **Secure and Scalable Deployment:** Provide a secure and scalable platform for deploying applications.
+*   **Personalized Content Generation:** Generate personalized content adapting to individual user preferences.
+*   **Integration Options:** Offer a range of integration options for connecting applications with other systems.
+*   **Personalized Recommendations:** Provide personalized recommendations for products, services, and content.
+*   **Agile Development:** Support agile development methodologies for quick iteration and response to changing requirements.
+*   **Image Recognition:** Enable applications to recognize and classify images for enhanced visual search.
+*   **Cost-Effective Development:** Provide cost-effective solutions for app development, reducing costs and time-to-market.
+
+### Key Insights for AI-Powered CLI Development (from DhiWise Guide)
+
+*   AI integration in app development streamlines processes, freeing developers to innovate and enhance user experiences.
+*   DhiWise simplifies AI integration, enabling developers to create intelligent applications quickly.
+*   Leveraging AI in app development allows for personalized user experiences.
+*   DhiWise empowers developers to build secure, scalable applications efficiently.
+*   Integrating AI via Gemini API allows for intelligent chatbots and assistants.
+*   AI-driven applications can analyze user data for insights, enabling continuous optimization.
+*   DhiWise's cross-platform capabilities ensure seamless user experiences.
+*   AI integration enables automated fraud detection, ensuring data security.
+*   DhiWise supports agile development, allowing developers to quickly adapt.
+*   AI-powered applications can generate personalized content.
+*   DhiWise provides a comprehensive development environment.
+*   AI-driven insights enable continuous improvement.
+*   AI-powered applications can understand natural language.
+
+### Habits for Effective CLI Development (from DhiWise Guide)
+
+*   Utilize DhiWise's user-friendly interface to streamline Gemini API integration.
+*   Focus on leveraging AI to create personalized user experiences.
+*   Prioritize the automation of repetitive tasks.
+*   Regularly analyze user data to identify patterns for optimizing performance.
+*   Embrace agile development methodologies.
+*   Continuously explore new features and capabilities of DhiWise.
+*   Utilize comprehensive documentation and tutorials.
+*   Focus on building secure applications that protect user data.
+*   Prioritize collaborative development.
+*   Regularly test and debug applications.
+*   Explore cross-platform development.
+*   Prioritize the integration of intelligent chatbots.
+*   Continuously seek user feedback.
+*   Focus on creating engaging and interactive applications.
+*   Regularly review and update security measures.
+
+### Recommendations for Buddy AI Improvement (from DhiWise Guide)
+
+*   Explore DhiWise's features to streamline AI integration.
+*   Leverage Gemini API to create personalized user experiences.
+*   Automate repetitive tasks using AI.
+*   Analyze user data regularly to identify patterns.
+*   Embrace agile development to iterate quickly.
+*   Continuously explore new DhiWise capabilities.
+*   Utilize comprehensive documentation and tutorials.
+*   Focus on building secure applications.
+*   Prioritize collaborative development.
+*   Regularly test and debug applications.
+*   Explore cross-platform development.
+*   Prioritize the integration of intelligent chatbots.
+*   Continuously seek user feedback.
+*   Focus on creating engaging and interactive applications.
+*   Regularly review and update security measures.
+
+## Extracted Best Practices from Gemini API Structured Output
+
+Based on the Gemini API structured output documentation, here are best practices and key considerations for building and improving AI agents like Buddy AI, specifically focusing on generating structured output:
+
+### Ideas for Building and Improving AI Agents (from Structured Output)
+
+*   **Structured Output:** Configure Gemini for structured output (JSON or enum values) for precise information extraction and standardization.
+*   **Schema Configuration (Recommended):** Use schema configuration on the model to constrain it to output JSON, rather than providing a schema in a text prompt.
+*   **`responseSchema` Parameter:** Utilize the `responseSchema` parameter when configuring a schema.
+*   **Pydantic Models for Python:** Leverage Python libraries like Pydantic to define schemas, which are automatically converted to JSON schemas.
+*   **Enum Values:** Use enum values in the schema to constrain the model to choose a single option from a list.
+*   **`Schema` Object and `propertyOrdering`:** Understand the `Schema` object and the importance of `propertyOrdering` for consistent and predictable output.
+*   **JSON Schema Support (Preview):** Be aware of JSON Schema support as a preview feature with Gemini 2.5 and its limitations.
+*   **Schema Size within Token Limit:** Keep the schema size within the input token limit.
+*   **Optional Fields by Default:** Understand that fields are optional by default unless explicitly set as required.
+*   **Context for Prompts:** Add more context to prompts if results are not as expected.
+*   **Simplify Complex Schemas:** Resolve `InvalidArgument: 400` errors by simplifying complex schemas (e.g., shortening property names, flattening nested arrays, reducing constraints).
+
+### Key Insights for AI-Powered CLI Development (from Structured Output)
+
+*   Generating structured output from LLMs is crucial for precise information extraction and integration with other systems.
+*   Configuring a schema directly on the model is the recommended and most reliable method for structured output.
+*   Understanding schema limitations and best practices is essential for avoiding errors and optimizing output quality.
+*   The ability to control output format enhances the utility of AI models for various applications.
+
+### Habits for Effective CLI Development (from Structured Output)
+
+*   Prioritize configuring schemas directly on the model for structured output.
+*   Familiarize yourself with the `responseSchema` parameter and its usage.
+*   Utilize Pydantic models in Python for defining and converting schemas.
+*   Employ enum values to constrain model choices for specific fields.
+*   Pay attention to `propertyOrdering` for consistent output.
+*   Keep schemas concise and within input token limits.
+*   Provide clear and sufficient context in prompts for better results.
+*   Simplify complex schemas to prevent errors.
+
+### Recommendations for Buddy AI Improvement (from Structured Output)
+
+*   Implement structured output for Buddy AI's responses where precise information is required.
+*   Prioritize schema configuration directly on the model for reliable structured output.
+*   Leverage Python libraries that simplify schema definition and conversion.
+*   Utilize enum values to guide Buddy AI's choices in specific contexts.
+*   Ensure consistent property ordering in Buddy AI's structured responses.
+*   Optimize schema size to stay within token limits for efficient processing.
+*   Provide clear and concise context in prompts to Buddy AI for improved structured output.
+*   Simplify complex output requirements to avoid errors and enhance Buddy AI's performance.
+
 
 
 
