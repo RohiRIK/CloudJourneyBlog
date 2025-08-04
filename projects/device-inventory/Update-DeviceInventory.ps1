@@ -244,6 +244,37 @@ function Connect-SharePointOnline {
     }
 }
 
+
+ │    226 + function Get-BatteryHealthDevicePerformance {                                                                                       │
+ │    227 +     [CmdletBinding()]                                                                                                               │
+ │    228 +     param (                                                                                                                         │
+ │    229 +         [Parameter(Mandatory = $true)]                                                                                              │
+ │    230 +         [string]$DeviceId                                                                                                           │
+ │    231 +     )                                                                                                                               │
+ │    232 +                                                                                                                                     │
+ │    233 +     $apiUrl = "https://graph.microsoft.com/beta/deviceManagement/userExperienceAnalyticsBatteryHealthDevicePerformance"             │
+ │    234 +     $requestUri = "$apiUrl?`$filter=deviceId eq '$DeviceId'"                                                                        │
+ │    235 +                                                                                                                                     │
+ │    236 +     Write-Log "Querying Graph API for battery health performance for device: $DeviceId" -Level "Info"                               │
+ │    237 +                                                                                                                                     │
+ │    238 +     try {                                                                                                                           │
+ │    239 +         $response = Invoke-MgGraphRequest -Uri $requestUri -Method Get                                                              │
+ │    240 +                                                                                                                                     │
+ │    241 +         if ($response.value -and $response.value.Count -gt 0) {                                                                     │
+ │    242 +             Write-Log "Successfully retrieved battery health performance for device ID: $DeviceId" -Level "Info"                    │
+ │    243 +             return $response.value[0] # Return the record                                                                           │
+ │    244 +         } else {                                                                                                                    │
+ │    245 +             Write-Log "No battery health performance found for device ID: $DeviceId" -Level "Info"                                  │
+ │    246 +             return $null                                                                                                            │
+ │    247 +         }                                                                                                                           │
+    }                                                                                                                               │
+   catch {                                                                                                                         │
+        Write-Log "Error getting battery health performance for device '$DeviceId': $($_.Exception.Message)" -Level "Error"         │
+    return $null                                                                                                                │
+      }                                                                                                                               │
+ }                                                                                                                                   │
+
+
 function Update-SharePointListItem {
     param (
         [Parameter(Mandatory = $true)]
@@ -281,6 +312,9 @@ function Update-SharePointListItem {
         return "Failed"
     }
 }
+
+
+
 
 # --- Main Script Logic ---
 
@@ -352,8 +386,6 @@ foreach ($device in $allDevicesWithMainProps) {
 
     $deviceAnalytics = $deviceAnalyticsHash[$deviceId]
 
-    # Get Startup History
-    $startupHistory = Get-DeviceStartupHistory -DeviceId $deviceId
 
     # Create a custom object to hold the device data
     $deviceData = [PSCustomObject]@{
@@ -375,16 +407,11 @@ foreach ($device in $allDevicesWithMainProps) {
         BatteryHealthScore         = if ($deviceAnalytics) { $deviceAnalytics.batteryHealthScore } else { -1 }
         HealthStatus               = if ($deviceAnalytics) { $deviceAnalytics.healthStatus } else { "Unknown" }
 
-        # Startup Performance Details
-        Startup_CoreBootTimeInMs = if ($startupHistory) { $startupHistory.coreBootTimeInMs } else { -1 }
-        Startup_TotalBootTimeInMs = if ($startupHistory) { $startupHistory.totalBootTimeInMs } else { -1 }
-        Startup_CoreLoginTimeInMs = if ($startupHistory) { $startupHistory.coreLoginTimeInMs } else { -1 }
-        Startup_ResponsiveDesktopTimeInMs = if ($startupHistory) { $startupHistory.responsiveDesktopTimeInMs } else { -1 }
-        Startup_TotalLoginTimeInMs = if ($startupHistory) { $startupHistory.totalLoginTimeInMs } else { -1 }
-        Startup_RestartCategory = if ($startupHistory) { $startupHistory.restartCategory } else { "Unknown" }
 
         # Crash Events Data - only call if we have a device score and it's low
         RecentCrashEvents          = if ($deviceAnalytics -and $deviceAnalytics.appReliabilityScore -lt 80) { Get-RecentCrashEvents -DeviceId $deviceId -DaysBack 30 } else { $null }
+        StartupPerformance         = if ($deviceAnalytics) { $deviceAnalytics.startupPerformance } else { Get-DeviceStartupHistory -DeviceId $deviceId -DaysBack 30 } 
+        
         dataCollectionTime       = get-date -Format "yyyy-MM-ddTHH:mm:ssZ" # Add a timestamp for data collection
     }
 
@@ -397,15 +424,6 @@ foreach ($device in $allDevicesWithMainProps) {
         "Failed" { $failedCount++ }
     }
 
-    # Check for low scores and add to report
-    if ($deviceData.EndpointAnalyticsScore -lt 80 -or
-        $deviceData.StartupPerformanceScore -lt 80 -or
-        $deviceData.AppReliabilityScore -lt 80 -or
-        $deviceData.WorkFromAnywhereScore -lt 80 -or
-        $deviceData.MeanResourceSpikeTimeScore -lt 80 -or
-        $deviceData.BatteryHealthScore -lt 80) {
-        $lowScoreDevices += $deviceData
-    }
 }
 
 # --- Generate Summary Report ---
