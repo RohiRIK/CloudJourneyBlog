@@ -223,6 +223,35 @@ function Get-WorkFromAnywhereModelPerformance {
     }
 }
 
+function Get-BatteryHealthDevicePerformance {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$DeviceId
+    )
+
+    $apiUrl = "https://graph.microsoft.com/beta/deviceManagement/userExperienceAnalyticsBatteryHealthDevicePerformance"
+    $requestUri = "$apiUrl?`$filter=deviceId eq '$DeviceId'"
+
+    Write-Log "Querying Graph API for battery health performance for device: $DeviceId" -Level "Info"
+
+    try {
+        $response = Invoke-MgGraphRequest -Uri $requestUri -Method Get
+
+        if ($response.value -and $response.value.Count -gt 0) {
+            Write-Log "Successfully retrieved battery health performance for device ID: $DeviceId" -Level "Info"
+            return $response.value[0] # Return the record
+        } else {
+            Write-Log "No battery health performance found for device ID: $DeviceId" -Level "Info"
+            return $null
+        }
+    }
+    catch {
+        Write-Log "Error getting battery health performance for device '$DeviceId': $($_.Exception.Message)" -Level "Error"
+        return $null
+    }
+}
+
 function Connect-SharePointOnline {
     param (
         [Parameter(Mandatory = $true)]
@@ -245,34 +274,6 @@ function Connect-SharePointOnline {
 }
 
 
- │    226 + function Get-BatteryHealthDevicePerformance {                                                                                       │
- │    227 +     [CmdletBinding()]                                                                                                               │
- │    228 +     param (                                                                                                                         │
- │    229 +         [Parameter(Mandatory = $true)]                                                                                              │
- │    230 +         [string]$DeviceId                                                                                                           │
- │    231 +     )                                                                                                                               │
- │    232 +                                                                                                                                     │
- │    233 +     $apiUrl = "https://graph.microsoft.com/beta/deviceManagement/userExperienceAnalyticsBatteryHealthDevicePerformance"             │
- │    234 +     $requestUri = "$apiUrl?`$filter=deviceId eq '$DeviceId'"                                                                        │
- │    235 +                                                                                                                                     │
- │    236 +     Write-Log "Querying Graph API for battery health performance for device: $DeviceId" -Level "Info"                               │
- │    237 +                                                                                                                                     │
- │    238 +     try {                                                                                                                           │
- │    239 +         $response = Invoke-MgGraphRequest -Uri $requestUri -Method Get                                                              │
- │    240 +                                                                                                                                     │
- │    241 +         if ($response.value -and $response.value.Count -gt 0) {                                                                     │
- │    242 +             Write-Log "Successfully retrieved battery health performance for device ID: $DeviceId" -Level "Info"                    │
- │    243 +             return $response.value[0] # Return the record                                                                           │
- │    244 +         } else {                                                                                                                    │
- │    245 +             Write-Log "No battery health performance found for device ID: $DeviceId" -Level "Info"                                  │
- │    246 +             return $null                                                                                                            │
- │    247 +         }                                                                                                                           │
-    }                                                                                                                               │
-   catch {                                                                                                                         │
-        Write-Log "Error getting battery health performance for device '$DeviceId': $($_.Exception.Message)" -Level "Error"         │
-    return $null                                                                                                                │
-      }                                                                                                                               │
- }                                                                                                                                   │
 
 
 function Update-SharePointListItem {
@@ -409,10 +410,11 @@ foreach ($device in $allDevicesWithMainProps) {
 
 
         # Crash Events Data - only call if we have a device score and it's low
-        RecentCrashEvents          = if ($deviceAnalytics -and $deviceAnalytics.appReliabilityScore -lt 80) { Get-RecentCrashEvents -DeviceId $deviceId -DaysBack 30 } else { $null }
-        StartupPerformance         = if ($deviceAnalytics) { $deviceAnalytics.startupPerformance } else { Get-DeviceStartupHistory -DeviceId $deviceId -DaysBack 30 } 
-        
-        dataCollectionTime       = get-date -Format "yyyy-MM-ddTHH:mm:ssZ" # Add a timestamp for data collection
+        RecentCrashEvents_data          = if ($deviceAnalytics -and $deviceAnalytics.appReliabilityScore -lt 80) { Get-RecentCrashEvents -DeviceId $deviceId -DaysBack 30 } else { $null }
+        StartupPerformance_data         = if ($deviceAnalytics) { $deviceAnalytics.startupPerformance -lt 80 } else { Get-DeviceStartupHistory -DeviceId $deviceId -DaysBack 30 }
+        BatteryHealth_data               = if ($deviceAnalytics) { $deviceAnalytics.batteryHealth -lt 80 } else { Get-BatteryHealthDevicePerformance -DeviceId $deviceId }
+        WorkFromAnywhere_data            = if ($deviceAnalytics) { $deviceAnalytics.workFromAnywhere -lt 80 } else { Get-WorkFromAnywhereDevicePerformance -DeviceId $deviceId }
+        dataCollectionTime               = get-date -Format "yyyy-MM-ddTHH:mm:ssZ" # Add a timestamp for data collection
     }
 
     # Update SharePoint List Item

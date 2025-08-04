@@ -102,4 +102,4 @@ infrastructure/secrets-management/infisical/.env
 # Gemini CLI specific ignores
 .gemini/
 
-device_inventory/
+device_inventory/projects/device-inventory/Update-DeviceInventory.ps1
