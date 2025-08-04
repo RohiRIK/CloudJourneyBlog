@@ -67,47 +67,37 @@ aws-credentials
 
 # Custom Exclusions
 
-# Keep Important Files
+# Keep Important Files (Git-tracked exceptions)
 !.github/
 !.gitkeep
 
-# Documentation and Configuration Files that Warp crated for me/. 
+# Documentation and Configuration Files (potentially generated or temporary)
 recommendation.md
 content-quality.yml
 link-check-config.json
 future_repository-structure.md
 
-# projects in work
+# Project-specific local ignores
 Sync_GAL
 sync-gal
-
-# task
 tasks.md
-
-# obsidian
 .obsidian
 
-# Buddy AI Assistant Instructions  
-
+# Buddy AI specific ignores
 projects/buddy-ai/buddy-output/
+projects/buddy-ai/buddy-output/simplified_GEMINI.md
+buddy-instructionsV2.md
+projects/buddy-ai/best-pratice/
 
+# Tool-specific ignores
 flair58-research-automation.goosehint
+.goosehints
 
+# Infrastructure-related local ignores
 projects/docker_swarm/*
 projects/TELOS/
 projects/TELOS/*
-
-
-.gemini
-
-.goosehints
-# Infisical secrets file
 infrastructure/secrets-management/infisical/.env
 
-
-# Buddy AI Output Files
-projects/buddy-ai/buddy-output/simplified_GEMINI.md
-buddy-instructionsV2.md
-
-# Best Practices Project
-projects/buddy-ai/best-pratice/
+# Gemini CLI specific ignores
+.gemini
