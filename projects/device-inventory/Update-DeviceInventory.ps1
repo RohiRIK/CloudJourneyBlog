@@ -158,6 +158,71 @@ function Get-RecentCrashEvents {
     }
 }
 
+function Get-DeviceStartupHistory {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$DeviceId
+    )
+
+    $apiUrl = "https://graph.microsoft.com/beta/deviceManagement/userExperienceAnalyticsDeviceStartupHistory"
+    $requestUri = "$apiUrl?`$filter=deviceId eq '$DeviceId'&$orderBy=startTime desc&$top=1"
+
+    Write-Log "Querying Graph API for latest startup history for device: $DeviceId" -Level "Info"
+
+    try {
+        $response = Invoke-MgGraphRequest -Uri $requestUri -Method Get
+
+        if ($response.value -and $response.value.Count -gt 0) {
+            Write-Log "Successfully retrieved startup history for device ID: $DeviceId" -Level "Info"
+            return $response.value[0] # Return the latest record
+        } else {
+            Write-Log "No startup history found for device ID: $DeviceId" -Level "Info"
+            return $null
+        }
+    }
+    catch {
+        Write-Log "Error getting startup history for device '$DeviceId': $($_.Exception.Message)" -Level "Error"
+        return $null
+    }
+}
+
+function Get-WorkFromAnywhereModelPerformance {
+    [CmdletBinding()]
+    param()
+
+    $apiUrl = "https://graph.microsoft.com/beta/deviceManagement/userExperienceAnalyticsWorkFromAnywhereModelPerformance"
+    Write-Log "Querying Graph API for Work From Anywhere model performance." -Level "Info"
+
+    try {
+        $allModelPerformance = @()
+        $nextLink = $apiUrl
+        
+        do {
+            $response = Invoke-MgGraphRequest -Uri $nextLink -Method Get
+            
+            if ($response.value) {
+                $allModelPerformance += $response.value
+                Write-Log "Retrieved $($response.value.Count) Work From Anywhere model performance records in this batch. Total so far: $($allModelPerformance.Count)" -Level "Info"
+            }
+            
+            $nextLink = $response.'@odata.nextLink'
+        } while ($nextLink)
+        
+        if ($allModelPerformance.Count -gt 0) {
+            Write-Log "Successfully retrieved $($allModelPerformance.Count) Work From Anywhere model performance records in total." -Level "Info"
+            return $allModelPerformance
+        } else {
+            Write-Log "No Work From Anywhere model performance records found." -Level "Warning"
+            return $null
+        }
+    }
+    catch {
+        Write-Log "Error querying Work From Anywhere model performance: $($_.Exception.Message)" -Level "Error"
+        return $null
+    }
+}
+
 function Connect-SharePointOnline {
     param (
         [Parameter(Mandatory = $true)]
@@ -248,6 +313,17 @@ if ($allDeviceAnalytics) {
     Write-Log "Device score hash created with $($deviceAnalyticsHash.Count) entries." -Level "Info"
 }
 
+# Get all Work From Anywhere model performance scores
+Write-Log "Fetching all Work From Anywhere model performance scores..." -Level "Info"
+$allWorkFromAnywhereModelPerformance = Get-WorkFromAnywhereModelPerformance
+$workFromAnywhereModelPerformanceHash = @{}
+if ($allWorkFromAnywhereModelPerformance) {
+    foreach ($modelPerf in $allWorkFromAnywhereModelPerformance) {
+        $workFromAnywhereModelPerformanceHash["$($modelPerf.manufacturer)-$($modelPerf.model)"] = $modelPerf
+    }
+    Write-Log "Work From Anywhere model performance hash created with $($workFromAnywhereModelPerformanceHash.Count) entries." -Level "Info"
+}
+
 # --- Connect to SharePoint Online ---
 Write-Log "Connecting to SharePoint Online..." -Level "Info"
 $accessToken = Get-AccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
@@ -276,6 +352,9 @@ foreach ($device in $allDevicesWithMainProps) {
 
     $deviceAnalytics = $deviceAnalyticsHash[$deviceId]
 
+    # Get Startup History
+    $startupHistory = Get-DeviceStartupHistory -DeviceId $deviceId
+
     # Create a custom object to hold the device data
     $deviceData = [PSCustomObject]@{
         Id                         = $deviceId
@@ -295,6 +374,14 @@ foreach ($device in $allDevicesWithMainProps) {
         MeanResourceSpikeTimeScore = if ($deviceAnalytics) { $deviceAnalytics.meanResourceSpikeTimeScore } else { -1 }
         BatteryHealthScore         = if ($deviceAnalytics) { $deviceAnalytics.batteryHealthScore } else { -1 }
         HealthStatus               = if ($deviceAnalytics) { $deviceAnalytics.healthStatus } else { "Unknown" }
+
+        # Startup Performance Details
+        Startup_CoreBootTimeInMs = if ($startupHistory) { $startupHistory.coreBootTimeInMs } else { -1 }
+        Startup_TotalBootTimeInMs = if ($startupHistory) { $startupHistory.totalBootTimeInMs } else { -1 }
+        Startup_CoreLoginTimeInMs = if ($startupHistory) { $startupHistory.coreLoginTimeInMs } else { -1 }
+        Startup_ResponsiveDesktopTimeInMs = if ($startupHistory) { $startupHistory.responsiveDesktopTimeInMs } else { -1 }
+        Startup_TotalLoginTimeInMs = if ($startupHistory) { $startupHistory.totalLoginTimeInMs } else { -1 }
+        Startup_RestartCategory = if ($startupHistory) { $startupHistory.restartCategory } else { "Unknown" }
 
         # Crash Events Data - only call if we have a device score and it's low
         RecentCrashEvents          = if ($deviceAnalytics -and $deviceAnalytics.appReliabilityScore -lt 80) { Get-RecentCrashEvents -DeviceId $deviceId -DaysBack 30 } else { $null }
