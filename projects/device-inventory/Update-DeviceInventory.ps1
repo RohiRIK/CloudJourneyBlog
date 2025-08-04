@@ -338,6 +338,9 @@ Write-Log "Connecting to Microsoft Graph..." -Level "Info"
 $secureSecret = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 # Create a PSCredential object
 $ClientSecretCredential = New-Object System.Management.Automation.PSCredential($clientId, $secureSecret)
+
+
+
 # Connect to Microsoft Graph
 Connect-MgGraph -TenantId $tenantId -ClientSecretCredential $ClientSecretCredential -NoWelcome
 Write-Log "Successfully connected to Microsoft Graph." -Level "Info"
@@ -440,7 +443,7 @@ foreach ($device in $allDevicesWithMainProps) {
         "Failed" { $failedCount++ }
         "Testing" { Write-Log "  - Device data collected for testing: $($device.DeviceName)" -Level "Info" }
     }
-
+    
 }
 
 # --- Generate Summary Report ---
