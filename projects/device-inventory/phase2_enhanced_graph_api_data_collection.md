@@ -55,10 +55,8 @@ This section provides a detailed explanation of each data point collected for En
         *   `healthStatus`: The health state of the device model (`unknown`, `insufficientData`, `needsAttention`, or `meetingGoals`).
 
 *   **MeanResourceSpikeTimeScore:**
-    *   **Description:** A score (0-100) related to a device's resource performance, specifically how efficiently CPU and RAM are utilized. A higher score indicates fewer or less impactful resource spikes (CPU/RAM usage over 50%).
-    *   **Associated Data Points (from `userExperienceAnalyticsMetricHistory` for historical trends):**
-        *   While not a direct individual device property, this score is derived from historical data on CPU and RAM usage. Detailed analysis would involve looking at trends of resource utilization over time to identify patterns of spikes.
-
+    *   **Description:** A score (0-100) related to a device's resource performance, specifically how efficiently CPU and RAM are utilized. A higher score indicates fewer or less impactful resource spikes (CPU/RAM usage over 50%).  In this i we will use that score only. 
+    
 *   **BatteryHealthScore:**
     *   **Description:** A score (0-100) indicating the overall health and performance of a device's battery. A lower score suggests potential battery degradation or issues.
     *   **Associated Data Points (from `userExperienceAnalyticsBatteryHealthDevicePerformance`):**
