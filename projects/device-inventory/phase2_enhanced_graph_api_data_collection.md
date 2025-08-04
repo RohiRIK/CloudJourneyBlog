@@ -20,17 +20,19 @@ This section provides a detailed explanation of each data point collected for En
     *   **Description:** This is a high-level, aggregated score (0-100) representing the overall user experience on a device. It's a weighted average of several sub-scores like Startup Performance, Application Reliability, and Work from Anywhere. A higher score indicates a better user experience.
 
 *   **StartupPerformanceScore:**
-    *   **Description:** A score (0-100) indicating how quickly a device gets from power-on to a productive state. It's crucial for user satisfaction as it directly impacts their ability to start working.
-    *   **Associated Data Points (from `userExperienceAnalyticsDeviceStartupProcess` and `userExperienceAnalyticsDeviceStartupProcessPerformance`):**
-        *   **`processName`:** The name of the executable or process that runs during device startup.
-        *   **`productName`:** The name of the product associated with the startup process.
-        *   **`publisher`:** The entity that published the startup process (e.g., Microsoft, Adobe).
-        *   **`impactInMs`:** The specific impact (in milliseconds) that a particular startup process has on the device's boot time. Higher values indicate a greater negative impact.
-        *   **`medianImpactInMs`:** The median impact of a startup process, providing a more stable measure of its typical effect on boot times across multiple devices.
-        *   **`totalImpactInMs`:** The cumulative impact of a startup process on boot time.
-        *   **`deviceCount`:** The number of devices on which this specific startup process was observed.
+    *   **Description:** A score (0-100) indicating how quickly a device gets from power-on to a productive state. It's crucial for user satisfaction as it directly impacts their ability to start working. we nned to get the last event based on the id.
+    *   **Research Findings:** Detailed data can be found in `userExperienceAnalyticsDeviceStartupHistory` entity.
+    *   **Data Points:** Look for:
+        *   `startTime`: The timestamp when the startup event began.
+        *   `coreBootTimeInMs`: Time from power-on to sign-in screen (in milliseconds).
+        *   `totalBootTimeInMs`: Total boot time (in milliseconds).
+        *   `coreLoginTimeInMs`: Time from credentials entered to responsive desktop (in milliseconds).
+        *   `responsiveDesktopTimeInMs`: Time until the desktop is fully responsive (in milliseconds).
+        *   `totalLoginTimeInMs`: Total login time (in milliseconds).
+        *   `restartCategory`: Category of the restart (e.g., `restartWithoutUpdate`).
+ 
 
-*   **AppReliabilityScore:**
+*   **AppReliabilityScore:** - Done
     *   **Description:** A score (0-100) reflecting the stability of applications on a device. A lower score often indicates frequent application crashes, impacting user productivity.
     *   **Associated Data Points (from `Get-RecentCrashEvents` function, which uses `userExperienceAnalyticsAppHealthDevicePerformanceDetails`):**
         *   **`AppDisplayName`:** The user-friendly name of the application that crashed.
@@ -39,10 +41,15 @@ This section provides a detailed explanation of each data point collected for En
 
 *   **WorkFromAnywhereScore:**
     *   **Description:** A score (0-100) assessing a device's readiness and performance for remote work scenarios. It considers factors like cloud management, identity, and network connectivity.
-    *   **Associated Data Points (from `userExperienceAnalyticsWorkFromAnywhereDevices`):**
-        *   **`ownership`:** Indicates whether the device is corporate or personal.
-        *   **`managedBy`:** The management agent (e.g., Intune).
-        *   **Boolean flags (e.g., `isCloudManaged`, `isHybridAzureAdJoined`, `isCoManaged`):** These flags provide insights into the device's management state and connectivity to cloud services.
+    *   **Research Findings:** Detailed data is available through the `userExperienceAnalyticsWorkFromAnywhereModelPerformance` entity.
+    *   **Data Points:** Look for:
+        *   `id`: Unique identifier for the object.
+        *   `model`: The name of the device model.
+        *   `manufacturer`: The manufacturer's name for the device.
+        *   `modelDeviceCount`: The number of devices associated with that specific model.
+        *   `workFromAnywhereScore`: A score (0-100) indicating the overall work from anywhere performance of the device model.
+        *   `windowsScore`: The Windows score of the device model (0-100).
+        *   `healthStatus`: The health state of the device model (`unknown`, `insufficientData`, `needsAttention`, or `meetingGoals`).
 
 *   **MeanResourceSpikeTimeScore:**
     *   **Description:** A score (0-100) related to a device's resource performance, specifically how efficiently CPU and RAM are utilized. A higher score indicates fewer or less impactful resource spikes (CPU/RAM usage over 50%).
