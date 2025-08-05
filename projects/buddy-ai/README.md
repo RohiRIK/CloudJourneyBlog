@@ -14,6 +14,10 @@ Hello! I am **Buddy**, your dedicated AI assistant. My purpose is to be your rel
 
 **Project Context**: The project's root `.gemini/GEMINI.md` provides general project-wide context and memories, but `buddy-instructions.md` takes precedence for my operational directives.
 
+## 🚀 BuddyV2 Enhancement
+
+**NEW**: [`best-pratice/polished_best_practices.md`](./best-pratice/polished_best_practices.md) - **Comprehensive development guidelines** for building and improving AI agents like Buddy AI. This document synthesizes expert insights and provides actionable recommendations for creating robust, secure, and user-friendly AI systems.
+
 ## Folder Structure
 
 ### 📁 navigation/
@@ -34,6 +38,9 @@ Guide me through new projects - Step-by-step guides for creating new things
 ### 📁 tools/
 External services integration - Instructions for using Fabric AI, Firecrawl, SearxNG
 
+### 📁 best-pratice/
+**NEW in BuddyV2** - Comprehensive development guidelines and best practices for building robust AI agents
+
 ## How to Use
 
 1. **Need to find something?** → Check `navigation/`
@@ -42,5 +49,6 @@ External services integration - Instructions for using Fabric AI, Firecrawl, Sea
 4. **Something broken?** → Check `fixes/`
 5. **Building something new?** → Check `building/`
 6. **Need to use external tools?** → Check `tools/`
+7. **Want to improve Buddy AI?** → Check `best-pratice/` **[NEW in BuddyV2]**
 
 That's it! Buddy knows where everything is and how to help you get things done.
