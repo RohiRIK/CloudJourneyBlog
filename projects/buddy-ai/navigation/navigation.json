@@ -10,6 +10,7 @@
       {"name": "API Integration Specifications", "path": "projects/buddy-ai/api-integration-specifications.md"},
       {"name": "Testing Framework", "path": "projects/buddy-ai/testing-framework.md"},
       {"name": "Validation Procedures", "path": "projects/buddy-ai/validation-procedures.md"},
+      {"name": "Action Items Analysis", "path": "projects/buddy-ai/action-items-analysis.md"},
       {"name": "BuddyV2 TODO List", "path": "projects/buddy-ai/TODO-BuddyV2.md"},
       {"name": "AI Assistant Plan", "path": "projects/buddy-ai/AI Assistant Plan - Simple as F*ck.md"},
       {"name": "Navigation System", "path": "projects/buddy-ai/navigation/"},

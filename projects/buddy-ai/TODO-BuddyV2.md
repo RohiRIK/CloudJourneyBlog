@@ -54,10 +54,16 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 - [ ] **Create regression testing plan** - Prevent breaking existing functionality
 
 ### Action Items Prioritization
-- [ ] **Review all action items in action_items/ directory** - Catalog existing tasks
+- [x] **Review all action items in action_items/ directory** - Catalog existing tasks
 - [ ] **Define dependencies between tasks** - Identify blocking relationships
 - [ ] **Create priority matrix** - Urgent vs Important classification
 - [ ] **Establish sequence order** - What must be done first
+
+### GitHub Actions Security Implementation
+- [ ] **Create API key sanitizer workflow** - Actual `.github/workflows/api-key-sanitizer.yml`
+- [ ] **Implement automated commit/push** - Action commits sanitized files back
+- [ ] **Add workflow testing** - Validate the action works correctly
+- [ ] **Integration with existing security** - Connect to current validation procedures
 
 ## 🎯 MEDIUM PRIORITY - System Enhancement
 
