@@ -103,3 +103,7 @@ infrastructure/secrets-management/infisical/.env
 .gemini/
 
 device_inventory/projects/device-inventory/Update-DeviceInventory.ps1
+
+# Ignore device inventory project with sensitive data
+projects/device-inventory/
+projects/device-inventory/
