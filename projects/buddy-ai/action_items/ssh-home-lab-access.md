@@ -1,5 +1,7 @@
 # Secure SSH Access and Workflow for Home Lab Server
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![High Priority](https://img.shields.io/badge/Priority-High-orange?style=flat-square)
+
 ## Description
 Establish a robust and efficient workflow for Buddy AI to securely connect to the user's home lab server via SSH from the macOS environment. This includes defining commands and processes for common server management tasks, ensuring security, and optimizing for efficiency.
 

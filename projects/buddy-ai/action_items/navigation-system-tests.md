@@ -1,5 +1,7 @@
 # Navigation System Test Tasks
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![Medium Priority](https://img.shields.io/badge/Priority-Medium-blue?style=flat-square)
+
 This document outlines tasks for testing and improving Buddy's navigation system (`navigation.json`).
 
 ## Current Tasks

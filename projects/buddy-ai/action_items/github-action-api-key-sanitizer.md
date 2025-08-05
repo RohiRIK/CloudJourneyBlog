@@ -1,5 +1,7 @@
 # GitHub Action: API Key Sanitizer for Uploaded Files
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![Critical Priority](https://img.shields.io/badge/Priority-Critical-darkred?style=flat-square)
+
 ## Description
 Develop a GitHub Action that automatically detects and sanitizes API keys or other sensitive credentials within files uploaded to the repository. The action replaces identified sensitive strings with a placeholder (e.g., `[REDACTED_API_KEY]`) to prevent *new* accidental exposure in future commits. **Note: This action does not rewrite Git history; it only sanitizes files in the current commit.**
 

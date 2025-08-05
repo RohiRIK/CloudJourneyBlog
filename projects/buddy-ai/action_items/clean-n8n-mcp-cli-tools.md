@@ -1,5 +1,7 @@
 # Clean Up n8n MCP CLI Tools and Fix Session Management
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![Critical Priority](https://img.shields.io/badge/Priority-Critical-darkred?style=flat-square)
+
 ## Description
 Consolidate and clean up the multiple CLI test scripts created during n8n MCP research, and implement a working solution for the session management challenge.
 

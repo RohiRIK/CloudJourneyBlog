@@ -1,5 +1,7 @@
 # Buddy AI Workflow Integration: Coding Assistant, Chatbot, and Troubleshooting
 
+![In Progress](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square) ![High Priority](https://img.shields.io/badge/Priority-High-orange?style=flat-square)
+
 ## Description
 Explore and implement strategies for integrating Buddy AI more deeply into the user's daily workflow, transforming Buddy into a comprehensive coding assistant, interactive chatbot, and effective troubleshooting tool. This initiative aims to streamline development, provide immediate assistance, and enhance problem-solving capabilities.
 

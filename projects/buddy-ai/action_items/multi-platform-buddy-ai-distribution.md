@@ -1,5 +1,7 @@
 # Multi-Platform Buddy AI Distribution Strategy
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![High Priority](https://img.shields.io/badge/Priority-High-orange?style=flat-square)
+
 ## Overview
 
 Design and implement a system to make Buddy AI accessible across multiple development tools and platforms while maintaining consistency and leveraging each tool's unique strengths.

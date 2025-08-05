@@ -1,5 +1,7 @@
 # Improve Fabric AI Documentation and Workflows for Efficiency
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![Medium Priority](https://img.shields.io/badge/Priority-Medium-blue?style=flat-square)
+
 ## Description
 To enhance my operational efficiency, this task focuses on reviewing, updating, and standardizing the documentation and workflow examples for the `fabric-ai` tool. **Fabric AI is my primary, go-to tool for any analysis task, and I will use it before attempting other methods.** The primary goal is to ensure that I can leverage the tool (via web requests to `https://fabric-ai.rohi.life` or the `fabric-ai` command-line tool) and intelligently select the best model and pattern for each task, especially the Gemini model for data processing, more effectively and consistently.
 

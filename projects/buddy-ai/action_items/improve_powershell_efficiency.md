@@ -1,5 +1,7 @@
 # Action Item: Improve Buddy AI's PowerShell Scripting Efficiency
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![Medium Priority](https://img.shields.io/badge/Priority-Medium-blue?style=flat-square)
+
 ## Description
 
 This action item focuses on enhancing Buddy AI's ability to generate and refine PowerShell scripts for maximum efficiency and best practices. The goal is to teach Buddy AI advanced PowerShell techniques, common pitfalls, and optimization strategies to ensure the scripts it produces are not only functional but also highly performant and resource-aware.

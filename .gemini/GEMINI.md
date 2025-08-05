@@ -1,4 +1,3 @@
---- Content from: .gemini/GEMINI.md ---
 ---
 applyTo: '**'
 ---

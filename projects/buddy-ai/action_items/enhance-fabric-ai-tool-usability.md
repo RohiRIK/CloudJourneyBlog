@@ -1,5 +1,7 @@
 # Enhance Fabric AI Tool for Better Usability and Smoother Experience
 
+![Open](https://img.shields.io/badge/Status-Open-red?style=flat-square) ![High Priority](https://img.shields.io/badge/Priority-High-orange?style=flat-square)
+
 ## Description
 Based on user feedback, the `fabric-ai.rohi.life` service needs significant improvements to make it more intuitive, user-friendly, and self-documenting. This task is focused on enhancing the core tool to reduce the need for repeated explanations and make it easier for both humans and AI to use effectively.
 

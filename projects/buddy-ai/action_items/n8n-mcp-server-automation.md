@@ -1,5 +1,7 @@
 # Automate Model Context Protocol (MCP) Server Deployment with n8n
 
+![In Progress](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square) ![High Priority](https://img.shields.io/badge/Priority-High-orange?style=flat-square)
+
 ## Description
 Utilize n8n to create a workflow for deploying and managing multiple Model Context Protocol (MCP) servers. This task should also enable Buddy AI to initiate and manage these deployments, providing an option for self-service deployment.
 
