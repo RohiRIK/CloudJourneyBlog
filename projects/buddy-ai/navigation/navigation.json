@@ -5,6 +5,8 @@
       {"name": "My Persona", "path": "projects/buddy-ai/persona.md"},
       {"name": "Main Buddy Hub", "path": "projects/buddy-ai/"},
       {"name": "Buddy Instructions", "path": "projects/buddy-ai/buddy-instructions.md"},
+      {"name": "Technical Architecture", "path": "projects/buddy-ai/technical-architecture.md"},
+      {"name": "Success Metrics", "path": "projects/buddy-ai/success-metrics.md"},
       {"name": "BuddyV2 TODO List", "path": "projects/buddy-ai/TODO-BuddyV2.md"},
       {"name": "AI Assistant Plan", "path": "projects/buddy-ai/AI Assistant Plan - Simple as F*ck.md"},
       {"name": "Navigation System", "path": "projects/buddy-ai/navigation/"},

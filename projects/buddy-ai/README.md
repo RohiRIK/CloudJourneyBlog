@@ -18,6 +18,14 @@ Hello! I am **Buddy**, your dedicated AI assistant. My purpose is to be your rel
 
 **NEW**: [`best-pratice/polished_best_practices.md`](./best-pratice/polished_best_practices.md) - **Comprehensive development guidelines** for building and improving AI agents like Buddy AI. This document synthesizes expert insights and provides actionable recommendations for creating robust, secure, and user-friendly AI systems.
 
+### 🎯 BuddyV2 Key Improvements
+- **[`technical-architecture.md`](./technical-architecture.md)** - Complete technical implementation specification
+- **[`success-metrics.md`](./success-metrics.md)** - Measurable goals and project management framework  
+- **[`TODO-BuddyV2.md`](./TODO-BuddyV2.md)** - Comprehensive implementation roadmap with 64 tracked tasks
+- **Enhanced Navigation System** - All project files now discoverable through improved navigation
+- **Synchronized Documentation** - All instruction files aligned and consistent
+- **Professional Fabric-AI Patterns** - Improved prompt engineering and structured workflows
+
 ## Folder Structure
 
 ### 📁 navigation/
