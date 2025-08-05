@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "instanceId": "buddy-ai-instance"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-deploy",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [260, 300],
+      "webhookId": "buddy-mcp-deploy"
+    },
+    {
+      "parameters": {
+        "functionCode": "// MCP Server Deployment Request Processor\n// Parse and validate deployment request\n\nconst input = $json.input || $json;\nconst serverType = input.server_type;\nconst serverName = input.server_name;\nconst configPath = input.config_path;\nconst additionalConfig = input.additional_config || {};\nconst timestamp = input.timestamp || new Date().toISOString();\nconst requestedBy = input.requested_by || 'unknown';\n\n// Validate required parameters\nif (!serverType || !serverName) {\n  throw new Error('Missing required parameters: server_type and server_name are required');\n}\n\n// Validate server type\nconst validTypes = ['filesystem', 'database', 'git', 'api'];\nif (!validTypes.includes(serverType)) {\n  throw new Error(`Invalid server_type: ${serverType}. Must be one of: ${validTypes.join(', ')}`);\n}\n\n// Generate unique container name\nconst containerName = `mcp-${serverType}-${serverName.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase()}`;\n\n// Base MCP configuration\nconst mcpConfig = {\n  serverType,\n  serverName,\n  containerName,\n  configPath,\n  additionalConfig,\n  timestamp,\n  requestedBy,\n  status: 'deploying'\n};\n\n// Generate Docker configuration based on server type\nswitch (serverType) {\n  case 'filesystem':\n    mcpConfig.dockerConfig = {\n      image: 'modelcontextprotocol/filesystem-server:latest',\n      name: containerName,\n      environment: {\n        MCP_SERVER_TYPE: 'filesystem',\n        MCP_ALLOWED_PATHS: configPath || '/data',\n        MCP_PERMISSIONS: additionalConfig.permissions?.join(',') || 'read'\n      },\n      volumes: [\n        `${configPath || '/data'}:/mcp/data:ro`\n      ],\n      ports: {\n        '3000': '0'\n      },\n      restart: 'unless-stopped',\n      labels: {\n        'buddy.mcp.type': 'filesystem',\n        'buddy.mcp.name': serverName,\n        'buddy.created.by': requestedBy\n      }\n    };\n    break;\n    \n  case 'database':\n    mcpConfig.dockerConfig = {\n      image: 'modelcontextprotocol/database-server:latest',\n      name: containerName,\n      environment: {\n        MCP_SERVER_TYPE: 'database',\n        MCP_CONNECTION_STRING: configPath,\n        MCP_PERMISSIONS: additionalConfig.permissions?.join(',') || 'read'\n      },\n      ports: {\n        '3000': '0'\n      },\n      restart: 'unless-stopped',\n      labels: {\n        'buddy.mcp.type': 'database',\n        'buddy.mcp.name': serverName,\n        'buddy.created.by': requestedBy\n      }\n    };\n    break;\n    \n  case 'git':\n    mcpConfig.dockerConfig = {\n      image: 'modelcontextprotocol/git-server:latest',\n      name: containerName,\n      environment: {\n        MCP_SERVER_TYPE: 'git',\n        MCP_REPO_URL: configPath,\n        MCP_PERMISSIONS: additionalConfig.permissions?.join(',') || 'read'\n      },\n      volumes: [\n        '/tmp/mcp-git:/mcp/repos'\n      ],\n      ports: {\n        '3000': '0'\n      },\n      restart: 'unless-stopped',\n      labels: {\n        'buddy.mcp.type': 'git',\n        'buddy.mcp.name': serverName,\n        'buddy.created.by': requestedBy\n      }\n    };\n    break;\n    \n  case 'api':\n    mcpConfig.dockerConfig = {\n      image: 'modelcontextprotocol/api-server:latest',\n      name: containerName,\n      environment: {\n        MCP_SERVER_TYPE: 'api',\n        MCP_API_BASE_URL: configPath,\n        MCP_PERMISSIONS: additionalConfig.permissions?.join(',') || 'read'\n      },\n      ports: {\n        '3000': '0'\n      },\n      restart: 'unless-stopped',\n      labels: {\n        'buddy.mcp.type': 'api',\n        'buddy.mcp.name': serverName,\n        'buddy.created.by': requestedBy\n      }\n    };\n    break;\n    \n  default:\n    throw new Error(`Unsupported server type: ${serverType}`);\n}\n\nconsole.log(`Processing MCP deployment: ${containerName}`);\nconsole.log(`Server type: ${serverType}`);\nconsole.log(`Requested by: ${requestedBy}`);\n\nreturn mcpConfig;"
+      },
+      "id": "process-request",
+      "name": "Process Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# MCP Server Deployment Script\nSERVER_TYPE=\"{{ $json.serverType }}\"\nCONTAINER_NAME=\"{{ $json.containerName }}\"\nSERVER_NAME=\"{{ $json.serverName }}\"\n\necho \"🚀 Deploying MCP Server: $CONTAINER_NAME\"\n\n# Check if container already exists\nif docker ps -a --format '{{.Names}}' | grep -q \"^${CONTAINER_NAME}$\"; then\n  echo \"⚠️ Container $CONTAINER_NAME already exists. Removing...\"\n  docker rm -f \"$CONTAINER_NAME\" 2>/dev/null || true\nfi\n\n# Build Docker run command based on server type\ncase \"$SERVER_TYPE\" in\n  \"filesystem\")\n    DOCKER_CMD=\"docker run -d \\\n      --name '$CONTAINER_NAME' \\\n      --restart unless-stopped \\\n      -e MCP_SERVER_TYPE=filesystem \\\n      -e MCP_ALLOWED_PATHS='{{ $json.dockerConfig.environment.MCP_ALLOWED_PATHS }}' \\\n      -e MCP_PERMISSIONS='{{ $json.dockerConfig.environment.MCP_PERMISSIONS }}' \\\n      -v '{{ $json.dockerConfig.environment.MCP_ALLOWED_PATHS }}:/mcp/data:ro' \\\n      -p '0:3000' \\\n      --label 'buddy.mcp.type=filesystem' \\\n      --label 'buddy.mcp.name=$SERVER_NAME' \\\n      --label 'buddy.created.by={{ $json.requestedBy }}' \\\n      modelcontextprotocol/filesystem-server:latest\"\n    ;;\n  \"database\")\n    DOCKER_CMD=\"docker run -d \\\n      --name '$CONTAINER_NAME' \\\n      --restart unless-stopped \\\n      -e MCP_SERVER_TYPE=database \\\n      -e MCP_CONNECTION_STRING='{{ $json.dockerConfig.environment.MCP_CONNECTION_STRING }}' \\\n      -e MCP_PERMISSIONS='{{ $json.dockerConfig.environment.MCP_PERMISSIONS }}' \\\n      -p '0:3000' \\\n      --label 'buddy.mcp.type=database' \\\n      --label 'buddy.mcp.name=$SERVER_NAME' \\\n      --label 'buddy.created.by={{ $json.requestedBy }}' \\\n      modelcontextprotocol/database-server:latest\"\n    ;;\n  \"git\")\n    DOCKER_CMD=\"docker run -d \\\n      --name '$CONTAINER_NAME' \\\n      --restart unless-stopped \\\n      -e MCP_SERVER_TYPE=git \\\n      -e MCP_REPO_URL='{{ $json.dockerConfig.environment.MCP_REPO_URL }}' \\\n      -e MCP_PERMISSIONS='{{ $json.dockerConfig.environment.MCP_PERMISSIONS }}' \\\n      -v '/tmp/mcp-git:/mcp/repos' \\\n      -p '0:3000' \\\n      --label 'buddy.mcp.type=git' \\\n      --label 'buddy.mcp.name=$SERVER_NAME' \\\n      --label 'buddy.created.by={{ $json.requestedBy }}' \\\n      modelcontextprotocol/git-server:latest\"\n    ;;\n  \"api\")\n    DOCKER_CMD=\"docker run -d \\\n      --name '$CONTAINER_NAME' \\\n      --restart unless-stopped \\\n      -e MCP_SERVER_TYPE=api \\\n      -e MCP_API_BASE_URL='{{ $json.dockerConfig.environment.MCP_API_BASE_URL }}' \\\n      -e MCP_PERMISSIONS='{{ $json.dockerConfig.environment.MCP_PERMISSIONS }}' \\\n      -p '0:3000' \\\n      --label 'buddy.mcp.type=api' \\\n      --label 'buddy.mcp.name=$SERVER_NAME' \\\n      --label 'buddy.created.by={{ $json.requestedBy }}' \\\n      modelcontextprotocol/api-server:latest\"\n    ;;\n  *)\n    echo \"❌ Unsupported server type: $SERVER_TYPE\"\n    exit 1\n    ;;\nesac\n\n# Execute Docker command\necho \"📦 Starting container...\"\nCONTAINER_ID=$(eval \"$DOCKER_CMD\")\n\nif [ $? -eq 0 ] && [ -n \"$CONTAINER_ID\" ]; then\n  echo \"✅ Container started successfully: $CONTAINER_ID\"\n  \n  # Get assigned port\n  ASSIGNED_PORT=$(docker port \"$CONTAINER_NAME\" 3000 | cut -d: -f2)\n  \n  echo \"🌐 Assigned port: $ASSIGNED_PORT\"\n  echo \"📋 Container ID: $CONTAINER_ID\"\n  echo \"🏷️ Container name: $CONTAINER_NAME\"\n  \n  # Output JSON for next node\n  echo \"{\\\"containerId\\\": \\\"$CONTAINER_ID\\\", \\\"assignedPort\\\": \\\"$ASSIGNED_PORT\\\", \\\"containerName\\\": \\\"$CONTAINER_NAME\\\", \\\"status\\\": \\\"started\\\"}\"\nelse\n  echo \"❌ Failed to start container\"\n  exit 1\nfi",
+        "options": {}
+      },
+      "id": "deploy-container",
+      "name": "Deploy Container",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// MCP Server Health Check and Registration\n// Wait for container to be ready and register the service\n\nconst delay = ms => new Promise(resolve => setTimeout(resolve, ms));\n\n// Parse the output from previous node\nconst containerInfo = {\n  containerId: $json.containerId,\n  assignedPort: $json.assignedPort,\n  containerName: $json.containerName,\n  status: $json.status\n};\n\nconst mcpConfig = $node[\"Process Request\"].json;\n\n// Health check configuration\nconst healthCheckConfig = {\n  maxAttempts: 30,\n  intervalMs: 2000,\n  timeoutMs: 5000\n};\n\nconsole.log(`Starting health check for ${containerInfo.containerName} on port ${containerInfo.assignedPort}`);\n\n// Perform health check loop\nfor (let attempt = 1; attempt <= healthCheckConfig.maxAttempts; attempt++) {\n  try {\n    console.log(`Health check attempt ${attempt}/${healthCheckConfig.maxAttempts}`);\n    \n    // Try to connect to the MCP server\n    const healthResponse = await $http.request({\n      method: 'GET',\n      url: `http://localhost:${containerInfo.assignedPort}/health`,\n      timeout: healthCheckConfig.timeoutMs,\n      headers: {\n        'Accept': 'application/json'\n      }\n    });\n    \n    if (healthResponse.status === 200) {\n      console.log('✅ MCP server is healthy and responding');\n      \n      // Get server info\n      const infoResponse = await $http.request({\n        method: 'GET',\n        url: `http://localhost:${containerInfo.assignedPort}/info`,\n        timeout: healthCheckConfig.timeoutMs,\n        headers: {\n          'Accept': 'application/json'\n        }\n      }).catch(() => ({ data: {} }));\n      \n      // Prepare final result\n      const result = {\n        deployment: {\n          status: 'success',\n          serverName: mcpConfig.serverName,\n          serverType: mcpConfig.serverType,\n          containerName: containerInfo.containerName,\n          containerId: containerInfo.containerId,\n          endpoint: `http://localhost:${containerInfo.assignedPort}`,\n          assignedPort: containerInfo.assignedPort,\n          healthCheck: 'passed',\n          deployedAt: new Date().toISOString(),\n          requestedBy: mcpConfig.requestedBy\n        },\n        serverInfo: infoResponse.data || {},\n        capabilities: {\n          filesystem: mcpConfig.serverType === 'filesystem',\n          database: mcpConfig.serverType === 'database',\n          git: mcpConfig.serverType === 'git',\n          api: mcpConfig.serverType === 'api'\n        },\n        configuration: {\n          type: mcpConfig.serverType,\n          configPath: mcpConfig.configPath,\n          additionalConfig: mcpConfig.additionalConfig\n        }\n      };\n      \n      console.log('🎉 MCP server deployment completed successfully');\n      return result;\n    }\n    \n  } catch (error) {\n    console.log(`Health check attempt ${attempt} failed: ${error.message}`);\n    \n    if (attempt === healthCheckConfig.maxAttempts) {\n      // Final attempt failed, return error\n      throw new Error(`MCP server failed to start within ${healthCheckConfig.maxAttempts * healthCheckConfig.intervalMs / 1000} seconds. Last error: ${error.message}`);\n    }\n  }\n  \n  // Wait before next attempt\n  await delay(healthCheckConfig.intervalMs);\n}\n\n// This should never be reached, but just in case\nthrow new Error('Health check loop completed unexpectedly');"
+      },
+      "id": "health-check",
+      "name": "Health Check & Registration",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BUDDY_REGISTRY_URL || 'http://localhost:8080' }}/api/mcp/register",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-API-Key", 
+              "value": "={{ $env.BUDDY_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "jsonBody": "={{ JSON.stringify($json.deployment) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "register-service",
+      "name": "Register with Buddy Registry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1060, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  \"success\": true,\n  \"deployment\": $node[\"Health Check & Registration\"].json.deployment,\n  \"serverInfo\": $node[\"Health Check & Registration\"].json.serverInfo,\n  \"capabilities\": $node[\"Health Check & Registration\"].json.capabilities,\n  \"configuration\": $node[\"Health Check & Registration\"].json.configuration,\n  \"registryStatus\": $node[\"Register with Buddy Registry\"].json?.success ? \"registered\" : \"registration_failed\",\n  \"message\": \"MCP server deployed and ready for use\"\n}, null, 2) }}"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1260, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  \"success\": false,\n  \"error\": $json.error?.message || \"Unknown deployment error\",\n  \"serverName\": $node[\"Process Request\"].json?.serverName || \"unknown\",\n  \"serverType\": $node[\"Process Request\"].json?.serverType || \"unknown\",\n  \"timestamp\": new Date().toISOString(),\n  \"troubleshooting\": {\n    \"checkLogs\": \"docker logs \" + ($node[\"Deploy Container\"].json?.containerName || \"container-name\"),\n    \"checkStatus\": \"docker ps -a | grep \" + ($node[\"Process Request\"].json?.containerName || \"container-name\"),\n    \"removeContainer\": \"docker rm -f \" + ($node[\"Deploy Container\"].json?.containerName || \"container-name\")\n  }\n}, null, 2) }}"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1260, 480]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Request": {
+      "main": [
+        [
+          {
+            "node": "Deploy Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deploy Container": {
+      "main": [
+        [
+          {
+            "node": "Health Check & Registration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check & Registration": {
+      "main": [
+        [
+          {
+            "node": "Register with Buddy Registry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register with Buddy Registry": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": [
+    {
+      "createdAt": "2025-01-05T10:00:00.000Z",
+      "updatedAt": "2025-01-05T10:00:00.000Z",
+      "id": "buddy-mcp",
+      "name": "Buddy MCP"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-05T10:00:00.000Z",
+  "versionId": "buddy-mcp-deployment-v1"
+}

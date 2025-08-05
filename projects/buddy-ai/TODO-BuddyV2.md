@@ -16,6 +16,17 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 - [x] **Verify documentation consistency** - Ensure all instruction files are aligned
 - [x] **Test core prompt functionality** - Validate that changes work as expected
 
+### Testing & Quality Validation
+
+- [ ] **Comprehensive file validation** - Check all generated files for quality and correctness
+- [ ] **JSON syntax validation** - Ensure all JSON files are properly formatted and valid
+- [ ] **Markdown linting fixes** - Fix all MD formatting issues across the project
+- [ ] **CLI tool testing** - Test all functions in buddy-n8n-mcp.sh thoroughly  
+- [ ] **End-to-end integration testing** - Test complete workflows from start to finish
+- [ ] **Error handling validation** - Test failure scenarios and recovery mechanisms
+- [ ] **Documentation accuracy testing** - Verify all examples and commands work as documented
+- [ ] **Cross-environment testing** - Test on different systems and configurations
+
 ## 📋 HIGH PRIORITY - Technical Implementation
 
 ### System Architecture Definition
@@ -64,6 +75,22 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 - [x] **Implement automated commit/push** - Action commits sanitized files back
 - [x] **Add workflow testing** - Validate the action works correctly
 - [x] **Integration with existing security** - Connect to current validation procedures
+
+### n8n MCP Server Automation
+
+**Status**: Research Complete → Moving to Action Items
+
+- [ ] **Research Phase Complete** - MCP protocol, tool discovery, architecture analysis
+- [ ] **Identify Core Challenge** - Session management vs stateless HTTP
+- [ ] **Complete Implementation** - See detailed tasks in action items:
+  - `action_items/n8n-mcp-server-automation.md` - Overall project status
+  - `action_items/clean-n8n-mcp-cli-tools.md` - Cleanup and working solution
+
+**Next**: Focus on action items for clean implementation.
+- [ ] **Documentation testing** - Verify all examples and commands work as documented
+- [ ] **Cross-platform testing** - Test CLI tool on different environments
+- [ ] **API endpoint testing** - Verify all n8n API calls work correctly
+- [ ] **Container testing** - Test MCP server containers can be deployed and managed
 
 ## 🎯 MEDIUM PRIORITY - System Enhancement
 

@@ -28,9 +28,30 @@ Utilize n8n to create a workflow for deploying and managing multiple Model Conte
 - **Self-Service Option**: Implement a command or process within Buddy AI that allows the user to request a new MCP server deployment, with Buddy AI handling the n8n interaction.
 
 ## Status
-- **Overall Status**: To Do
+- **Overall Status**: In Progress (Research Phase Complete)
 - **Assigned To**: Buddy / Rohi (Collaborative)
 - **Priority**: High
 
+## Progress Update (2025-08-05)
+
+### ✅ Completed
+- **MCP Protocol Research**: Deep understanding of JSON-RPC 2.0, SSE streams, session management
+- **n8n MCP Integration Discovery**: Found existing n8n Notion MCP server at `https://n8n.rohi.life/mcp/*`
+- **Tool Discovery**: Identified "Search_page_Notion" tool with correct parameter structure
+- **Architecture Analysis**: Understanding of stateless HTTP vs session persistence challenge
+- **CLI Development**: Multiple test scripts for MCP protocol interaction
+- **Documentation**: Comprehensive findings documented in TODO and changelog
+
+### 🔄 Current Challenge
+- **Session Management**: n8n MCP server requires persistent sessions but HTTP requests are stateless
+- **Tool Execution**: Can initialize MCP server successfully but "Server not initialized" for tool calls
+- **Implementation Gap**: Need to bridge stateless HTTP with session-based MCP protocol
+
+### 📋 Next Steps
+1. **Clean up CLI tools** - Remove messy test scripts, keep only working solutions
+2. **Fix session persistence** - Implement proper session management for tool calls
+3. **Create working Notion integration** - Functional search and create operations
+4. **Document final solution** - Working buddy-ai → n8n → Notion workflow
+
 ## Notes
-This task requires significant learning and exploration into MCP server technology, n8n automation, and Fabric-AI integration. The goal is to create a highly efficient and automated solution for MCP server deployment, leveraging the strengths of all involved tools.
+Research phase revealed that user already has working n8n MCP infrastructure. Focus shifted from deployment to integration and session management solutions.

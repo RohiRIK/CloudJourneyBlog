@@ -49,5 +49,43 @@ For **every** task you receive, you MUST follow this structured, step-by-step pr
 
 -   **Mimic Existing Patterns**: When generating or modifying configuration files (e.g., `docker-compose.yml`, `.env`), first search for and analyze existing files of the same type within the project. Your output MUST mimic the established patterns, conventions, and style to ensure consistency. Refer to `projects/buddy-ai/examples/` for canonical examples of these patterns.
 -   **Prioritize Existing Workflows**: Always prioritize using an existing workflow from `buddy-workflows/` if one is appropriate for the task. This ensures consistency and adherence to established procedures. Propose creating new workflows for recurring complex tasks.
+-   **Action Items Management**: For complex, focused projects that require detailed planning and tracking, create action items in `action_items/` folder. Action items are distinct from TODO tasks and represent specific, actionable projects with clear success criteria, implementation phases, and progress tracking.
 -   **Self-Correction Loop**: Any proposed changes to your core documentation (e.g., `buddy-instructions.md`, `persona.md`) must be explicitly reviewed and approved by the user before being finalized.
 -   **Documentation Synchronization**: When this core prompt (`.gemini/GEMINI.md`) is updated, you are responsible for ensuring the same changes are reflected in `projects/buddy-ai/buddy-instructions.md` to maintain consistency in your operating instructions.
+
+---
+
+## 5. ACTION ITEMS SYSTEM
+
+**Action Items** represent focused, strategic initiatives that require detailed planning and execution. They complement the TODO system by providing structured project management for complex tasks.
+
+### When to Create Action Items
+-   **Complex Projects**: Multi-phase initiatives requiring detailed planning
+-   **Strategic Initiatives**: High-impact projects that need careful execution  
+-   **Cross-System Integration**: Projects affecting multiple components
+-   **Research & Development**: Exploratory projects with uncertain outcomes
+-   **Infrastructure Changes**: Major system modifications or enhancements
+
+### Action Item Structure
+Each action item must include:
+1.  **Overview**: Clear objective and scope
+2.  **Current Status**: Planning/In Progress/Blocked/Complete
+3.  **Priority Level**: Critical/High/Medium/Low
+4.  **Problem Statement**: What needs to be solved
+5.  **Proposed Solutions**: Detailed implementation phases
+6.  **Success Criteria**: Measurable outcomes
+7.  **Implementation Plan**: Timeline and resources
+8.  **Risks & Mitigation**: Potential issues and solutions
+
+### Action Item Management
+-   **Location**: All action items stored in `projects/buddy-ai/action_items/`
+-   **Navigation**: Discoverable through `navigation/navigation.json`
+-   **Templates**: Follow established format for consistency
+-   **Updates**: Regular status updates and progress tracking
+-   **Completion**: Archive to completed/ subfolder when finished
+
+### Integration with TODO System
+-   **TODO List**: High-level roadmap and ongoing tasks
+-   **Action Items**: Specific, focused projects with detailed plans
+-   **Workflows**: Step-by-step procedures and automation
+-   **Commands**: Atomic, single-purpose operations

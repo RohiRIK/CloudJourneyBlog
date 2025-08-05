@@ -5,14 +5,10 @@
       {"name": "My Persona", "path": "projects/buddy-ai/persona.md"},
       {"name": "Main Buddy Hub", "path": "projects/buddy-ai/"},
       {"name": "Buddy Instructions", "path": "projects/buddy-ai/buddy-instructions.md"},
-      {"name": "Technical Architecture", "path": "projects/buddy-ai/technical-architecture.md"},
-      {"name": "Success Metrics", "path": "projects/buddy-ai/success-metrics.md"},
-      {"name": "API Integration Specifications", "path": "projects/buddy-ai/api-integration-specifications.md"},
-      {"name": "Testing Framework", "path": "projects/buddy-ai/testing-framework.md"},
-      {"name": "Validation Procedures", "path": "projects/buddy-ai/validation-procedures.md"},
-      {"name": "Action Items Analysis", "path": "projects/buddy-ai/action-items-analysis.md"},
       {"name": "BuddyV2 TODO List", "path": "projects/buddy-ai/TODO-BuddyV2.md"},
       {"name": "AI Assistant Plan", "path": "projects/buddy-ai/AI Assistant Plan - Simple as F*ck.md"},
+      {"name": "Documentation Hub", "path": "projects/buddy-ai/docs/"},
+      {"name": "Action Items", "path": "projects/buddy-ai/action_items/"},
       {"name": "Navigation System", "path": "projects/buddy-ai/navigation/"},
       {"name": "Commands Database", "path": "projects/buddy-ai/commands/"},
       {"name": "Check Local Ignored Files", "path": "projects/buddy-ai/commands/check_local_ignored_files.md"},
@@ -30,7 +26,9 @@
           {"name": "Check Ignored Files Workflow", "path": "projects/buddy-ai/buddy-workflows/check-ignored-files-workflow.md"},
           {"name": "Secure Commit Workflow", "path": "projects/buddy-ai/buddy-workflows/secure-commit-workflow.md"},
           {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/buddy-workflows/sort-blog-workflow.md"},
-          {"name": "Validate Navigation Workflows", "path": "projects/buddy-ai/buddy-workflows/validate-navigation-workflows.md"}
+          {"name": "Validate Navigation Workflows", "path": "projects/buddy-ai/buddy-workflows/validate-navigation-workflows.md"},
+          {"name": "n8n MCP Server Automation", "path": "projects/buddy-ai/buddy-workflows/n8n-mcp-server-automation.md"},
+          {"name": "n8n MCP Notion Workflow", "path": "projects/buddy-ai/buddy-workflows/n8n-mcp-notion-workflow.md"}
         ]
       },
       {
@@ -42,6 +40,29 @@
           {"name": "Polished Best Practices", "path": "projects/buddy-ai/best-pratice/polished_best_practices.md"},
           {"name": "Project Improvement Analysis", "path": "projects/buddy-ai/best-pratice/Buddy-AI Project-Improvement-Analysis.md"},
           {"name": "Raw Research Data", "path": "projects/buddy-ai/best-pratice/Raw data.md"}
+        ]
+      },
+      {
+        "name": "n8n MCP Integration",
+        "items": [
+          {"name": "Overview", "path": "projects/buddy-ai/tools/n8n-mcp/README.md"},
+          {"name": "n8n API Integration", "path": "projects/buddy-ai/tools/n8n-mcp/docs/n8n-api-integration.md"},
+          {"name": "Quick Start Guide", "path": "projects/buddy-ai/tools/n8n-mcp/docs/QUICK_START_N8N_MCP.md"},
+          {"name": "CLI Tool", "path": "projects/buddy-ai/tools/n8n-mcp/scripts/buddy-n8n-mcp.sh"},
+          {"name": "Deployment Workflow", "path": "projects/buddy-ai/tools/n8n-mcp/workflows/mcp-deployment-workflow.json"},
+          {"name": "List Workflow", "path": "projects/buddy-ai/tools/n8n-mcp/workflows/mcp-list-workflow.json"}
+        ]
+      },
+      {
+        "name": "Documentation",
+        "items": [
+          {"name": "Documentation Hub", "path": "projects/buddy-ai/docs/README.md"},
+          {"name": "Technical Architecture", "path": "projects/buddy-ai/docs/architecture/technical-architecture.md"},
+          {"name": "API Integration Specifications", "path": "projects/buddy-ai/docs/specifications/api-integration-specifications.md"},
+          {"name": "Action Items Analysis", "path": "projects/buddy-ai/docs/analysis/action-items-analysis.md"},
+          {"name": "Testing Framework", "path": "projects/buddy-ai/docs/testing/testing-framework.md"},
+          {"name": "Validation Procedures", "path": "projects/buddy-ai/docs/validation/validation-procedures.md"},
+          {"name": "Success Metrics", "path": "projects/buddy-ai/docs/project-management/success-metrics.md"}
         ]
       }
     ]
@@ -131,8 +152,11 @@
   {
     "category": "Action Items",
     "items": [
+      {"name": "Action Items Overview", "path": "projects/buddy-ai/action_items/README.md"},
       {"name": "Navigation System Tests", "path": "projects/buddy-ai/action_items/navigation-system-tests.md"},
       {"name": "Automate MCP Server Deployment", "path": "projects/buddy-ai/action_items/n8n-mcp-server-automation.md"},
+      {"name": "Clean n8n MCP CLI Tools", "path": "projects/buddy-ai/action_items/clean-n8n-mcp-cli-tools.md"},
+      {"name": "Multi-Platform Buddy AI Distribution", "path": "projects/buddy-ai/action_items/multi-platform-buddy-ai-distribution.md"},
       {"name": "Secure SSH Access to Home Lab", "path": "projects/buddy-ai/action_items/ssh-home-lab-access.md"},
       {"name": "GitHub Action: API Key Sanitizer", "path": "projects/buddy-ai/action_items/github-action-api-key-sanitizer.md"},
       {"name": "Buddy AI Workflow Integration", "path": "projects/buddy-ai/action_items/buddy-ai-workflow-integration.md"},
