@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+      - buddyV2
+      - develop
   pull_request:
     branches:
       - main
+      - buddyV2
+      - develop
 
 jobs:
   sanitize_api_keys:
@@ -35,7 +39,10 @@ jobs:
           # AWS Secret Access Key (a-zA-Z0-9, 40 chars)
           # Azure Client Secret (base64-like, often 44 chars)
           # Generic API Key (alphanumeric, often with hyphens/underscores, 16-64 chars)
+          # Fabric AI and Firecrawl specific patterns
           API_KEY_PATTERNS=(
+            "sk-[a-zA-Z0-9]{20,50}" # Fabric AI / OpenAI style API Key
+            "fc-[a-zA-Z0-9]{20,50}" # Firecrawl API Key
             "AKIA[0-9A-Z]{16}" # AWS Access Key ID
             "ASIA[0-9A-Z]{16}" # AWS Access Key ID (temporary)
             "[a-zA-Z0-9+/]{40}" # AWS Secret Access Key (generic base64-like)
@@ -58,6 +65,7 @@ jobs:
             "ghs_[0-9a-zA-Z]{36}" # GitHub Scoped Token
             "pat_[0-9a-zA-Z]{44}" # Azure DevOps Personal Access Token
             "Bearer\s[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*" # JWT Token
+            "eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*" # JWT Token (without Bearer)
           )
 
           # Files to scan (from changed files output)
@@ -109,5 +117,77 @@ jobs:
       - name: Report Sanitization Status
         run: |
           echo "API Key Sanitization scan completed. Review logs for details."
-          # TODO: Add more detailed reporting here, e.g., if keys were found and sanitized.
+          if [ "${{ steps.sanitizer.outputs.sanitized_count }}" -gt 0 ]; then
+            echo "⚠️  ${{ steps.sanitizer.outputs.sanitized_count }} files were sanitized."
+            echo "SECURITY ALERT: API keys detected and sanitized!"
+          else
+            echo "✅ No API keys detected."
+          fi
         shell: bash
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected after sanitization."
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected - files were sanitized."
+          fi
+
+      - name: Commit sanitized files
+        if: steps.check-changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action - API Sanitizer"
+          git add .
+          git commit -m "🔒 security: Sanitize API keys and secrets
+
+          - Automatically detected and sanitized ${{ steps.sanitizer.outputs.sanitized_count }} files with potential secrets
+          - Replaced sensitive data with [REDACTED_API_KEY] placeholders
+          - This is an automated security measure to protect the repository
+          
+          ⚠️ IMPORTANT: Please review sanitized files and rotate any exposed API keys"
+
+      - name: Push changes
+        if: steps.check-changes.outputs.changes == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request' && steps.sanitizer.outputs.sanitized_count > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🔒 **Security Alert**: API Key Sanitizer detected and cleaned ${{ steps.sanitizer.outputs.sanitized_count }} files with potential secrets.
+              
+              **Action Taken**: Sensitive data has been replaced with \`[REDACTED_API_KEY]\` placeholders.
+              
+              **⚠️ Important Next Steps**:
+              1. Review the sanitized files in the latest commit
+              2. Rotate any exposed API keys immediately
+              3. Update your secrets management practices (use environment variables)
+              4. Review and update your \`.gitignore\` patterns
+              
+              **Files affected**: Check the workflow logs for specific files that were sanitized.`
+            })
+
+      - name: Security warning
+        if: steps.sanitizer.outputs.sanitized_count > 0
+        run: |
+          echo "🚨 SECURITY WARNING: API keys were detected and sanitized!"
+          echo "📋 Action taken: ${{ steps.sanitizer.outputs.sanitized_count }} files sanitized"
+          echo "⚠️  Next steps required:"
+          echo "   1. Review the sanitized files"
+          echo "   2. Rotate any exposed API keys"
+          echo "   3. Update secrets management practices"
+          echo "   4. Consider using environment variables for secrets"
+          echo ""
+          echo "This workflow will continue, but please address the security issues."
