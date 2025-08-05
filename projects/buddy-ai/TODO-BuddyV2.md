@@ -14,7 +14,7 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 
 - [x] **Update `.gemini/GEMINI.md`** - Sync with buddy-instructions.md improvements made via Fabric-AI
 - [x] **Verify documentation consistency** - Ensure all instruction files are aligned
-- [ ] **Test core prompt functionality** - Validate that changes work as expected
+- [x] **Test core prompt functionality** - Validate that changes work as expected
 
 ## 📋 HIGH PRIORITY - Technical Implementation
 
@@ -26,10 +26,17 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 - [x] **Specify performance requirements** - Response time, scalability targets
 
 ### API Integration Specifications
-- [ ] **Document Fabric AI integration patterns** - Clear protocols for using Fabric AI
-- [ ] **Define Firecrawl service integration** - Web scraping and content extraction protocols
-- [ ] **Specify SearxNG integration** - Search aggregation service usage
-- [ ] **Create authentication standards** - Secure API key management across services
+- [x] **Document Fabric AI integration patterns** - Clear protocols for using Fabric AI
+- [x] **Define Firecrawl service integration** - Web scraping and content extraction protocols
+- [x] **Specify SearxNG integration** - Search aggregation service usage
+- [x] **Create authentication standards** - Secure API key management across services
+
+### CLI tools integration
+- [] **Integrate CLI tools with Buddy AI** - Ensure CLI commands are discoverable and usable
+- [] **Document CLI tool usage** - How to use CLI tools within Buddy AI
+- [] **Create CLI tool examples** - Sample commands for common tasks
+- [] **Test CLI tool execution** - Validate that CLI commands run as expected
+
 
 ### Success Metrics & Project Management
 
@@ -41,7 +48,7 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 ## 🔧 HIGH PRIORITY - Quality Assurance
 
 ### Testing Strategy
-- [ ] **Create comprehensive testing framework** - Unit, integration, and system tests
+- [x] **Create comprehensive testing framework** - Unit, integration, and system tests
 - [ ] **Define validation procedures** - Quality gates for releases
 - [ ] **Establish error handling specifications** - What happens when things go wrong
 - [ ] **Create regression testing plan** - Prevent breaking existing functionality
@@ -67,11 +74,15 @@ This TODO list tracks the implementation of improvements identified in the Buddy
 - [ ] **Implement change tracking** - Version control for documentation
 
 ### Workflow Integration
-
 - [x] **Update main project README** - Highlight navigation improvements
 - [ ] **Create navigation validation workflow** - Automated checking
 - [ ] **Establish workflow templates** - Standardized process documents
 - [ ] **Define workflow approval process** - Quality gates for new workflows
+- [ ] **Create workflow documentation** - How to use and modify workflows
+- [ ] **Integrate workflows with Buddy AI** - Ensure they are discoverable and usable
+- [ ] **Test workflow execution** - Validate that workflows run as expected
+- [ ] **Add more workflows for granular tasks** - Provide sample workflows for users
+
 
 ## 🚀 MEDIUM PRIORITY - Technical Capabilities
 

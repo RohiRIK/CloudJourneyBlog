@@ -1,3 +1,109 @@
+# =================
+# CLOUDJOURNEYBLOG
+# Professional .gitignore
+# =================
 
-# Buddy AI Output Directory
-buddy-output/
+# Operating System Files
+.DS_Store
+.DS_Store?
+
+# IDE and Editor Files
+.idea/
+.vscode/
+
+# Environment and Configuration
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+# But allow .env.example files
+!.env.example
+environment.js
+environment.ts
+config.json
+config.yaml
+config.yml
+
+# Secrets and Credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+*.der
+*.jks
+*.keystore
+*.truststore
+secrets/
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+credentials.yaml
+credentials.yml
+auth.json
+auth.yaml
+auth.yml
+*.secret
+*.secrets
+api-keys.json
+api-keys.yaml
+api-keys.yml
+service-account.json
+service-account-key.json
+gcp-service-account.json
+aws-credentials
+.aws/
+.gcp/
+.azure/
+
+# Logs and Temporary Files
+*.log
+
+# Custom Exclusions
+
+# Keep Important Files (Git-tracked exceptions)
+!.github/
+!.gitkeep
+
+# Documentation and Configuration Files (potentially generated or temporary)
+recommendation.md
+content-quality.yml
+link-check-config.json
+future_repository-structure.md
+
+# Project-specific local ignores
+Sync_GAL
+sync-gal
+tasks.md
+.obsidian
+
+# Buddy AI specific ignores
+projects/buddy-ai/buddy-output/
+
+buddy-instructionsV2.md
+projects/buddy-ai/best-pratice/
+
+# Tool-specific ignores
+flair58-research-automation.goosehint
+.goosehints
+
+# Infrastructure-related local ignores
+projects/docker_swarm/*
+projects/TELOS/
+projects/TELOS/*
+infrastructure/secrets-management/infisical/.env
+
+# Gemini CLI specific ignores
+.gemini/
+
+device_inventory/projects/device-inventory/Update-DeviceInventory.ps1
+
+# Ignore device inventory project with sensitive data
+projects/device-inventory/
+projects/device-inventory/
