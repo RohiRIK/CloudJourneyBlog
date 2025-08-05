@@ -35,7 +35,7 @@ All the information you need to operate is provided below, enclosed in delimiter
 ### `BUDDY_INSTRUCTIONS.MD`
 
 ```markdown
-# SYSTEM PROMPT: Buddy AI - Core Operating System
+# SYSTEM PROMPT: Buddy AI - Core Operating System V2
 
 ## 1. ROLE AND PURPOSE
 
@@ -99,6 +99,9 @@ For **every** task you receive, you MUST follow this structured, step-by-step pr
     "items": [
       {"name": "My Persona", "path": "projects/buddy-ai/persona.md"},
       {"name": "Main Buddy Hub", "path": "projects/buddy-ai/"},
+      {"name": "Buddy Instructions", "path": "projects/buddy-ai/buddy-instructions.md"},
+      {"name": "BuddyV2 TODO List", "path": "projects/buddy-ai/TODO-BuddyV2.md"},
+      {"name": "AI Assistant Plan", "path": "projects/buddy-ai/AI Assistant Plan - Simple as F*ck.md"},
       {"name": "Navigation System", "path": "projects/buddy-ai/navigation/"},
       {"name": "Commands Database", "path": "projects/buddy-ai/commands/"},
       {"name": "Check Local Ignored Files", "path": "projects/buddy-ai/commands/check_local_ignored_files.md"},
@@ -117,6 +120,17 @@ For **every** task you receive, you MUST follow this structured, step-by-step pr
           {"name": "Secure Commit Workflow", "path": "projects/buddy-ai/buddy-workflows/secure-commit-workflow.md"},
           {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/buddy-workflows/sort-blog-workflow.md"},
           {"name": "Validate Navigation Workflows", "path": "projects/buddy-ai/buddy-workflows/validate-navigation-workflows.md"}
+        ]
+      },
+      {
+        "name": "Best Practices",
+        "items": [
+          {"name": "Buddy AI Best Practices Project", "path": "projects/buddy-ai/best-pratice/README.md"},
+          {"name": "The Goal and The Prompt", "path": "projects/buddy-ai/best-pratice/The gole and the prompt.md"},
+          {"name": "Checklist", "path": "projects/buddy-ai/best-pratice/checklist.md"},
+          {"name": "Polished Best Practices", "path": "projects/buddy-ai/best-pratice/polished_best_practices.md"},
+          {"name": "Project Improvement Analysis", "path": "projects/buddy-ai/best-pratice/Buddy-AI Project-Improvement-Analysis.md"},
+          {"name": "Raw Research Data", "path": "projects/buddy-ai/best-pratice/Raw data.md"}
         ]
       }
     ]
@@ -198,7 +212,10 @@ For **every** task you receive, you MUST follow this structured, step-by-step pr
       {"name": "Automate MCP Server Deployment", "path": "projects/buddy-ai/action_items/n8n-mcp-server-automation.md"},
       {"name": "Secure SSH Access to Home Lab", "path": "projects/buddy-ai/action_items/ssh-home-lab-access.md"},
       {"name": "GitHub Action: API Key Sanitizer", "path": "projects/buddy-ai/action_items/github-action-api-key-sanitizer.md"},
-      {"name": "Buddy AI Workflow Integration", "path": "projects/buddy-ai/action_items/buddy-ai-workflow-integration.md"}
+      {"name": "Buddy AI Workflow Integration", "path": "projects/buddy-ai/action_items/buddy-ai-workflow-integration.md"},
+      {"name": "Improve PowerShell Scripting Efficiency", "path": "projects/buddy-ai/action_items/improve_powershell_efficiency.md"},
+      {"name": "Enhance Fabric AI Tool Usability", "path": "projects/buddy-ai/action_items/enhance-fabric-ai-tool-usability.md"},
+      {"name": "Improve Fabric AI Docs and Workflows", "path": "projects/buddy-ai/action_items/improve-fabric-ai-docs-and-workflows.md"}
     ]
   }
 ]
