@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "instanceId": "buddy-ai-instance"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-list",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [260, 300],
+      "webhookId": "buddy-mcp-list"
+    },
+    {
+      "parameters": {
+        "command": "docker ps -a --filter \"label=buddy.mcp.type\" --format \"{{.Names}}\\t{{.Image}}\\t{{.Status}}\\t{{.Labels}}\" | head -20",
+        "options": {}
+      },
+      "id": "list-containers",
+      "name": "List MCP Containers",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Simple MCP server list processor\nconst rawOutput = $json.stdout || '';\nconst lines = rawOutput.split('\\n').filter(line => line.trim());\n\nconst servers = lines.map(line => {\n  const parts = line.split('\\t');\n  if (parts.length >= 3) {\n    return {\n      containerName: parts[0] || 'unknown',\n      image: parts[1] || 'unknown',\n      status: parts[2] || 'unknown',\n      labels: parts[3] || ''\n    };\n  }\n  return null;\n}).filter(server => server !== null);\n\nconst result = {\n  servers: servers,\n  count: servers.length,\n  timestamp: new Date().toISOString(),\n  message: `Found ${servers.length} MCP server(s)`\n};\n\nreturn result;"
+      },
+      "id": "process-list",
+      "name": "Process List",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json, null, 2) }}"
+      },
+      "id": "response",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [860, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "List MCP Containers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List MCP Containers": {
+      "main": [
+        [
+          {
+            "node": "Process List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process List": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": [
+    {
+      "createdAt": "2025-01-05T10:00:00.000Z",
+      "updatedAt": "2025-01-05T10:00:00.000Z",
+      "id": "buddy-mcp",
+      "name": "Buddy MCP"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-05T10:00:00.000Z",
+  "versionId": "buddy-mcp-list-v1"
+}

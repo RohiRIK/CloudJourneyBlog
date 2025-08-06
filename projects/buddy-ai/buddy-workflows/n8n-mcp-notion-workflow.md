@@ -1,364 +1,230 @@
-# n8n MCP Notion Workflow - Zero to Hero Guide
+# n8n MCP Notion Integration - Buddy AI Workflow
 
-**Workflow Type**: MCP Integration  
+**Purpose**: Enable Buddy AI to interact with Notion through existing n8n MCP server integration  
 **Complexity**: Intermediate  
-**Prerequisites**: n8n instance running, Notion workspace access, MCP server knowledge  
-**Estimated Time**: 15-30 minutes  
+**Prerequisites**: n8n instance running, Notion workspace connected, MCP server configured  
+**Target**: Seamless Buddy AI → n8n → Notion operations  
 
-## 🎯 Workflow Overview
+## Workflow Overview
 
-This workflow enables Buddy AI to interact with your Notion workspace through your existing n8n MCP server integration. You've already built the foundation - now let's make it work seamlessly with Buddy AI.
+This workflow establishes direct integration between Buddy AI and your Notion workspace using your existing n8n MCP server infrastructure.
 
-### What You've Built
-- ✅ **MCP Server Trigger** - Webhook endpoint for receiving requests
-- ✅ **Notion Integration** - Connected to your Notion workspace 
-- ✅ **Search Functionality** - Can search pages in Notion
-- ✅ **n8n Workflow** - Ready to execute and process requests
+### Current State
+- ✅ **n8n MCP Server** - Running at `n8n.rohi.life`
+- ✅ **Notion Integration** - Connected and authenticated
+- ✅ **Basic Search** - Functional page search capability
 
-### What We'll Achieve
-- 🎯 **Buddy AI Integration** - Enable Buddy to trigger your workflow
-- 🎯 **Notion Operations** - Search, create, update Notion pages via Buddy
-- 🎯 **Automated Workflows** - Chain multiple Notion operations together
-- 🎯 **Error Handling** - Robust error detection and recovery
+### Integration Goal
+Enable Buddy AI to perform Notion operations seamlessly through n8n workflows.
 
-## 📋 Step-by-Step Implementation
+## Core Implementation Steps
 
-### Step 1: Identify Your Webhook URL
+### Step 1: Verify MCP Endpoint Configuration
 
-From your n8n workflow screenshot, I can see you have:
-- **Workflow Name**: "My workflow 3" 
-- **Trigger**: MCP Server Trigger
-- **Notion Node**: "Search a page in Notion"
+**Identify your active n8n MCP workflow:**
 
-**Action Required:**
-1. In your n8n workflow, click on the **MCP Server Trigger** node
-2. Copy the **Production URL** (it should look like: `https://n8n.rohi.life/mcp/3cf65aaa-4868-4cf1-bed1-d9020412fa71`)
-3. Save this URL - we'll use it for Buddy AI integration
+- Workflow: "My workflow 3"
+- Trigger: MCP Server Trigger
+- Notion Node: "Search a page in Notion"
+
+**Get the MCP endpoint URL:**
+
+1. In n8n, open your workflow
+2. Click the **MCP Server Trigger** node
+3. Copy the **Production URL**
+4. Format should be: `https://n8n.rohi.life/mcp/{workflow-id}`
+
+### Step 2: Configure Environment
+
+**Add to your `.env` file:**
 
 ```bash
-# Your MCP endpoint URL format:
-# https://n8n.rohi.life/mcp/[your-unique-id]
+# n8n MCP Notion Integration
+N8N_MCP_NOTION_ENDPOINT=https://n8n.rohi.life/mcp/3cf65aaa-4868-4cf1-bed1-d9020412fa71
+N8N_INSTANCE_URL=https://n8n.rohi.life
 ```
 
-### Step 2: Configure Environment Variables
-
-Create or update your `.env` file with the webhook URL:
+**Validate connection:**
 
 ```bash
-# Add to your .env file
-N8N_NOTION_WEBHOOK=https://n8n.rohi.life/webhook/3cf65aaa-4868-4cf1-bed1-d9020412fa71
-N8N_API_URL=https://n8n.rohi.life/api/v1
-N8N_WEBHOOK_URL=https://n8n.rohi.life/webhook
-```
-
-### Step 3: Test Your Current Workflow
-
-**Using Buddy CLI Tool:**
-```bash
-# Navigate to the n8n-mcp tools
-cd projects/buddy-ai/tools/n8n-mcp/scripts/
-
-# Test basic connectivity
-./buddy-n8n-mcp.sh check-deps
-
-# Test your specific Notion workflow
-curl -X POST "https://n8n.rohi.life/webhook/3cf65aaa-4868-4cf1-bed1-d9020412fa71" \
+# Test MCP endpoint
+curl -X POST "$N8N_MCP_NOTION_ENDPOINT" \
   -H "Content-Type: application/json" \
-  -d '{
-    "searchText": "test search",
-    "operation": "search_page"
-  }'
+  -d '{"searchText": "test", "operation": "search_page"}'
 ```
 
-### Step 4: Enhance Your n8n Workflow
+### Step 3: Enhance n8n Workflow for Buddy AI
 
-**Recommended Improvements to Your Current Workflow:**
+**Required n8n workflow improvements:**
 
-1. **Add Input Validation Node** (after MCP Server Trigger):
+1. **Input Validation (after MCP Trigger):**
+
 ```javascript
-// Validate input data
+// Validate and normalize input
 const input = $json;
-
-if (!input.searchText && !input.operation) {
-  throw new Error('Missing required parameters: searchText or operation');
-}
-
 return {
-  searchText: input.searchText || '',
+  searchText: input.searchText || input.query || '',
   operation: input.operation || 'search_page',
   pageId: input.pageId || '',
-  timestamp: new Date().toISOString(),
-  requestId: input.requestId || `req_${Date.now()}`
+  requestId: `buddy_${Date.now()}`,
+  timestamp: new Date().toISOString()
 };
 ```
 
-2. **Add Response Formatting Node** (after Notion node):
+2. **Response Formatting (after Notion node):**
+
 ```javascript
-// Format response for Buddy AI
-const notionResult = $json;
+// Format for Buddy AI consumption
+const result = $json;
 const input = $('MCP Server Trigger').first().json;
 
 return {
   success: true,
-  operation: input.operation || 'search_page',
+  operation: input.operation,
   requestId: input.requestId,
-  timestamp: new Date().toISOString(),
-  data: notionResult,
-  metadata: {
-    source: 'n8n-mcp-notion',
-    workflow: 'buddy-ai-integration',
-    resultsCount: Array.isArray(notionResult) ? notionResult.length : 1
-  }
+  data: result,
+  timestamp: new Date().toISOString()
 };
 ```
 
-3. **Add Error Handling Node**:
-```javascript
-// Error handling and logging
-const error = $json.error || $json;
+3. **Error Handling:**
 
+```javascript
+// Standardized error response
+const error = $json.error || $json;
 return {
   success: false,
-  error: {
-    message: error.message || 'Unknown error occurred',
-    code: error.code || 'WORKFLOW_ERROR',
-    timestamp: new Date().toISOString()
-  },
-  requestId: $('MCP Server Trigger').first().json.requestId || 'unknown',
-  workflow: 'n8n-mcp-notion'
+  error: error.message || 'Workflow execution failed',
+  requestId: $('MCP Server Trigger').first().json.requestId,
+  timestamp: new Date().toISOString()
 };
 ```
 
-### Step 5: Create Buddy AI Functions
+## Buddy AI Integration Functions
 
-Now let's create the Buddy AI integration functions:
+**Core operations available to Buddy AI:**
 
-**Add to CLI Tool** (`buddy-n8n-mcp.sh`):
+### Search Notion Pages
 
-```bash
-# Search Notion pages via MCP workflow
-search_notion_pages() {
-    local search_query="$1"
-    local page_id="$2"
-    
-    if [[ -z "$search_query" ]]; then
-        log_error "Usage: search_notion_pages <search_query> [page_id]"
-        echo "  Example: search_notion_pages 'project updates'"
-        return 1
-    fi
-    
-    log_info "Searching Notion for: '$search_query'"
-    
-    local payload
-    payload=$(cat <<EOF
-{
-  "searchText": "$search_query",
-  "operation": "search_page",
-  "pageId": "${page_id:-""}",
-  "requestId": "buddy_$(date +%s)",
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-}
-EOF
-)
-    
-    local response
-    response=$(curl -s -X POST "$N8N_NOTION_WEBHOOK" \
-        -H "Content-Type: application/json" \
-        -d "$payload")
-    
-    if [[ $? -eq 0 ]]; then
-        echo "$response" | jq '.'
-        local success=$(echo "$response" | jq -r '.success // false')
-        
-        if [[ "$success" == "true" ]]; then
-            log_success "Search completed successfully"
-            local count=$(echo "$response" | jq -r '.metadata.resultsCount // 0')
-            log_info "Found $count result(s)"
-        else
-            log_error "Search failed"
-            echo "$response" | jq -r '.error.message // "Unknown error"'
-        fi
-    else
-        log_error "Failed to connect to n8n webhook"
-        return 1
-    fi
-}
-
-# Create new Notion page via MCP workflow  
-create_notion_page() {
-    local title="$1"
-    local content="$2"
-    local parent_id="$3"
-    
-    if [[ -z "$title" ]]; then
-        log_error "Usage: create_notion_page <title> [content] [parent_id]"
-        return 1
-    fi
-    
-    log_info "Creating Notion page: '$title'"
-    
-    local payload
-    payload=$(cat <<EOF
-{
-  "operation": "create_page",
-  "title": "$title",
-  "content": "${content:-""}",
-  "parentId": "${parent_id:-""}",
-  "requestId": "buddy_$(date +%s)",
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-}
-EOF
-)
-    
-    local response
-    response=$(curl -s -X POST "$N8N_NOTION_WEBHOOK" \
-        -H "Content-Type: application/json" \
-        -d "$payload")
-    
-    if [[ $? -eq 0 ]]; then
-        echo "$response" | jq '.'
-        local success=$(echo "$response" | jq -r '.success // false')
-        
-        if [[ "$success" == "true" ]]; then
-            log_success "Page created successfully"
-            local page_url=$(echo "$response" | jq -r '.data.url // "No URL returned"')
-            log_info "Page URL: $page_url"
-        fi
-    else
-        log_error "Failed to create page"
-        return 1
-    fi
+```javascript
+// Buddy AI can call this internally
+async function searchNotionPages(query, pageId = null) {
+  const payload = {
+    searchText: query,
+    operation: 'search_page',
+    pageId: pageId,
+    requestId: `buddy_${Date.now()}`
+  };
+  
+  const response = await fetch(process.env.N8N_MCP_NOTION_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  
+  return response.json();
 }
 ```
 
-### Step 6: Usage Examples
+### Create Notion Pages
 
-**Basic Search:**
-```bash
-# Search for pages containing "meeting notes"
-./buddy-n8n-mcp.sh search_notion_pages "meeting notes"
-
-# Search within a specific page
-./buddy-n8n-mcp.sh search_notion_pages "action items" "page-id-123"
-```
-
-**Creating Pages:**
-```bash
-# Create a simple page
-./buddy-n8n-mcp.sh create_notion_page "Daily Standup Notes"
-
-# Create page with content
-./buddy-n8n-mcp.sh create_notion_page "Project Update" "Today we completed the MCP integration"
-
-# Create page under a parent page
-./buddy-n8n-mcp.sh create_notion_page "Sprint Planning" "Planning session notes" "parent-page-id"
-```
-
-### Step 7: Advanced Operations
-
-**Chaining Operations:**
-```bash
-# Search and then create related page
-SEARCH_RESULT=$(./buddy-n8n-mcp.sh search_notion_pages "project alpha")
-PROJECT_ID=$(echo "$SEARCH_RESULT" | jq -r '.data[0].id')
-./buddy-n8n-mcp.sh create_notion_page "Alpha Project Update" "Latest updates..." "$PROJECT_ID"
-```
-
-**Batch Operations:**
-```bash
-# Create multiple related pages
-for topic in "Planning" "Development" "Testing" "Deployment"; do
-    ./buddy-n8n-mcp.sh create_notion_page "Sprint $topic" "Notes for $topic phase"
-done
-```
-
-## 🚀 Buddy AI Integration Patterns
-
-### Pattern 1: Information Retrieval
-```bash
-# Buddy can search for information and provide context
-buddy_search_context() {
-    local query="$1"
-    echo "🔍 Searching Notion for: $query"
-    ./buddy-n8n-mcp.sh search_notion_pages "$query" | jq -r '.data[].title'
+```javascript
+// Buddy AI page creation
+async function createNotionPage(title, content = '', parentId = null) {
+  const payload = {
+    operation: 'create_page',
+    title: title,
+    content: content,
+    parentId: parentId,
+    requestId: `buddy_${Date.now()}`
+  };
+  
+  const response = await fetch(process.env.N8N_MCP_NOTION_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  
+  return response.json();
 }
 ```
 
-### Pattern 2: Automated Documentation
+## Usage Patterns
+
+**Information Retrieval:**
+
+- Buddy: "Search for meeting notes from last week"
+- Action: `searchNotionPages("meeting notes last week")`
+- Result: Structured response with matching pages
+
+**Documentation Creation:**
+
+- Buddy: "Create a page documenting today's deployment"
+- Action: `createNotionPage("Deployment Notes", content)`
+- Result: New page created with deployment details
+
+**Project Management:**
+
+- Buddy: "Add this task to the project backlog"
+- Action: Search project → Create task page under project
+- Result: Organized task management
+
+## Validation & Testing
+
+**Test workflow functionality:**
+
 ```bash
-# Buddy can create documentation automatically
-buddy_auto_document() {
-    local title="$1"
-    local content="$2"
-    echo "📝 Creating documentation: $title"
-    ./buddy-n8n-mcp.sh create_notion_page "$title" "$content"
-}
-```
-
-### Pattern 3: Task Management
-```bash
-# Buddy can manage tasks and projects
-buddy_task_management() {
-    local task="$1"
-    local project_id="$2"
-    echo "✅ Adding task: $task"
-    ./buddy-n8n-mcp.sh create_notion_page "Task: $task" "Auto-created by Buddy AI" "$project_id"
-}
-```
-
-## 🔧 Troubleshooting
-
-### Common Issues and Solutions
-
-**Issue 1: Webhook Not Responding**
-```bash
-# Test webhook directly
-curl -X POST "$N8N_NOTION_WEBHOOK" \
+# 1. Test search
+curl -X POST "$N8N_MCP_NOTION_ENDPOINT" \
   -H "Content-Type: application/json" \
-  -d '{"test": true}'
+  -d '{"searchText": "test search", "operation": "search_page"}'
 
-# Check n8n workflow status
-./buddy-n8n-mcp.sh list-workflows | grep -i notion
+# 2. Test page creation  
+curl -X POST "$N8N_MCP_NOTION_ENDPOINT" \
+  -H "Content-Type: application/json" \
+  -d '{"operation": "create_page", "title": "Test Page", "content": "Created by Buddy AI"}'
 ```
 
-**Issue 2: Notion Authentication Errors**
-- Verify Notion integration is properly connected in n8n
-- Check Notion workspace permissions
-- Ensure Notion token hasn't expired
+**Expected response format:**
 
-**Issue 3: JSON Parsing Errors**
-```bash
-# Validate JSON payload before sending
-echo '{"searchText": "test"}' | jq '.'
+```json
+{
+  "success": true,
+  "operation": "search_page",
+  "requestId": "buddy_1234567890",
+  "data": [...],
+  "timestamp": "2025-08-06T12:00:00.000Z"
+}
 ```
 
-## 📊 Success Metrics
+## Troubleshooting
 
-Track these metrics to measure workflow success:
+**Common Issues:**
 
-- ✅ **Webhook Response Time** < 3 seconds
-- ✅ **Search Success Rate** > 95%
-- ✅ **Page Creation Success Rate** > 98%
-- ✅ **Error Rate** < 2%
+1. **MCP Endpoint Not Responding**
+   - Verify n8n workflow is active
+   - Check endpoint URL format
+   - Ensure MCP server is running
 
-## 🎯 Next Steps
+2. **Notion Authentication Errors**
+   - Verify Notion integration in n8n
+   - Check workspace permissions
+   - Refresh Notion token if needed
 
-1. **Enhanced Operations**: Add update, delete, and bulk operations
-2. **Rich Content**: Support for blocks, databases, and complex formatting
-3. **Automation**: Create scheduled workflows for recurring tasks
-4. **Monitoring**: Add logging and alerting for workflow health
-5. **Templates**: Create page templates for common use cases
+3. **Response Format Issues**
+   - Ensure response formatting nodes are properly configured
+   - Validate JSON structure matches expected format
 
-## 📚 Additional Resources
+## Success Criteria
 
-- **n8n Documentation**: [n8n.io/docs](https://n8n.io/docs)
-- **Notion API**: [developers.notion.com](https://developers.notion.com)
-- **MCP Protocol**: Model Context Protocol specifications
-- **Buddy AI Tools**: `projects/buddy-ai/tools/n8n-mcp/`
+- ✅ Buddy AI can search Notion pages seamlessly
+- ✅ Page creation works through MCP integration
+- ✅ Response times under 3 seconds
+- ✅ Error handling provides clear feedback
+- ✅ Integration requires zero manual intervention
 
 ---
 
-**Workflow Created**: August 5, 2025  
-**Last Updated**: August 5, 2025  
-**Version**: 1.0  
-**Author**: Buddy AI System
+**Workflow Version**: 2.0  
+**Updated**: August 6, 2025  
+**Author**: Buddy AI Assistant
