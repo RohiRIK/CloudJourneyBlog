@@ -1,18 +1,5 @@
 # Buddy AI Project Changelog
 
-## [3.1.0] - 2025-08-06
-
-### Added
-- **Workflow Testing Meta-Workflow**: Created a new `workflow-testing-workflow.md` to systematically test other workflows with both dry runs and live executions.
-- **Risk Analysis Action Items**: Created five new Action Items to address findings from a risk analysis of the core `buddy-instructions.md`.
-
-### Improved
-- **Secure Commit Workflow**: Refined the `secure-commit-workflow.md` by restructuring it into a formal, phased-based format using the meta-workflow.
-- **Navigation Validation Workflow**: Refined the `validate-navigation-workflows.md` by restructuring it into a formal, phased-based format using the meta-workflow.
-
-### Fixed
-- **Navigation Path**: Corrected the `navigation.json` file by removing an invalid placeholder path.
-
 ## [3.0.0] - 2025-08-06 - 🚀 MAJOR RELEASE: Enterprise AI Integration System
 
 ### 🎯 **WHY BUDDYV3: Revolutionary AI Collaboration Platform**

@@ -70,7 +70,7 @@
   {
     "category": "Content & Blogs",
     "items": [
-      
+      {"name": "New blog post", "path": "content/blogs/[category]/"},
       {"name": "Guides", "path": "content/guides/"}
     ],
     "sub_categories": [

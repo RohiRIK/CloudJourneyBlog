@@ -1,295 +1,180 @@
-# Buddy Ignore Files Workflow
-
-## Overview
-This workflow explains how to comprehensively manage `.gitignore` patterns to exclude specific files and directories from git tracking across your entire repository.
-
-## Use Cases
-- Adding new files/folders to be ignored by git
-- Removing already-tracked files from git while keeping them locally
-- Setting up global patterns for tool-specific files (like `.gemini/`, `.goosehints`, etc.)
-- Testing ignore patterns to ensure they work correctly
-
-## Prerequisites
-- Git repository initialized
-- Basic understanding of git commands
-- Access to terminal/command line
-
-## Step-by-Step Workflow
-
-### 1. Identify Files and Directories to Ignore
-
-First, find all instances of files/directories you want to ignore across your repository:
-
-```bash
-# Find directories by name (recursive search)
-find . -name ".gemini" -type d
-find . -name ".obsidian" -type d
-
-# Find files by name pattern
-find . -name ".goosehints" -type f
-find . -name "*.goosehint" -type f
-find . -name "Ana-lazy-ing" -type d
-
-# Search for specific patterns in file names
-find . -name "*secret*" -type f
-find . -name "*.log" -type f
-```
-
-### 2. Check Current Git Status
-
-Before making changes, understand what's currently tracked:
-
-```bash
-# Check current git status
-git status --porcelain
-
-# List files currently tracked by git that match your patterns
-git ls-files | grep -E "(\.gemini|\.goosehints|Ana-lazy-ing)"
-
-# Check what files are being ignored
-git status --ignored
-```
-
-### 3. Update .gitignore Patterns
-
-Add comprehensive patterns to your `.gitignore` file. Use global patterns to catch files anywhere in the repository:
-
-```gitignore
-# Directory patterns (anywhere in repo)
-Ana-lazy-ing/
-**/.gemini/
-**/.obsidian/
-
-# File patterns (anywhere in repo)
-.goosehints
-**/.goosehints
-*.goosehint
-*.log
-
-# Specific file patterns
-.env
-.env.*
-!.env.example
-```
-
-### 4. Pattern Types Explained
-
-| Pattern | Description | Example |
-|---------|-------------|---------|
-| `filename` | Ignores file in root directory only | `.gitignore` |
-| `filename/` | Ignores directory in root only | `logs/` |
-| `**/filename` | Ignores file anywhere in repo | `**/.goosehints` |
-| `**/dirname/` | Ignores directory anywhere in repo | `**/.gemini/` |
-| `*.extension` | Ignores all files with extension | `*.log` |
-| `!filename` | Exception - don't ignore this file | `!.env.example` |
-
-### 5. Test Your Patterns
-
-Before removing tracked files, test your patterns:
-
-```bash
-# Create test files to verify patterns work
-mkdir -p test-dir/.gemini
-echo "test content" > test-dir/.gemini/test.md
-echo "test content" > test-dir/.goosehints
-echo "test content" > test-dir/test.goosehint
-
-# Test if patterns are working
-git check-ignore -v test-dir/.gemini/
-git check-ignore -v test-dir/.goosehints
-git check-ignore -v test-dir/test.goosehint
-
-# Check git status - these files should not appear
-git status --porcelain | grep test-dir
-
-# Clean up test files
-rm -rf test-dir
-```
-
-### 6. Remove Already-Tracked Files
-
-If files are already tracked by git, you need to remove them from tracking:
-
-```bash
-# Remove individual files from tracking (keeps local files)
-git rm --cached .goosehints
-git rm --cached .gemini/GEMINI.md
-
-# Remove directories from tracking
-git rm -r --cached .obsidian/
-git rm -r --cached Ana-lazy-ing/
-
-# Remove files matching pattern from tracking
-git rm --cached $(git ls-files | grep -E "\.goosehint$")
-```
-
-### 7. Verify Ignore Patterns
-
-After updating `.gitignore` and removing tracked files:
-
-```bash
-# Verify specific files are now ignored
-git check-ignore -v .gemini/
-git check-ignore -v Ana-lazy-ing/
-git check-ignore -v .goosehints
-
-# Check git status - ignored files should not appear
-git status
-
-# Test with new files in various locations
-mkdir -p deep/nested/path/.gemini
-echo "test" > deep/nested/path/.gemini/test.md
-echo "test" > deep/nested/.goosehints
-echo "test" > deep/test.goosehint
-
-# Verify they're ignored
-git check-ignore -v deep/nested/path/.gemini/
-git check-ignore -v deep/nested/.goosehints
-git check-ignore -v deep/test.goosehint
-
-# Clean up
-rm -rf deep
-```
-
-### 8. Commit Changes
-
-```bash
-# Add the updated .gitignore
-git add .gitignore
-
-# Commit both the .gitignore changes and file removals
-git commit -m "feat: update .gitignore patterns and remove tracked tool files
-
-- Add comprehensive ignore patterns for .gemini/, .goosehints, Ana-lazy-ing/
-- Remove previously tracked tool-specific files from git
-- Use global patterns (**/) to ignore files anywhere in repository"
-```
-
-## Common Patterns for Development Tools
-
-### AI/ML Tools
-```gitignore
-# Gemini AI CLI
-.gemini/
-**/.gemini/
-
-# Goose AI
-.goosehints
-**/.goosehints
-*.goosehint
-
-# Other AI tools
-.cursor/
-**/.cursor/
-```
-
-### Development Environments
-```gitignore
-# IDEs
-.idea/
-.vscode/
-**/.obsidian/
-
-# Environment files
-.env
-.env.*
-!.env.example
-```
-
-### Build and Cache
-```gitignore
-# Logs
-*.log
-logs/
-
-# Dependencies
-node_modules/
-vendor/
-
-# Build outputs
-dist/
-build/
-```
-
-## Troubleshooting
-
-### Files Still Showing in Git Status
-- **Problem**: Files appear in `git status` even after adding to `.gitignore`
-- **Solution**: Files are already tracked. Use `git rm --cached filename` to untrack them.
-
-### Pattern Not Working
-- **Problem**: New files matching pattern still appear in git status
-- **Solution**: 
-  1. Verify pattern syntax in `.gitignore`
-  2. Test with `git check-ignore -v filename`
-  3. Ensure no spaces or typos in pattern
-
-### Global Patterns Not Working
-- **Problem**: `**/pattern` doesn't work as expected
-- **Solution**: 
-  1. Ensure git version supports `**` patterns (Git 1.8.2+)
-  2. Try both `pattern` and `**/pattern` for comprehensive coverage
-
-### Accidentally Removed Important Files
-- **Problem**: Used `git rm` instead of `git rm --cached`
-- **Solution**: 
-  1. `git checkout HEAD -- filename` to restore file
-  2. Then use `git rm --cached filename` to untrack only
-
-## Best Practices
-
-1. **Test First**: Always test patterns before removing tracked files
-2. **Use Global Patterns**: Prefer `**/pattern` for files that can appear anywhere
-3. **Be Specific**: Avoid overly broad patterns that might catch important files
-4. **Document Changes**: Include clear commit messages explaining ignore changes
-5. **Regular Maintenance**: Periodically review and clean up `.gitignore` patterns
-
-## Advanced Commands
-
-### Find Large Ignored Files
-```bash
-# List ignored files with sizes
-git ls-files --others --ignored --exclude-standard --directory | xargs ls -lah
-```
-
-### Remove All Ignored Files
-```bash
-# CAUTION: This permanently deletes ignored files
-git clean -fXd
-```
-
-### Check Ignore Status of Multiple Files
-```bash
-# Check multiple files at once
-git check-ignore -v $(find . -name "*.log" -o -name ".gemini")
-```
-
-### Temporarily Track Ignored File
-```bash
-# Force add an ignored file (use sparingly)
-git add -f ignored-file.log
-```
-
-## Workflow Checklist
-
-- [ ] Identify files/directories to ignore
-- [ ] Check current git status
-- [ ] Add patterns to `.gitignore`
-- [ ] Test patterns with temporary files
-- [ ] Remove tracked files with `git rm --cached`
-- [ ] Verify patterns work correctly
-- [ ] Commit changes with descriptive message
-- [ ] Test with new files in various locations
-
-## Related Resources
-
-- [Git Documentation - gitignore](https://git-scm.com/docs/gitignore)
-- [GitHub .gitignore Templates](https://github.com/github/gitignore)
-- [gitignore.io - Generate .gitignore files](https://www.toptal.com/developers/gitignore)
+# Workflow: Manage Git Ignore Patterns
+
+**Purpose:** To systematically manage `.gitignore` patterns, ensuring specific files and directories are correctly excluded from Git tracking, and to guide the user through remediation if issues are found.
+
+**Activation Triggers:**
+- "Manage gitignore."
+- "Add files to gitignore."
+- "Remove tracked files from gitignore."
+- "Test gitignore patterns."
+
+## SYSTEM INSTRUCTIONS FOR MANAGING GIT IGNORE PATTERNS
+When a user requests to manage gitignore patterns, I MUST:
+1.  Follow all phases of this workflow systematically.
+2.  Proactively identify files/directories that should be ignored.
+3.  Guide the user through updating `.gitignore` and untracking files.
+4.  Verify the patterns are working correctly.
+5.  Ensure changes are committed.
 
 ---
 
-**Workflow Created**: 2025-01-06  
-**Last Updated**: 2025-01-06  
-**Author**: Buddy AI Assistant  
-**Version**: 1.0
+## PHASE 1: IDENTIFY & ANALYZE IGNORE TARGETS
+
+### Step 1.1: Identify Files and Directories to Ignore
+**Tools to Use:** User Input, `find`, `glob`
+**Actions:**
+- Ask the user for specific files or directories they want to ignore.
+- Propose common ignore targets (e.g., `node_modules`, `dist`, `.env`, `logs/`, `projects/TELOS`, `.gemini`, `.goosehints`).
+- Use `find` to locate instances of these files/directories in the repository.
+**Evidence to Gather:**
+- A list of files/directories the user wants to ignore.
+- Paths of existing instances of these targets.
+**Validation:**
+- The list of targets is clear and comprehensive.
+**Output:**
+- A consolidated list of absolute paths to files/directories that should be ignored.
+
+### Step 1.2: Check Current Git Status of Targets
+**Tools to Use:** `run_shell_command` (`git status --porcelain`, `git ls-files`)
+**Actions:**
+- For each identified target, check if it is currently tracked by Git.
+- Identify any files that are *already* tracked but *should* be ignored.
+**Evidence to Gather:**
+- Output from `git status --porcelain` and `git ls-files` filtered by target paths.
+**Validation:**
+- Accurate identification of tracked vs. untracked targets.
+**Output:**
+- A list of targets that are currently tracked by Git and need to be untracked.
+
+---
+
+## PHASE 2: UPDATE .GITIGNORE
+
+### Step 2.1: Propose .gitignore Patterns
+**Tools to Use:** Internal Logic, User Input
+**Actions:**
+- Based on the identified targets, propose appropriate `.gitignore` patterns (e.g., `**/filename`, `dirname/`, `*.extension`).
+- Explain the different pattern types and their scope.
+- Ask the user to confirm or modify the proposed patterns.
+**Evidence to Gather:**
+- The proposed `.gitignore` patterns.
+**Validation:**
+- The patterns are syntactically correct and cover the intended targets.
+**Output:**
+- Finalized `.gitignore` patterns.
+
+### Step 2.2: Apply .gitignore Changes
+**Tools to Use:** `write_file`, `read_file`
+**Actions:**
+- Read the current `.gitignore` file.
+- Append the new patterns to the `.gitignore` file.
+**Evidence to Gather:**
+- The updated content of the `.gitignore` file.
+**Validation:**
+- The `.gitignore` file is updated successfully.
+**Output:**
+- The `.gitignore` file with new patterns applied.
+
+---
+
+## PHASE 3: REMEDIATE TRACKED FILES
+
+### Step 3.1: Identify Already-Tracked Files for Removal
+**Tools to Use:** Internal Logic
+**Actions:**
+- Reconfirm the list of files identified in Phase 1 that are currently tracked by Git but should be ignored.
+**Evidence to Gather:**
+- The confirmed list of files to be untracked.
+**Validation:**
+- The list is accurate and approved by the user.
+**Output:**
+- A definitive list of files to untrack.
+
+### Step 3.2: Remove Tracked Files from Git
+**Tools to Use:** `run_shell_command` (`git rm --cached`)
+**Actions:**
+- For each file in the list, execute `git rm --cached <file_path>`.
+- For directories, execute `git rm -r --cached <directory_path>/`.
+**Evidence to Gather:**
+- The output of the `git rm --cached` commands.
+**Validation:**
+- The files/directories are no longer tracked by Git.
+**Output:**
+- Untracked files/directories, remaining in the local working copy.
+
+---
+
+## PHASE 4: VERIFY & TEST PATTERNS
+
+### Step 4.1: Test Applied Patterns
+**Tools to Use:** `run_shell_command` (`git check-ignore -v`)
+**Actions:**
+- For each new pattern and untracked file, use `git check-ignore -v <path>` to verify that Git now correctly ignores them.
+**Evidence to Gather:**
+- The output of `git check-ignore -v` for all relevant paths.
+**Validation:**
+- All patterns are working as expected.
+**Output:**
+- Confirmation that patterns are effective.
+
+### Step 4.2: Verify Final Git Status
+**Tools to Use:** `run_shell_command` (`git status`)
+**Actions:**
+- Execute `git status` to show the user that the previously tracked files are no longer listed as changes, and new ignored files are not appearing.
+**Evidence to Gather:**
+- The output of `git status`.
+**Validation:**
+- The repository status is clean regarding ignored files.
+**Output:**
+- A clean Git status, confirming successful ignore management.
+
+---
+
+## PHASE 5: COMMIT CHANGES
+
+### Step 5.1: Stage Changes
+**Tools to Use:** `run_shell_command`
+**Actions:**
+- Execute `git add .gitignore` to stage the updated `.gitignore` file.
+- Stage any other relevant changes (e.g., `git add .` for untracked files that are now correctly ignored).
+**Evidence to Gather:**
+- The output of `git status` showing the staged changes.
+**Validation:**
+- The changes are correctly staged.
+**Output:**
+- Staged changes ready for commit.
+
+### Step 5.2: Propose Commit Message
+**Tools to Use:** Internal Logic
+**Actions:**
+- Generate a concise commit message summarizing the `.gitignore` updates and any untracked file removals.
+**Evidence to Gather:**
+- The proposed commit message.
+**Validation:**
+- The commit message accurately reflects the changes.
+**Output:**
+- A proposed commit message.
+
+### Step 5.3: Execute Commit
+**Tools to Use:** User Input, `run_shell_command`
+**Actions:**
+- Present the proposed commit message to the user and ask for confirmation.
+- If confirmed, execute `git commit -m "<commit_message>"`.
+**Evidence to Gather:**
+- User confirmation and the output of the `git commit` command.
+**Validation:**
+- The commit is successful.
+**Output:**
+- A new commit in the project's history.
+
+### Step 5.4: Push Changes (Optional)
+**Tools to Use:** User Input, `run_shell_command`
+**Actions:**
+- Ask the user if they want to push the changes to the remote repository.
+- If confirmed, execute `git push`.
+**Evidence to Gather:**
+- User confirmation and the output of the `git push` command.
+**Validation:**
+- The push is successful.
+**Output:**
+- Local changes synchronized with the remote repository.
