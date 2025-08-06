@@ -1,5 +1,13 @@
 # Buddy AI Project Changelog
 
+## [3.1.2] - 2025-08-06
+
+### Added
+- **Universal Content Organizer Workflow**: Created a new `universal-content-organizer-workflow.md` designed to systematically sort, categorize, and organize any type of content file.
+
+### Changed
+- **Workflow Renamed**: `content-sorting-categorization-workflow.md` was renamed to `universal-content-organizer-workflow.md` to better reflect its broader capabilities.
+
 ## [3.0.0] - 2025-08-06 - 🚀 MAJOR RELEASE: Enterprise AI Integration System
 
 ### 🎯 **WHY BUDDYV3: Revolutionary AI Collaboration Platform**
