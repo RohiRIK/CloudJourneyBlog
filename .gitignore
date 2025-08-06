@@ -97,8 +97,6 @@ projects/buddy-ai/best-pratice/
 **/.goosehints
 
 # Gemini CLI specific ignores (anywhere in repo)
-.gemini/
-**/.gemini/
 
 # Infrastructure-related local ignores
 projects/docker_swarm/*
