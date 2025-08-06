@@ -28,7 +28,8 @@
           {"name": "Sort Blog Post Workflow", "path": "projects/buddy-ai/buddy-workflows/sort-blog-workflow.md"},
           {"name": "Validate Navigation Workflows", "path": "projects/buddy-ai/buddy-workflows/validate-navigation-workflows.md"},
           {"name": "n8n MCP Server Automation", "path": "projects/buddy-ai/buddy-workflows/n8n-mcp-server-automation.md"},
-          {"name": "n8n MCP Notion Workflow", "path": "projects/buddy-ai/buddy-workflows/n8n-mcp-notion-workflow.md"}
+          {"name": "n8n MCP Notion Workflow", "path": "projects/buddy-ai/buddy-workflows/n8n-mcp-notion-workflow.md"},
+          {"name": "Buddy Ignore Files Workflow", "path": "projects/buddy-ai/buddy-workflows/buddy-ignore-files.md"}
         ]
       },
       {
