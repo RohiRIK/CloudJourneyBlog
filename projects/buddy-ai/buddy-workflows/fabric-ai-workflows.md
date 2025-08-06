@@ -373,6 +373,18 @@ fabric-ai --temperature 0.8 --topp 0.9 --pattern "create_art_prompt" --model "ge
 
 **Output to buddy-output directory for analysis and processing:**
 
+#### Confirmation Before Saving
+Before any Fabric AI generated content is saved to a file, Buddy AI will present the content to the user and ask for explicit confirmation. This ensures the user has full control and can review the output before it is written to disk.
+
+**Procedure:**
+1.  **Present Content**: Buddy AI will display the generated content to the user.
+2.  **Request Confirmation**: Buddy AI will ask the user, "Do you want to save this content to [proposed file path]?"
+3.  **Save or Discard**: If the user confirms, the content will be saved. Otherwise, it will be discarded.
+
+**Tools to Use:** User Input, `echo`, `write_file`
+
+
+
 ```bash
 # Create organized output structure
 mkdir -p projects/buddy-ai/buddy-output/{analysis,summaries,insights,code-review,research}
