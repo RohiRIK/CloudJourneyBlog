@@ -1,5 +1,10 @@
 # Buddy AI Project Changelog
 
+## [3.1.3] - 2025-08-06
+
+### Added
+- **Project Summary**: Generated a comprehensive, non-humble summary of Buddy AI's capabilities and impact using Fabric AI.
+
 ## [3.1.2] - 2025-08-06
 
 ### Added
