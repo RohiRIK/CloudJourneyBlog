@@ -35,10 +35,10 @@ Before deploying and using this Logic App, ensure you have the following:
     -   `YOUR_SUBSCRIPTION_ID`: Replace with your Azure subscription ID.
     -   `YOUR_RESOURCE_GROUP`: Replace with the name of your resource group where the Log Analytics Workspace is located.
     -   `YOUR_LOG_ANALYTICS_WORKSPACE_NAME`: Replace with the name of your Azure Monitor Log Analytics Workspace.
-    -   `recipient@example.com`: Replace with the email address for personalized alerts.
-    -   `summary_recipient@example.com`: Replace with the email address for summary alerts.
-    -   `admin@example.com`: Replace with the email address for error notifications.
-    -   `support@example.com`: Replace with your IT support email address in the personalized email body.
+    -   `recipient@oncld.io`: Replace with the email address for personalized alerts.
+    -   `summary_recipient@oncld.io`: Replace with the email address for summary alerts.
+    -   `admin@oncld.io`: Replace with the email address for error notifications.
+    -   `support@oncld.io`: Replace with your IT support email address in the personalized email body.
 
     You can find these values in your Azure portal.
 
@@ -84,8 +84,8 @@ The Logic App is triggered every 15 minutes (configurable) and performs the foll
     -   If not processed, it constructs a personalized HTML email body (`personalEmailBody`) for the `TargetUser`.
     -   Sends a personalized email to the `TargetUser` (or a placeholder recipient).
     -   Adds the `TargetUser` to the `processedUsers` array.
-4.  **Send Summary Email**: If any matching activity is found, a summary email containing a table of all detected activities is sent to `summary_recipient@example.com`.
-5.  **Error Notification**: If the Kusto query fails, an error flag is set, and an error message is appended. An error notification email is sent to `admin@example.com`.
+4.  **Send Summary Email**: If any matching activity is found, a summary email containing a table of all detected activities is sent to `summary_recipient@oncld.io`.
+5.  **Error Notification**: If the Kusto query fails, an error flag is set, and an error message is appended. An error notification email is sent to `admin@oncld.io`.
 
 ## Kusto Query Details
 

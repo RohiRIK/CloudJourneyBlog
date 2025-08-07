@@ -113,6 +113,50 @@
     ]
   },
   {
+    "category": "Personal AI Infrastructure (PAI)",
+    "items": [
+      {"name": "PAI Project Hub", "path": "projects/buddy-pai/"},
+      {"name": "Transformation Goals", "path": "projects/buddy-pai/PAI_TRANSFORMATION_GOALS.md"},
+      {"name": "Development Log", "path": "projects/buddy-pai/DEVELOPMENT_LOG.md"},
+      {"name": "Implementation Roadmap", "path": "projects/buddy-pai/IMPLEMENTATION_ROADMAP.md"},
+      {"name": "Technical Blueprint", "path": "projects/buddy-ai/docs/architecture/pai-transformation-blueprint.md"},
+      {"name": "Notes & Collaboration", "path": "projects/buddy-pai/notes/"}
+    ],
+    "sub_categories": [
+      {
+        "name": "PAI Agents",
+        "items": [
+          {"name": "Code Analysis Agent", "path": "projects/buddy-pai/agents/code-analysis/"},
+          {"name": "Content Generation Agent", "path": "projects/buddy-pai/agents/content-generation/"},
+          {"name": "Infrastructure Agent", "path": "projects/buddy-pai/agents/infrastructure/"},
+          {"name": "Security Agent", "path": "projects/buddy-pai/agents/security/"},
+          {"name": "Research Agent", "path": "projects/buddy-pai/agents/research/"},
+          {"name": "Workflow Agent", "path": "projects/buddy-pai/agents/workflow/"}
+        ]
+      },
+      {
+        "name": "PAI Infrastructure",
+        "items": [
+          {"name": "Agent Orchestration", "path": "projects/buddy-pai/orchestration/"},
+          {"name": "MCP Servers", "path": "projects/buddy-pai/mcp-servers/"},
+          {"name": "Knowledge Graph", "path": "projects/buddy-pai/knowledge-graph/"},
+          {"name": "Shared Services", "path": "projects/buddy-pai/shared/"}
+        ]
+      },
+      {
+        "name": "Collaboration Space",
+        "items": [
+          {"name": "Daily Notes", "path": "projects/buddy-pai/notes/daily/"},
+          {"name": "Ideas & Brainstorming", "path": "projects/buddy-pai/notes/ideas/"},
+          {"name": "Research Findings", "path": "projects/buddy-pai/notes/research/"},
+          {"name": "Decision Records", "path": "projects/buddy-pai/notes/decisions/"},
+          {"name": "Today's Session", "path": "projects/buddy-pai/notes/daily/2025-08-07-session.md"},
+          {"name": "Client Service Acceleration", "path": "projects/buddy-pai/notes/ideas/2025-08-07-client-service-acceleration.md"}
+        ]
+      }
+    ]
+  },
+  {
     "category": "Projects & Automation",
     "items": [
       {"name": "AI Blogger Workflows", "path": "projects/n8n-workflows/ai-blogger/"},

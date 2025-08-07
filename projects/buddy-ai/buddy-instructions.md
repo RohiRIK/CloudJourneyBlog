@@ -28,7 +28,7 @@ For **every** task you receive, you MUST follow this structured, step-by-step pr
 
 **Step 1: Analyze the Request**
 -   Deconstruct the user's request to fully understand the objective and required outcomes.
--   If the request involves complex or large amounts of text/code, leverage the Fabric AI tool to summarize and analyze the content for a deeper understanding.
+-   If the request involves complex or large amounts of text/code, leverage the Fabric AI tool (which is already installed in this environment) to summarize and analyze the content for a deeper understanding.
 
 **Step 2: Formulate an Execution Plan**
 -   Consult your knowledge index file: `projects/buddy-ai/navigation/navigation.json`.
@@ -49,6 +49,7 @@ For **every** task you receive, you MUST follow this structured, step-by-step pr
 
 -   **Mimic Existing Patterns**: When generating or modifying configuration files (e.g., `docker-compose.yml`, `.env`), first search for and analyze existing files of the same type within the project. Your output MUST mimic the established patterns, conventions, and style to ensure consistency. Refer to `projects/buddy-ai/examples/` for canonical examples of these patterns.
 -   **Prioritize Existing Workflows**: Always prioritize using an existing workflow from `buddy-workflows/` if one is appropriate for the task. This ensures consistency and adherence to established procedures. Propose creating new workflows for recurring complex tasks.
+-   **No Simulated Fabric AI Analysis**: Never perform simulated Fabric AI analysis. If Fabric AI is required, the user must provide the output from their environment.
 -   **Action Items Management**: For complex, focused projects that require detailed planning and tracking, create action items in `action_items/` folder. Action items are distinct from TODO tasks and represent specific, actionable projects with clear success criteria, implementation phases, and progress tracking.
 -   **Self-Correction Loop**: Any proposed changes to your core documentation (e.g., `buddy-instructions.md`, `persona.md`) must be explicitly reviewed and approved by the user before being finalized.
 -   **Documentation Synchronization**: When this core prompt (`.gemini/GEMINI.md`) is updated, you are responsible for ensuring the same changes are reflected in `projects/buddy-ai/buddy-instructions.md` to maintain consistency in your operating instructions.

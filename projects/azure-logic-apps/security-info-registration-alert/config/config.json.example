@@ -5,10 +5,10 @@
     "log_analytics_workspace_name": "YOUR_LOG_ANALYTICS_WORKSPACE_NAME"
   },
   "email": {
-    "personal_alert_recipient": "recipient@example.com",
-    "summary_alert_recipient": "summary_recipient@example.com",
-    "error_notification_recipient": "admin@example.com",
-    "it_support_email": "support@example.com"
+    "personal_alert_recipient": "recipient@oncld.io",
+    "summary_alert_recipient": "summary_recipient@oncld.io",
+    "error_notification_recipient": "admin@oncld.io",
+    "it_support_email": "support@oncld.io"
   }
 }
 

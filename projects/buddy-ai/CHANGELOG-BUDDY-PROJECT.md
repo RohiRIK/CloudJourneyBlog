@@ -1,5 +1,13 @@
 # Buddy AI Project Changelog
 
+## [3.1.4] - 2025-08-06
+
+### Added
+- **Explain Buddy Output Cleanup Workflow**: Created a new `explain-buddy-output-cleanup-workflow.md` to explain the process of cleaning and organizing the `buddy-output` directory.
+
+### Improved
+- **Fabric AI Workflows**: Added a new "Confirmation Before Saving" step to `fabric-ai-workflows.md` to ensure user review before saving Fabric AI generated content.
+
 ## [3.1.3] - 2025-08-06
 
 ### Added
