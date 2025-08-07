@@ -112,12 +112,72 @@ Buddy AI is evolving from a single assistant into a **Personal AI Infrastructure
   * **Features**: Clean HTML extraction, PDF processing, structured data
   * **Use Cases**: Content research, competitor analysis, data collection
 
+## Sub-Agents
 
+**Current Buddy AI Workflows → Specialized PAI Agents:**
 
+Each existing Buddy AI workflow becomes a dedicated sub-agent with inherited personality and security protocols.
 
+### Security Agent (`security.pai.local`)
 
-# we stop here!!!!!
+* **Transformed From**: API Key Sanitizer Workflow, Secure Commit Workflow, Check Ignored Files Workflow
+* **Specialization**: Proactive secret detection, git security, compliance monitoring
+* **Commands**:
+  * `sanitize_secrets <directory>` - Scan and secure API keys/credentials
+  * `secure_commit` - Validate commits before pushing
+  * `audit_ignored_files` - Review .gitignore patterns and protection
 
+### Content Agent (`content.pai.local`)
+
+* **Transformed From**: Sort Blog Post Workflow, Fabric AI Workflows
+* **Specialization**: Content creation, research, blog management
+* **Commands**:
+  * `research_topic <topic>` - Use SearxNG + Firecrawl for content research
+  * `generate_blog <category> <title>` - Create blog posts using Fabric patterns
+  * `sort_content` - Organize and categorize existing content
+
+### Infrastructure Agent (`infra.pai.local`)
+
+* **Transformed From**: n8n MCP Server Automation, Validate Navigation Workflows
+* **Specialization**: Docker services, workflow automation, system monitoring
+* **Commands**:
+  * `deploy_service <service_name>` - Deploy new Docker services with Traefik
+  * `trigger_workflow <workflow_id>` - Execute n8n automation workflows
+  * `validate_system` - Check all services and dependencies
+
+### Code Agent (`code.pai.local`)
+
+* **Transformed From**: General Workflows, Navigation System validation
+* **Specialization**: Code analysis, project structure, documentation
+* **Commands**:
+  * `analyze_codebase` - Deep code analysis using Fabric patterns
+  * `update_navigation` - Maintain navigation.json structure
+  * `generate_docs` - Auto-generate project documentation
+
+### Research Agent (`research.pai.local`)
+
+* **Transformed From**: n8n MCP Notion Workflow, External API integrations
+* **Specialization**: Information gathering, knowledge synthesis, note-taking
+* **Commands**:
+  * `web_research <query>` - Comprehensive web research using all tools
+  * `sync_notion <workspace>` - Bidirectional Notion data synchronization
+  * `extract_insights <content>` - Generate insights from research data
+
+### Workflow Agent (`workflow.pai.local`)
+
+* **Transformed From**: All MCP integration workflows
+* **Specialization**: Cross-agent orchestration, complex task automation
+* **Commands**:
+  * `orchestrate_task <complex_request>` - Coordinate multiple agents
+  * `automate_routine <routine_name>` - Set up recurring automated tasks
+  * `monitor_pipelines` - Track multi-step workflow execution
+
+**Shared Characteristics:**
+
+* **Personality**: Each inherits Buddy's supportive, proactive persona
+* **Security**: All agents enforce the same security-first protocols
+* **Communication**: Agents can delegate to each other for specialized tasks
+* **Context**: Shared knowledge graph and project understanding
 
 ### MCPs
 
@@ -183,12 +243,10 @@ wil set in mcp.json
   * Resource allocation and scaling decisions
   * Deployment automation and rollback capabilities
 
-## Sub-Agents
-
 ---
 
 **Ayaa Karte Chop!** 🚀
 
-*Simple, clear transformation map focused on the core principles that matter.*
+*Complete transformation map ready for PAI implementation!*
 
-**Next Action**: Fill out each section with specific details as we develop the PAI system.
+**Next Action**: Begin implementing specialized agents based on this transformation roadmap.

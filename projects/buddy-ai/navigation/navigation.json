@@ -119,8 +119,7 @@
       {"name": "Transformation Goals", "path": "projects/buddy-pai/PAI_TRANSFORMATION_GOALS.md"},
       {"name": "Development Log", "path": "projects/buddy-pai/DEVELOPMENT_LOG.md"},
       {"name": "Implementation Roadmap", "path": "projects/buddy-pai/IMPLEMENTATION_ROADMAP.md"},
-      {"name": "Technical Blueprint", "path": "projects/buddy-ai/docs/architecture/pai-transformation-blueprint.md"},
-      {"name": "Notes & Collaboration", "path": "projects/buddy-pai/notes/"}
+      {"name": "Technical Blueprint", "path": "projects/buddy-ai/docs/architecture/pai-transformation-blueprint.md"}
     ],
     "sub_categories": [
       {
@@ -141,17 +140,6 @@
           {"name": "MCP Servers", "path": "projects/buddy-pai/mcp-servers/"},
           {"name": "Knowledge Graph", "path": "projects/buddy-pai/knowledge-graph/"},
           {"name": "Shared Services", "path": "projects/buddy-pai/shared/"}
-        ]
-      },
-      {
-        "name": "Collaboration Space",
-        "items": [
-          {"name": "Daily Notes", "path": "projects/buddy-pai/notes/daily/"},
-          {"name": "Ideas & Brainstorming", "path": "projects/buddy-pai/notes/ideas/"},
-          {"name": "Research Findings", "path": "projects/buddy-pai/notes/research/"},
-          {"name": "Decision Records", "path": "projects/buddy-pai/notes/decisions/"},
-          {"name": "Today's Session", "path": "projects/buddy-pai/notes/daily/2025-08-07-session.md"},
-          {"name": "Client Service Acceleration", "path": "projects/buddy-pai/notes/ideas/2025-08-07-client-service-acceleration.md"}
         ]
       }
     ]
