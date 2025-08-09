@@ -111,3 +111,5 @@ projects/device-inventory/
 projects/device-inventory/
 projects/buddy-ai/CHANGELOG-BUDDY-PROJECT-V3.md
 projects/device-inventory/Update-DeviceInventory.ps1
+.vscode/
+.mcp.jsonprojects/buddy-pai/.mcp.json

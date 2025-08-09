@@ -1,0 +1,6 @@
+name: prompt_generating
+type: "Draft & Create"
+description: "Converts basic ideas into well-structured, detailed, and highly effective prompts."
+source_file: "commands/prompt_generating.md"
+requirements:
+  - "Standard AI"

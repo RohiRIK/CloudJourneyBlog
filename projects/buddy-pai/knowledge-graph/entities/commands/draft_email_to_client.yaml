@@ -1,0 +1,6 @@
+name: draft_email_to_client
+type: "Draft & Create"
+description: "Composes high-quality email drafts based on user's personal style and intent."
+source_file: "commands/draft_email_to_client.md"
+requirements:
+  - "Standard AI"
